@@ -11,10 +11,10 @@ const Home = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">
-            슬슬 AIdea <span className="text-gradient">2025</span>
+            슬슬 AIdea Agent <span className="text-gradient">2025</span>
           </h1>
           <p className="hero-subtitle">
-            슬시인의 AIdea (AI+Idea), 일상을 바꾸는 업무 혁신
+            슬시인의 AIdea (AI+Idea), 업무 혁신을 이루는 AI Agent
           </p>
         </div>
       </section>

@@ -23,7 +23,7 @@ from auth import create_access_token, get_current_user
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="슬슬 AIdea API",
+    title="슬슬 AIdea Agent API",
     description="사내 개발자 경진대회 컨퍼런스 API",
     version="1.0.0"
 )
@@ -42,7 +42,7 @@ security = HTTPBearer()
 
 @app.get("/")
 async def root():
-    return {"message": "슬슬 AIdea API에 오신 것을 환영합니다!"}
+    return {"message": "슬슬 AIdea Agent API에 오신 것을 환영합니다!"}
 
 @app.get("/health")
 async def health_check():

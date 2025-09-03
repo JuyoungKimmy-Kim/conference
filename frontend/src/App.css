@@ -45,7 +45,7 @@ main {
 
 .hero-title {
   font-size: 4rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 2rem;
   line-height: 1.2;
 }
@@ -56,6 +56,13 @@ main {
   max-width: 800px;
   margin: 0 auto 3rem;
   line-height: 1.6;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero-buttons {
@@ -93,6 +100,13 @@ main {
   
   .hero-subtitle {
     font-size: 1.2rem;
+  }
+  
+  .hero-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
   .hero-buttons {
