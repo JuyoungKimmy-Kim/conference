@@ -88,7 +88,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--text-dark);
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .cta-subtitle {
@@ -96,6 +96,33 @@
   color: var(--text-light);
   max-width: 500px;
   margin: 0 auto;
+}
+
+/* 일정 표시 스타일 */
+.schedule-info {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.schedule-row {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.schedule-row:last-child {
+  margin-bottom: 0;
+}
+
+.schedule-label {
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.schedule-date {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
 }
 
 .btn-lg {
@@ -115,5 +142,23 @@
   
   .feature-card {
     padding: 1.5rem;
+  }
+  
+  .schedule-container {
+    padding: 1.5rem;
+  }
+  
+  .schedule-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .schedule-label {
+    font-size: 0.9rem;
+  }
+  
+  .schedule-date {
+    font-size: 0.85rem;
   }
 } 

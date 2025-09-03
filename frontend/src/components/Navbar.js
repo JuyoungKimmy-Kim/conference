@@ -19,7 +19,7 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg navbar-light fixed-top">
       <div className="container">
         <Link className="navbar-brand" to="/">
-          <span className="brand-text">DevConf 2024</span>
+          <span className="brand-text">슬슬 AIdea</span>
         </Link>
         
         <button

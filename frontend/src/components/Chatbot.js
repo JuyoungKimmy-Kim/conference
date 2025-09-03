@@ -7,7 +7,7 @@ const Chatbot = () => {
     {
       id: 1,
       type: 'bot',
-      content: '안녕하세요! DevConf 2024 챗봇입니다. 무엇을 도와드릴까요?',
+      content: '안녕하세요! 슬슬 AIdea 챗봇입니다. 무엇을 도와드릴까요?',
       timestamp: new Date()
     }
   ]);
