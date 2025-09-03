@@ -11,28 +11,18 @@ const Home = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">
-            DevConf <span className="text-gradient">2024</span>
+            슬슬 AIdea <span className="text-gradient">2024</span>
           </h1>
           <p className="hero-subtitle">
             사내 개발자들의 혁신적인 아이디어와 기술을 공유하는 
             연례 개발자 컨퍼런스에 여러분을 초대합니다
           </p>
-          <div className="hero-buttons">
-            <Link to="/register" className="btn btn-primary">
-              지금 등록하기
-            </Link>
-            <Link to="/agenda" className="btn btn-secondary">
-              일정 보기
-            </Link>
-          </div>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="cta-section section-padding">
-        <div className="container text-center">
-          <h2 className="cta-title">슬슬 AIdea 등록 OPEN</h2>
-          
+        <div className="container text-center">          
           <div className="schedule-info mb-4">
             <div className="schedule-row">
               <div className="schedule-label">참가 신청 기간</div>

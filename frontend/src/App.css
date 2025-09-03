@@ -15,7 +15,7 @@ main {
 }
 
 .hero-section {
-  background: var(--gradient-primary);
+  background: var(--text-dark);
   color: white;
   padding: 120px 0;
   text-align: center;
