@@ -2,38 +2,36 @@ import React, { useState } from 'react';
 import './Register.css';
 
 const Register = () => {
+  const [currentStep, setCurrentStep] = useState('login'); // 'login' 또는 'register'
+  const [loginData, setLoginData] = useState({
+    id: '',
+    password: ''
+  });
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    company: '',
-    position: '',
+    name: '',
     phone: '',
-    track: '',
-    dietary: '',
+    team: '',
+    aidea: '',
     agreeTerms: false,
     agreeMarketing: false
+  });
+
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [newMember, setNewMember] = useState({
+    name: '',
+    knoxId: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const tracks = [
-    { id: 'ai', name: 'AI/ML 트랙', description: '인공지능과 머신러닝 관련 세션' },
-    { id: 'cloud', name: '클라우드 트랙', description: '클라우드 아키텍처와 인프라' },
-    { id: 'devops', name: 'DevOps 트랙', description: '개발 운영과 자동화' },
-    { id: 'frontend', name: '프론트엔드 트랙', description: '사용자 인터페이스와 경험' },
-    { id: 'data', name: '데이터 트랙', description: '빅데이터와 분석' },
-    { id: 'security', name: '보안 트랙', description: '애플리케이션 보안' }
-  ];
-
-  const dietaryOptions = [
-    '일반',
-    '채식주의',
-    '비건',
-    '글루텐프리',
-    '알레르기 있음 (상세사항 기재)'
-  ];
+  const handleLoginInputChange = (e) => {
+    const { name, value } = e.target;
+    setLoginData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -41,6 +39,37 @@ const Register = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+  };
+
+  const handleNewMemberChange = (e) => {
+    const { name, value } = e.target;
+    setNewMember(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const addTeamMember = () => {
+    if (newMember.name && newMember.knoxId) {
+      const member = {
+        id: Date.now(),
+        name: newMember.name,
+        knoxId: newMember.knoxId
+      };
+      setTeamMembers(prev => [...prev, member]);
+      setNewMember({ name: '', knoxId: '' });
+    }
+  };
+
+  const removeTeamMember = (id) => {
+    setTeamMembers(prev => prev.filter(member => member.id !== id));
+  };
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    if (loginData.id && loginData.password) {
+      setCurrentStep('register');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -58,6 +87,79 @@ const Register = () => {
       setIsSubmitting(false);
     }
   };
+
+  // 로그인 화면 렌더링
+  if (currentStep === 'login') {
+    return (
+      <div className="register-page">
+        <div className="register-hero section-padding">
+          <div className="container text-center">
+            <h1 className="register-title">컨퍼런스 등록</h1>
+            <p className="register-subtitle">
+              DevConf 2024에 참여하고 싶으시다면 지금 바로 등록하세요!
+            </p>
+          </div>
+        </div>
+
+        <div className="register-content section-padding">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-6 mx-auto">
+                <div className="register-form-container">
+                  <form onSubmit={handleLoginSubmit} className="register-form">
+                    <div className="form-section">
+                      <h3>로그인 정보</h3>
+                      <div className="mb-3">
+                        <label htmlFor="id" className="form-label">knox id *</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="id"
+                          name="id"
+                          value={loginData.id}
+                          onChange={handleLoginInputChange}
+                          required
+                          placeholder="아이디를 입력하세요"
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="password" className="form-label">Password *</label>
+                        <input
+                          type="password"
+                          className="form-control"
+                          id="password"
+                          name="password"
+                          value={loginData.password}
+                          onChange={handleLoginInputChange}
+                          required
+                          placeholder="비밀번호를 입력하세요"
+                        />
+                      </div>
+                      
+                    </div>
+                    <small className="form-text text-muted">
+                    별도의 회원가입은 필요하지 않습니다.<br />
+                    최초 로그인 시 입력한 Knox ID와 비밀번호가 계정으로 등록됩니다. 
+                    설정한 비밀번호는 꼭 기억해 주세요.
+                    </small>
+                    <div className="form-submit">
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-lg w-100"
+                        disabled={!loginData.id || !loginData.password}
+                      >
+                        다음 단계로
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (submitSuccess) {
     return (
@@ -97,73 +199,32 @@ const Register = () => {
                 <form onSubmit={handleSubmit} className="register-form">
                   <div className="form-section">
                     <h3>기본 정보</h3>
-                    <div className="row">
-                      <div className="col-md-6 mb-3">
-                        <label htmlFor="firstName" className="form-label">이름 *</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="firstName"
-                          name="firstName"
-                          value={formData.firstName}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </div>
-                      <div className="col-md-6 mb-3">
-                        <label htmlFor="lastName" className="form-label">성 *</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="lastName"
-                          name="lastName"
-                          value={formData.lastName}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </div>
-                    </div>
-                    
                     <div className="mb-3">
-                      <label htmlFor="email" className="form-label">이메일 주소 *</label>
+                      <label htmlFor="knoxId" className="form-label">Knox ID</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                        id="knoxId"
+                        name="knoxId"
+                        value={loginData.id}
+                        readOnly
+                        style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="name" className="form-label">이름 *</label>
                       <input
-                        type="email"
+                        type="text"
                         className="form-control"
-                        id="email"
-                        name="email"
-                        value={formData.email}
+                        id="name"
+                        name="name"
+                        value={formData.name}
                         onChange={handleInputChange}
                         required
                       />
                     </div>
-
-                    <div className="row">
-                      <div className="col-md-6 mb-3">
-                        <label htmlFor="company" className="form-label">회사/조직</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="company"
-                          name="company"
-                          value={formData.company}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="col-md-6 mb-3">
-                        <label htmlFor="position" className="form-label">직책</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="position"
-                          name="position"
-                          value={formData.position}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-
                     <div className="mb-3">
-                      <label htmlFor="phone" className="form-label">연락처</label>
+                      <label htmlFor="phone" className="form-label">연락처 *</label>
                       <input
                         type="tel"
                         className="form-control"
@@ -172,44 +233,105 @@ const Register = () => {
                         value={formData.phone}
                         onChange={handleInputChange}
                         placeholder="010-0000-0000"
+                        required
                       />
                     </div>
+
+                    <div className="mb-3">
+                      <label htmlFor="team" className="form-label">팀명 *</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="team"
+                        name="team"
+                        value={formData.team}
+                        onChange={handleInputChange}
+                        placeholder="팀명을 입력하세요 (개인 등록시 개인명 입력도 가능)"
+                        required
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label">팀원 관리</label>
+                      <div className="border rounded p-3" style={{ backgroundColor: '#f8f9fa' }}>
+                        <div className="row mb-3">
+                          <div className="col-md-5 mb-2">
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="name"
+                              value={newMember.name}
+                              onChange={handleNewMemberChange}
+                              placeholder="팀원 이름"
+                            />
+                          </div>
+                          <div className="col-md-5 mb-2">
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="knoxId"
+                              value={newMember.knoxId}
+                              onChange={handleNewMemberChange}
+                              placeholder="Knox ID"
+                            />
+                          </div>
+                          <div className="col-md-2 mb-2">
+                            <button
+                              type="button"
+                              className="btn btn-outline-primary w-100"
+                              onClick={addTeamMember}
+                              disabled={!newMember.name || !newMember.knoxId}
+                            >
+                              추가
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {teamMembers.length > 0 && (
+                          <div>
+                            <h6 className="mb-2">팀원 목록 ({teamMembers.length}명)</h6>
+                            <div className="list-group">
+                              {teamMembers.map(member => (
+                                <div key={member.id} className="list-group-item d-flex justify-content-between align-items-center">
+                                  <div>
+                                    <strong>{member.name}</strong>({member.knoxId})
+                                  </div>
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-danger"
+                                    onClick={() => removeTeamMember(member.id)}
+                                  >
+                                    삭제
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {teamMembers.length === 0 && (
+                          <div className="text-center text-muted py-3">
+                            <small>아직 추가된 팀원이 없습니다.</small>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                   </div>
 
                   <div className="form-section">
                     <h3>참여 정보</h3>
                     <div className="mb-3">
-                      <label htmlFor="track" className="form-label">관심 트랙</label>
-                      <select
-                        className="form-select"
-                        id="track"
-                        name="track"
-                        value={formData.track}
+                      <label htmlFor="aidea" className="form-label">AIdea 제안서</label>
+                      <textarea
+                        className="form-control"
+                        id="aidea"
+                        name="aidea"
+                        value={formData.aidea}
                         onChange={handleInputChange}
-                      >
-                        <option value="">트랙을 선택하세요</option>
-                        {tracks.map(track => (
-                          <option key={track.id} value={track.id}>
-                            {track.name} - {track.description}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="mb-3">
-                      <label htmlFor="dietary" className="form-label">식사 제한사항</label>
-                      <select
-                        className="form-select"
-                        id="dietary"
-                        name="dietary"
-                        value={formData.dietary}
-                        onChange={handleInputChange}
-                      >
-                        <option value="">선택하세요</option>
-                        {dietaryOptions.map(option => (
-                          <option key={option} value={option}>{option}</option>
-                        ))}
-                      </select>
+                        rows="8"
+                        placeholder="AIdea 제안서 내용을 입력하세요..."
+                      />
                     </div>
                   </div>
 
