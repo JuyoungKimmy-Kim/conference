@@ -192,6 +192,72 @@ const Agenda = () => {
               </div>
             </div>
           </div>
+
+          {/* 일정 설명 섹션 */}
+          <div className="schedule-description-section">
+            <h3 className="description-title text-center mb-5">일정 상세 안내</h3>
+            <div className="description-grid">
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('registration') }}>
+                    📝
+                  </div>
+                  <h4 className="description-name">참가 신청</h4>
+                </div>
+                <p className="description-text">아이디어 제안서 제출</p>
+              </div>
+
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('announcement') }}>
+                    📋
+                  </div>
+                  <h4 className="description-name">서류 심사</h4>
+                </div>
+                <p className="description-text">제출된 아이디어 제안서 심사</p>
+              </div>
+
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('competition') }}>
+                    💻
+                  </div>
+                  <h4 className="description-name">개발 기간</h4>
+                </div>
+                <p className="description-text">AIdea를 AI Agent로 구현 기간</p>
+              </div>
+
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('evaluation') }}>
+                    🎯
+                  </div>
+                  <h4 className="description-name">예선 평가</h4>
+                </div>
+                <p className="description-text">15분 발표 및 녹스 미팅 데모 시연</p>
+              </div>
+
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('final') }}>
+                    🔧
+                  </div>
+                  <h4 className="description-name">본선 준비</h4>
+                </div>
+                <p className="description-text">본선 발표를 위한 최종 준비 기간</p>
+              </div>
+
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('award') }}>
+                    🏆
+                  </div>
+                  <h4 className="description-name">본선 및 시상</h4>
+                </div>
+                <p className="description-text">개발자행사에서 임원 평가 및 임직원 투표 진행 후 시상자 선정</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
