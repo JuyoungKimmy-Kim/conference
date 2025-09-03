@@ -80,24 +80,6 @@
   opacity: 0.9;
 }
 
-.cta-section {
-  background: var(--bg-light);
-}
-
-.cta-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-dark);
-  margin-bottom: 2rem;
-}
-
-.cta-subtitle {
-  font-size: 1.1rem;
-  color: var(--text-light);
-  max-width: 500px;
-  margin: 0 auto;
-}
-
 /* 일정 표시 스타일 */
 .schedule-info {
   max-width: 500px;
@@ -130,6 +112,32 @@
   font-size: 1.1rem;
 }
 
+.btn-lg:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* CTA 섹션 전체 스타일 */
+.cta-section {
+  background: var(--bg-light);
+  position: relative;
+  z-index: 2;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2rem;
+}
+
+.cta-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 @media (max-width: 768px) {
   .section-title,
   .cta-title {
@@ -144,21 +152,16 @@
     padding: 1.5rem;
   }
   
-  .schedule-container {
-    padding: 1.5rem;
-  }
-  
-  .schedule-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-  }
-  
   .schedule-label {
     font-size: 1.1rem;
   }
   
   .schedule-date {
     font-size: 1.2rem;
+  }
+  
+  .btn-lg {
+    font-size: 1rem;
+    padding: 0.875rem 1.75rem;
   }
 } 

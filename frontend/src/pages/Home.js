@@ -9,10 +9,10 @@ const Home = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">
-            슬슬 AIdea <span className="text-gradient">2025</span>
+            슬슬 AIdea Agent <span className="text-gradient">2025</span>
           </h1>
           <p className="hero-subtitle">
-            슬시인의 AIdea (AI+Idea), 일상을 바꾸는 업무 혁신
+            슬시인의 AIdea (AI+Idea) Agent, 업무 혁신을 이루는 AI Agent
           </p>
         </div>
       </section>
@@ -40,10 +40,6 @@ const Home = () => {
             <div className="schedule-row">
               <div className="schedule-label">본선 및 시상</div>
               <div className="schedule-date">10월 28일</div>
-            </div>
-            <div className="schedule-row">
-              <div className="schedule-label">시상</div>
-              <div className="schedule-date">10월 28일 (개발자 경진대회)</div>
             </div>
           </div>
           
