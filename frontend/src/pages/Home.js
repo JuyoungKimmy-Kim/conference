@@ -14,8 +14,7 @@ const Home = () => {
             슬슬 AIdea <span className="text-gradient">2025</span>
           </h1>
           <p className="hero-subtitle">
-            사내 개발자들의 혁신적인 아이디어와 기술을 공유하는 
-            연례 개발자 컨퍼런스에 여러분을 초대합니다
+            슬시인의 AIdea (AI+Idea), 일상을 바꾸는 업무 혁신
           </p>
         </div>
       </section>

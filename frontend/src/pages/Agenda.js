@@ -147,10 +147,8 @@ const Agenda = () => {
     <div className="agenda-page">
       <div className="agenda-hero section-padding">
         <div className="container text-center">
+          <br></br>
           <h1 className="agenda-title">경진대회 일정</h1>
-          <p className="agenda-subtitle">
-            슬슬 AIdea 개발자 경진대회의 전체 일정을 확인하세요
-          </p>
         </div>
       </div>
 
