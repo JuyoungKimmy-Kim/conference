@@ -7,7 +7,7 @@ const Chatbot = () => {
     {
       id: 1,
       type: 'bot',
-      content: '안녕하세요! 슬슬 AIdea Agent챗봇입니다. 무엇을 도와드릴까요?',
+      content: '안녕하세요! 슬슬 AIdea Agent 챗봇입니다. 무엇을 도와드릴까요?',
       timestamp: new Date()
     }
   ]);
@@ -128,7 +128,7 @@ const Chatbot = () => {
             <div className="avatar-icon">🤖</div>
           </div>
           <div className="chatbot-info">
-            <h3>DevConf 챗봇</h3>
+            <h3>슬슬 AIdea Agent</h3>
             <span className="status">온라인</span>
           </div>
         </div>

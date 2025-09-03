@@ -17,20 +17,12 @@ const Guide = () => {
           <section className="guide-section">
             <div className="section-header">
               <h2 className="section-title">대회 목표</h2>
-              <p className="section-subtitle">
-                사내 데이터를 사용하거나 업무에 적용 가능한 아이디어 및 기술 발굴
-              </p>
             </div>
             <div className="goals-grid">
               <div className="goal-card">
                 <div className="goal-icon">🎯</div>
                 <h3>혁신성</h3>
-                <p>창의적이고 혁신적인 기술 솔루션 개발</p>
-              </div>
-              <div className="goal-card">
-                <div className="goal-icon">🤝</div>
-                <h3>협업</h3>
-                <p>팀워크와 협업을 통한 시너지 창출</p>
+                <p>AI 서비스를 넘어 자율적 에이전트 설계</p>
               </div>
               <div className="goal-card">
                 <div className="goal-icon">💡</div>
@@ -180,12 +172,12 @@ const Guide = () => {
             <div className="contact-info">
               <div className="contact-item">
                 <h4>대회 운영팀</h4>
-                <p>e-mail: devconf@company.com</p>
+                <p>e-mail: ssai@samsung.com</p>
               </div>
               <div className="contact-item">
                 <h4>기술 지원</h4>
                 <p>e-mail: ssai@samsung.com</p>
-                <p>MOSAIC: </p>
+                <p>mosiac: </p>
               </div>
             </div>
           </section>
