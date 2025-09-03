@@ -60,6 +60,24 @@ class AgendaResponse(AgendaItem):
     class Config:
         from_attributes = True
 
+# 발표자 스키마
+class SpeakerCreate(BaseModel):
+    name: str
+    title: str
+    company: str
+    bio: Optional[str] = None
+    topic: str
+    track: str
+    image_url: Optional[str] = None
+
+class SpeakerResponse(SpeakerCreate):
+    id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
 # 로그인 스키마
 class UserLogin(BaseModel):
     email: EmailStr
