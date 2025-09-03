@@ -10,13 +10,11 @@ from models import Base
 from schemas import (
     UserCreate, UserResponse, 
     ConferenceRegistration, RegistrationResponse,
-    SpeakerCreate, SpeakerResponse,
     AgendaItem, AgendaResponse
 )
 from crud import (
     create_user, get_user_by_email,
     create_registration, get_registrations,
-    create_speaker, get_speakers,
     create_agenda_item, get_agenda_items
 )
 from auth import create_access_token, get_current_user
@@ -91,31 +89,6 @@ async def get_conference_registrations(
 ):
     return get_registrations(db, skip=skip, limit=limit)
 
-# 발표자 관련 엔드포인트
-@app.post("/speakers/", response_model=SpeakerResponse)
-async def add_speaker(
-    speaker: SpeakerCreate, 
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
-):
-    return create_speaker(db=db, speaker=speaker)
-
-@app.get("/speakers/", response_model=List[SpeakerResponse])
-async def get_conference_speakers(
-    skip: int = 0, 
-    limit: int = 100,
-    db: Session = Depends(get_db)
-):
-    return get_speakers(db, skip=skip, limit=limit)
-
-@app.get("/speakers/{speaker_id}", response_model=SpeakerResponse)
-async def get_speaker(speaker_id: int, db: Session = Depends(get_db)):
-    speakers = get_speakers(db, skip=0, limit=1000)
-    for speaker in speakers:
-        if speaker.id == speaker_id:
-            return speaker
-    raise HTTPException(status_code=404, detail="발표자를 찾을 수 없습니다.")
-
 # 일정 관련 엔드포인트
 @app.post("/agenda/", response_model=AgendaResponse)
 async def add_agenda_item(
@@ -139,12 +112,10 @@ async def get_conference_agenda(
 @app.get("/stats/")
 async def get_conference_stats(db: Session = Depends(get_db)):
     registrations = get_registrations(db)
-    speakers = get_speakers(db)
     agenda_items = get_agenda_items(db)
     
     return {
         "total_registrations": len(registrations),
-        "total_speakers": len(speakers),
         "total_agenda_items": len(agenda_items),
         "tracks": list(set([item.track for item in agenda_items])),
         "days": list(set([item.day for item in agenda_items]))

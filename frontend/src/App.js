@@ -5,7 +5,6 @@ import Footer from './components/Footer';
 import Chatbot from './components/Chatbot';
 import Home from './pages/Home';
 import Agenda from './pages/Agenda';
-import Speakers from './pages/Speakers';
 import Register from './pages/Register';
 import './App.css';
 
@@ -18,7 +17,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/agenda" element={<Agenda />} />
-            <Route path="/speakers" element={<Speakers />} />
             <Route path="/register" element={<Register />} />
           </Routes>
         </main>

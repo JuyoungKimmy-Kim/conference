@@ -9,7 +9,6 @@ const Navbar = () => {
   const navItems = [
     { path: '/', label: '홈' },
     { path: '/agenda', label: '일정' },
-    { path: '/speakers', label: '발표자' },
     { path: '/register', label: '등록' }
   ];
 
