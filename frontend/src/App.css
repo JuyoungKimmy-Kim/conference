@@ -17,13 +17,15 @@ main {
 .hero-section {
   background: var(--text-dark);
   color: white;
-  padding: 200px 0 150px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
+  z-index: 1;
 }
 
 .hero-section::before {
@@ -178,6 +180,14 @@ main {
   background: var(--bg-light);
   position: relative;
   z-index: 2;
+  margin-top: 100vh;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2rem;
 }
 
 @media (max-width: 768px) {

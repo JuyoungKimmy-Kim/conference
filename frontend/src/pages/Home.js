@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="home">
-      {/* Hero Section */}
-      <section className="hero-section">
+      {/* Hero Section - 전체 화면 */}
+      <section className="hero-section" style={{ 
+        transform: `translateY(${scrollY * 0.5}px)`,
+        opacity: Math.max(0, 1 - scrollY / 800)
+      }}>
         <div className="hero-content">
           <h1 className="hero-title">
             슬슬 AIdea Agent <span className="text-gradient">2025</span>
@@ -17,9 +28,17 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="cta-section section-padding">
+      {/* CTA Section - 스크롤 시 나타남 */}
+      <section 
+        className="cta-section section-padding"
+        style={{
+          opacity: Math.min(1, (scrollY - 400) / 400),
+          transform: `translateY(${Math.max(0, 400 - scrollY)}px)`
+        }}
+      >
         <div className="container text-center">
+          <h2 className="cta-title">DevConf 2024 참가 신청 OPEN</h2>
+          
           <div className="schedule-info mb-4">
             <div className="schedule-row">
               <div className="schedule-label">참가 신청 기간</div>
@@ -40,6 +59,10 @@ const Home = () => {
             <div className="schedule-row">
               <div className="schedule-label">본선 및 시상</div>
               <div className="schedule-date">10월 28일</div>
+            </div>
+            <div className="schedule-row">
+              <div className="schedule-label">시상</div>
+              <div className="schedule-date">10월 28일 (개발자 경진대회)</div>
             </div>
           </div>
           
