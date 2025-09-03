@@ -43,7 +43,7 @@ const Home = () => {
       {/* Hero Section - 전체 화면 */}
       <section className="hero-section" style={{ 
         transform: `translateY(${scrollY * 0.5}px)`,
-        opacity: Math.max(0, 1 - scrollY / 800)
+        opacity: Math.max(0, 1 - scrollY / 500)
       }}>
         <div className="hero-content">
           <h1 className="hero-title">

@@ -277,6 +277,24 @@
   margin: 0;
 }
 
+/* CTA 섹션의 참가 신청 버튼 */
+.cta-section .btn.btn-primary.btn-lg {
+  padding: 1rem 2rem !important;
+  font-size: 1.1rem !important;
+  border-radius: 25px !important;
+  background: #6366F1 !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.cta-section .btn.btn-primary.btn-lg:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+  background: #4F46E5 !important; /* 호버 시 약간 진한 색 */
+}
+
 @media (max-width: 768px) {
   .section-title,
   .cta-title {
@@ -351,5 +369,11 @@
   
   .point-description {
     font-size: 0.9rem;
+  }
+
+  .cta-section .btn.btn-primary.btn-lg {
+    font-size: 1rem !important;
+    padding: 0.875rem 1.75rem !important;
+    border-radius: 20px !important;
   }
 } 
