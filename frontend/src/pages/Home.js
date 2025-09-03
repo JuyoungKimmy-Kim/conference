@@ -37,7 +37,6 @@ const Home = () => {
         }}
       >
         <div className="container text-center">
-          <h2 className="cta-title">DevConf 2024 참가 신청 OPEN</h2>
           
           <div className="schedule-info mb-4">
             <div className="schedule-row">
