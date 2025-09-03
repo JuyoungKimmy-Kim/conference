@@ -6,48 +6,48 @@ const Agenda = () => {
   
   const agendaData = [
     {
-      time: '9월 4일 낮 12시 ~ 9월 19일 낮 12시',
+      time: '9월 10일 ~ 9월 19일',
       title: '참가 신청',
       track: '온라인',
       type: 'registration',
-      startDate: new Date(2025, 8, 4), // 2025년 9월 4일
+      startDate: new Date(2025, 8, 10), // 2025년 9월 4일
       endDate: new Date(2025, 8, 19)   // 2025년 9월 19일
     },
     {
-      time: '9월 23일 (예정)',
-      title: '서류 심사 발표',
+      time: '9월 20일 ~ 9월 23일',
+      title: '서류 심사',
       track: '온라인',
       type: 'announcement',
-      startDate: new Date(2025, 8, 23), // 2025년 9월 23일
+      startDate: new Date(2025, 8, 20), // 2025년 9월 23일
       endDate: new Date(2025, 8, 23)
     },
     {
-      time: '9월 24일 ~ 10월 15일',
-      title: '예선',
+      time: '9월 24일 ~ 10월 16일',
+      title: '개발 기간',
       track: '온라인',
       type: 'competition',
       startDate: new Date(2025, 8, 24), // 2025년 9월 24일
-      endDate: new Date(2025, 9, 15)    // 2025년 10월 15일
+      endDate: new Date(2025, 9, 16)    // 2025년 10월 15일
     },
     {
-      time: '10월 16일 ~ 10월 19일',
+      time: '10월 17일',
       title: '예선 평가',
       track: '온라인',
       type: 'evaluation',
-      startDate: new Date(2025, 9, 16), // 2025년 10월 16일
-      endDate: new Date(2025, 9, 19)    // 2025년 10월 19일
+      startDate: new Date(2025, 9, 17), // 2025년 10월 16일
+      endDate: new Date(2025, 9, 17)    // 2025년 10월 19일
     },
     {
-      time: '10월 23일 (예정)',
-      title: '본선 평가',
+      time: '10월 18일일 ~ 10월 27일',
+      title: '본선 준비',
       track: '온라인',
       type: 'final',
-      startDate: new Date(2025, 9, 23), // 2025년 10월 23일
-      endDate: new Date(2025, 9, 23)
+      startDate: new Date(2025, 9, 18), // 2025년 10월 23일
+      endDate: new Date(2025, 9, 27)
     },
     {
       time: '10월 28일',
-      title: '시상',
+      title: '본선 및 시상',
       track: '온라인',
       type: 'award',
       startDate: new Date(2025, 9, 28), // 2025년 10월 28일

@@ -94,15 +94,6 @@ const Guide = () => {
                 </div>
               </div>
             </div>
-            
-            {/* 주의사항 */}
-            <div className="notice-section">
-              <h3 className="notice-title">⚠️ 참가 신청 주의사항</h3>
-              <div className="notice-content">
-                <p>사내 다른 경진대회에서 <strong>100만원 이상</strong> 상당의 상품권 혹은 현금을 받은 프로젝트는 제외됩니다.</p>
-                <p>단, 참여만 한 경우나 그 이하의 상금은 재출전이 가능합니다.</p>
-              </div>
-            </div>
           </section>
 
         {/* 대회 평가 기준 */}
@@ -189,13 +180,12 @@ const Guide = () => {
             <div className="contact-info">
               <div className="contact-item">
                 <h4>대회 운영팀</h4>
-                <p>이메일: devconf@company.com</p>
-                <p>전화: 02-1234-5678</p>
+                <p>e-mail: devconf@company.com</p>
               </div>
               <div className="contact-item">
                 <h4>기술 지원</h4>
-                <p>이메일: tech-support@company.com</p>
-                <p>Slack: #devconf-support</p>
+                <p>e-mail: ssai@samsung.com</p>
+                <p>MOSAIC: </p>
               </div>
             </div>
           </section>
