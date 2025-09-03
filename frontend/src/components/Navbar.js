@@ -10,6 +10,7 @@ const Navbar = () => {
     { path: '/', label: '홈' },
     { path: '/guide', label: '안내' },
     { path: '/agenda', label: '일정' },
+    { path: '/resources', label: '자료실' },
     { path: '/register', label: '등록' }
   ];
 
@@ -22,9 +23,9 @@ const Navbar = () => {
           <span className="brand-text">슬슬 AIdea Agent</span>
         </Link>
         
-        <button
-          className="navbar-toggler"
-          type="button"
+        <button 
+          className="navbar-toggler" 
+          type="button" 
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className="navbar-toggler-icon"></span>
@@ -34,7 +35,7 @@ const Navbar = () => {
           <ul className="navbar-nav ms-auto">
             {navItems.map((item) => (
               <li key={item.path} className="nav-item">
-                <Link
+                <Link 
                   className={`nav-link ${isActive(item.path) ? 'active' : ''}`}
                   to={item.path}
                   onClick={() => setIsOpen(false)}

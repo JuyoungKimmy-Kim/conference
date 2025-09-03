@@ -80,41 +80,49 @@
   opacity: 0.9;
 }
 
-/* 일정 표시 스타일 */
+/* Schedule Info 스타일 */
 .schedule-info {
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.schedule-row {
-  margin-bottom: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
   text-align: center;
 }
 
-.schedule-row:last-child {
+.schedule-item {
+  margin-bottom: 1.5rem;
+}
+
+.schedule-item:last-child {
   margin-bottom: 0;
 }
 
 .schedule-label {
+  font-weight: 700;
+  color: var(--text-dark);
   font-size: 1.2rem;
-  color: var(--text-light);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .schedule-date {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--text-dark);
+  color: var(--text-light);
+  font-size: 1.1rem; /* 0.95rem에서 1.1rem으로 증가 */
 }
 
 .btn-lg {
   padding: 1rem 2rem;
   font-size: 1.1rem;
+  border-radius: 25px;
+  background: #1F2937 !important;
+  border: 2px solid #1F2937 !important; /* 테두리 색 추가 */
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .btn-lg:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(31, 41, 55, 0.4);
+  background: #374151 !important;
+  border-color: #374151 !important; /* 호버 시 테두리 색 변경 */
 }
 
 /* CTA 섹션 전체 스타일 */
@@ -207,6 +215,68 @@
   font-size: 0.95rem;
 }
 
+/* 행사 포인트 섹션 */
+.event-points {
+  margin-top: 3rem;
+  padding-top: 3rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.points-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2rem;
+}
+
+.points-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.point-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.point-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.point-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.point-content {
+  flex: 1;
+}
+
+.point-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.point-description {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   .section-title,
   .cta-title {
@@ -221,17 +291,23 @@
     padding: 1.5rem;
   }
   
+  .schedule-item {
+    margin-bottom: 1.25rem;
+  }
+  
   .schedule-label {
     font-size: 1.1rem;
+    font-weight: 700;
   }
   
   .schedule-date {
-    font-size: 1.2rem;
+    font-size: 1rem; /* 0.9rem에서 1rem으로 증가 */
   }
   
   .btn-lg {
     font-size: 1rem;
     padding: 0.875rem 1.75rem;
+    border-radius: 20px;
   }
 
   .faq-tabs {
@@ -253,6 +329,27 @@
   }
   
   .faq-answer {
+    font-size: 0.9rem;
+  }
+
+  .points-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .point-item {
+    padding: 1.25rem;
+  }
+  
+  .point-icon {
+    font-size: 1.75rem;
+  }
+  
+  .point-title {
+    font-size: 1rem;
+  }
+  
+  .point-description {
     font-size: 0.9rem;
   }
 } 

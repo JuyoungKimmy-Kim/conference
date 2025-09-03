@@ -21,7 +21,6 @@ const Footer = () => {
         
         <div className="footer-bottom">
           <p>&copy; {currentYear} 슬슬 AIdea Agent</p>
-          <p>Made with ❤️ by S.LSI AI Agent Group</p>
         </div>
       </div>
     </footer>

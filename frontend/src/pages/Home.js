@@ -64,30 +64,25 @@ const Home = () => {
         }}
       >
         <div className="container text-center">
-          <h2 className="cta-title">DevConf 2024 참가 신청 OPEN</h2>
           
           <div className="schedule-info mb-4">
-            <div className="schedule-row">
+            <div className="schedule-item">
               <div className="schedule-label">참가 신청 기간</div>
               <div className="schedule-date">9월 10일 ~ 9월 19일</div>
             </div>
-            <div className="schedule-row">
-              <div className="schedule-label">서류 심사</div>
-              <div className="schedule-date">9월 20일 ~ 9월 23일</div>
-            </div>
-            <div className="schedule-row">
+            <div className="schedule-item">
               <div className="schedule-label">개발 기간</div>
               <div className="schedule-date">9월 24일 ~ 10월 16일</div>
             </div>
-            <div className="schedule-row">
+            <div className="schedule-item">
               <div className="schedule-label">예선 평가</div>
               <div className="schedule-date">10월 17일</div>
             </div>
-            <div className="schedule-row">
+            <div className="schedule-item">
               <div className="schedule-label">본선 및 시상</div>
               <div className="schedule-date">10월 28일</div>
             </div>
-            <div className="schedule-row">
+            <div className="schedule-item">
               <div className="schedule-label">시상</div>
               <div className="schedule-date">10월 28일 (개발자 경진대회)</div>
             </div>
@@ -96,6 +91,50 @@ const Home = () => {
           <Link to="/register" className="btn btn-primary btn-lg">
             참가 신청하기
           </Link>
+
+          {/* 행사 포인트 섹션 */}
+          <div className="event-points mt-5">
+            <h3 className="points-title mb-4">왜 이 대회에 참여해야 할까요?</h3>
+            <div className="points-grid">
+              <div className="point-item">
+                <div className="point-content">
+                  <h4 className="point-title">업무 속 고민을 AI Agent로</h4>
+                  <p className="point-description">
+                    현업에서 Agent로 활용하면 좋겠다라고 생각했던 아이디어를 구체화할 수 있는 기회
+                  </p>
+                </div>
+              </div>
+              
+              <div className="point-item">
+                <div className="point-content">
+                  <h4 className="point-title">최신 LLM 키 제공</h4>
+                  <p className="point-description">
+                    참가자 전원에게 최신 대규모 언어모델(LLM) 활용 키를 제공하여 
+                    직접 실험하고 구현할 수 있는 환경 제공
+                  </p>
+                </div>
+              </div>
+              
+              <div className="point-item">
+                <div className="point-content">
+                  <h4 className="point-title">전문가 그룹의 실전 지원</h4>
+                  <p className="point-description">
+                    사내 AI Agent 그룹이 아이디어 구체화 및 멘토링, 
+                    개발 환경 지원을 제공
+                  </p>
+                </div>
+              </div>
+              
+              <div className="point-item">
+                <div className="point-content">
+                  <h4 className="point-title">참가자 전원 혜택</h4>
+                  <p className="point-description">
+                    서류 참가자 전원에게 ㅇㅇㅇ쿠폰 제공
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -1,0 +1,256 @@
+.resources-page {
+  min-height: 100vh;
+}
+
+.resources-hero {
+  background: var(--text-dark);
+  color: white;
+  text-align: center;
+}
+
+.resources-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.resources-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.resources-content {
+  background: var(--bg-light);
+}
+
+.resources-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.resources-tab {
+  background: none;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.resources-tab:hover {
+  color: var(--text-dark);
+}
+
+.resources-tab.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+/* Agent 개념 스타일 */
+.concepts-grid {
+  display: grid;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.concept-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.concept-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.concept-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+.concept-description {
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.concept-content {
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.concept-content h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 1.5rem 0 0.5rem 0;
+}
+
+.concept-content h3:first-child {
+  margin-top: 0;
+}
+
+.concept-content ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.concept-content li {
+  margin-bottom: 0.25rem;
+}
+
+/* 제안서 템플릿 스타일 */
+.template-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.template-form {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.75rem; /* 2rem에서 1.75rem으로 조정 */
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.625rem; /* 0.75rem에서 0.625rem으로 조정 */
+  font-size: 1rem;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9fafb;
+  color: var(--text-dark);
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background-color: white;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.template-note {
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+.template-note p {
+  margin: 0;
+  color: #0369a1;
+  font-size: 0.95rem;
+}
+
+/* 기존 템플릿 스타일 제거 */
+.templates-grid,
+.template-card,
+.template-header,
+.template-icon,
+.template-info,
+.template-title,
+.template-description,
+.template-meta,
+.template-format,
+.template-size,
+.template-download-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .resources-title {
+    font-size: 2rem;
+  }
+  
+  .resources-subtitle {
+    font-size: 1rem;
+  }
+  
+  .resources-tabs {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .resources-tab {
+    width: 200px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .concept-card,
+  .template-card {
+    padding: 1.5rem;
+  }
+  
+  .templates-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .template-form {
+    padding: 1.5rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .form-group.full-width {
+    grid-column: 1;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem; /* 1.75rem에서 1.5rem으로 조정 */
+  }
+  
+  .form-input,
+  .form-textarea {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.95rem;
+  }
+} 
