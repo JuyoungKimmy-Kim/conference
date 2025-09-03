@@ -44,15 +44,15 @@ const Home = () => {
             </div>
             <div className="schedule-row">
               <div className="schedule-label">예선 평가</div>
-              <div className="schedule-date">9월 16일 ~ 9월 19일</div>
+              <div className="schedule-date">10월 16일 ~ 10월 19일</div>
             </div>
             <div className="schedule-row">
               <div className="schedule-label">본선 평가(임원 평가)</div>
-              <div className="schedule-date">9월 23일 (예정)</div>
+              <div className="schedule-date">10월 23일 (예정)</div>
             </div>
             <div className="schedule-row">
               <div className="schedule-label">시상</div>
-              <div className="schedule-date">9월 28일 (개발자 경진대회)</div>
+              <div className="schedule-date">10월 28일 (개발자 경진대회)</div>
             </div>
           </div>
           
