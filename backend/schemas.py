@@ -42,27 +42,6 @@ class RegistrationResponse(ConferenceRegistration):
     class Config:
         from_attributes = True
 
-# 발표자 스키마
-class SpeakerBase(BaseModel):
-    name: str
-    title: str
-    company: str
-    bio: Optional[str] = None
-    topic: str
-    track: str
-    image_url: Optional[str] = None
-
-class SpeakerCreate(SpeakerBase):
-    pass
-
-class SpeakerResponse(SpeakerBase):
-    id: int
-    created_at: datetime
-    updated_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-
 # 일정 스키마
 class AgendaItem(BaseModel):
     day: str

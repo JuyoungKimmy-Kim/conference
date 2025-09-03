@@ -15,12 +15,15 @@ main {
 }
 
 .hero-section {
-  background: var(--gradient-primary);
+  background: var(--text-dark);
   color: white;
-  padding: 120px 0;
+  padding: 200px 0 150px;
   text-align: center;
   position: relative;
   overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
 }
 
 .hero-section::before {
@@ -37,22 +40,22 @@ main {
 .hero-content {
   position: relative;
   z-index: 2;
+  width: 100%;
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 4rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   line-height: 1.2;
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
+  font-size: 1.5rem;
   opacity: 0.9;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
 }
 
 .hero-buttons {
@@ -79,12 +82,17 @@ main {
 }
 
 @media (max-width: 768px) {
+  .hero-section {
+    padding: 150px 0 100px;
+    min-height: 80vh;
+  }
+  
   .hero-title {
     font-size: 2.5rem;
   }
   
   .hero-subtitle {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
   
   .hero-buttons {
