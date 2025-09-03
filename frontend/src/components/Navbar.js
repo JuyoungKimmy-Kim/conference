@@ -8,6 +8,7 @@ const Navbar = () => {
 
   const navItems = [
     { path: '/', label: '홈' },
+    { path: '/guide', label: '안내' },
     { path: '/agenda', label: '일정' },
     { path: '/register', label: '등록' }
   ];

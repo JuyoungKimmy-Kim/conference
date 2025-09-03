@@ -194,51 +194,6 @@ const Agenda = () => {
               </div>
             </div>
           </div>
-
-          <div className="agenda-timeline mt-5">
-            {agendaData.map((item, index) => (
-              <div key={index} className="timeline-item">
-                <div className="timeline-marker" style={{ backgroundColor: getTypeColor(item.type) }}>
-                  <span className="timeline-type">{getTypeLabel(item.type)}</span>
-                </div>
-                <div className="timeline-content">
-                  <div className="timeline-time">{item.time}</div>
-                  <h4 className="timeline-title">{item.title}</h4>
-                  <div className="timeline-track">{item.track}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="agenda-legend mt-5">
-            <h5>일정 구분</h5>
-            <div className="legend-items">
-              <div className="legend-item">
-                <span className="legend-color" style={{ backgroundColor: '#3b82f6' }}></span>
-                <span>신청</span>
-              </div>
-              <div className="legend-item">
-                <span className="legend-color" style={{ backgroundColor: '#8b5cf6' }}></span>
-                <span>발표</span>
-              </div>
-              <div className="legend-item">
-                <span className="legend-color" style={{ backgroundColor: '#f59e0b' }}></span>
-                <span>예선</span>
-              </div>
-              <div className="legend-item">
-                <span className="legend-color" style={{ backgroundColor: '#06b6d4' }}></span>
-                <span>평가</span>
-              </div>
-              <div className="legend-item">
-                <span className="legend-color" style={{ backgroundColor: '#ef4444' }}></span>
-                <span>본선</span>
-              </div>
-              <div className="legend-item">
-                <span className="legend-color" style={{ backgroundColor: '#10b981' }}></span>
-                <span>시상</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

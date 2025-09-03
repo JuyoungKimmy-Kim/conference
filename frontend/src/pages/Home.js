@@ -11,7 +11,7 @@ const Home = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">
-            슬슬 AIdea <span className="text-gradient">2024</span>
+            슬슬 AIdea <span className="text-gradient">2025</span>
           </h1>
           <p className="hero-subtitle">
             사내 개발자들의 혁신적인 아이디어와 기술을 공유하는 
