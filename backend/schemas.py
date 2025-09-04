@@ -12,6 +12,7 @@ class TeamMemberCreate(BaseModel):
     knox_id: str
 
 class AccountRegister(BaseModel):
+    id: int
     knox_id: str
     name: str
     team_name: str

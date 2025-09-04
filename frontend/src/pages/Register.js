@@ -5,6 +5,7 @@ const Register = () => {
   const [currentStep, setCurrentStep] = useState('login'); // 'login' 또는 'register'
   const [loginData, setLoginData] = useState({
     id: '',
+    knoxId: '',
     password: ''
   });
   const [formData, setFormData] = useState({
@@ -59,6 +60,16 @@ const Register = () => {
     }
     
     if (newMember.name && newMember.knoxId) {
+      if (newMember.knoxId === loginData.knoxId) {
+        setTeamMemberLimitError('본인 Knox ID와 동일한 팀원을 추가할 수 없습니다.');
+        return;
+      }
+
+      if (teamMembers.some(member => member.knoxId === newMember.knoxId)) {
+        setTeamMemberLimitError('동일한 Knox ID인 팀원이 존재합니다.');
+        return;
+      }
+
       const member = {
         id: Date.now(),
         name: newMember.name,
@@ -108,7 +119,7 @@ const Register = () => {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ knox_id: loginData.id, password: loginData.password })
+        body: JSON.stringify({ knox_id: loginData.knoxId, password: loginData.password })
       });
       
       if (!res.ok) {
@@ -126,7 +137,8 @@ const Register = () => {
       
       const accountData = await res.json();
       loadExistingData(accountData);
-      
+      setLoginData(prev => ({ ...prev, id: accountData.id }));
+
       setCurrentStep('register');
     } catch (err) {
       console.error(err);
@@ -142,7 +154,8 @@ const Register = () => {
     
     try {
       const registrationData = {
-        knox_id: loginData.id,
+        id: loginData.id,
+        knox_id: loginData.knoxId,
         name: formData.name,
         team_name: formData.team,
         aidea: formData.aidea,
@@ -196,13 +209,13 @@ const Register = () => {
                     <div className="form-section">
                       <h3>로그인 정보</h3>
                       <div className="mb-3">
-                        <label htmlFor="id" className="form-label">knox id *</label>
+                        <label htmlFor="knoxId" className="form-label">knox id *</label>
                         <input
                           type="text"
                           className="form-control"
-                          id="id"
-                          name="id"
-                          value={loginData.id}
+                          id="knoxId"
+                          name="knoxId"
+                          value={loginData.knoxId}
                           onChange={handleLoginInputChange}
                           required
                           placeholder="아이디를 입력하세요"
@@ -238,7 +251,7 @@ const Register = () => {
                       <button
                         type="submit"
                         className="btn btn-primary btn-lg w-100"
-                        disabled={!loginData.id || !loginData.password || isSubmitting}
+                        disabled={!loginData.knoxId || !loginData.password || isSubmitting}
                       >
                         {isSubmitting ? '로그인 중...' : '다음 단계로'}
                       </button>
@@ -332,7 +345,7 @@ const Register = () => {
                           className="form-control"
                         id="knoxId"
                         name="knoxId"
-                        value={loginData.id}
+                        value={loginData.knoxId}
                         readOnly
                         style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
                       />
