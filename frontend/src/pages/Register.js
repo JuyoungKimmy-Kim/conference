@@ -23,6 +23,7 @@ const Register = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [teamMemberLimitError, setTeamMemberLimitError] = useState('');
+  const [hasExistingData, setHasExistingData] = useState(false);
 
   const handleLoginInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +31,6 @@ const Register = () => {
       ...prev,
       [name]: value
     }));
-    // 입력 시 에러 메시지 초기화
     if (loginError) {
       setLoginError('');
     }
@@ -75,6 +75,29 @@ const Register = () => {
     setTeamMemberLimitError('');
   };
 
+  const loadExistingData = (accountData) => {
+    if (accountData.name || accountData.team_name || accountData.aidea) {
+      setFormData({
+        name: accountData.name || '',
+        team: accountData.team_name || '',
+        aidea: accountData.aidea || ''
+      });
+      
+      if (accountData.team_members && accountData.team_members.length > 0) {
+        const members = accountData.team_members.map((member, index) => ({
+          id: Date.now() + index,
+          name: member.name,
+          knoxId: member.knox_id
+        }));
+        setTeamMembers(members);
+      }
+      
+      setHasExistingData(true);
+    } else {
+      setHasExistingData(false);
+    }
+  };
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
@@ -101,7 +124,9 @@ const Register = () => {
         return;
       }
       
-      await res.json();
+      const accountData = await res.json();
+      loadExistingData(accountData);
+      
       setCurrentStep('register');
     } catch (err) {
       console.error(err);
@@ -150,7 +175,6 @@ const Register = () => {
     }
   };
 
-  // 로그인 화면 렌더링
   if (currentStep === 'login') {
     return (
       <div className="register-page">
@@ -272,9 +296,33 @@ const Register = () => {
                 >
                   <span className="me-2" aria-hidden="true">⚠️</span>
                   <div>
-                    작성한 내용은 자동으로 저장되지 않습니다.<br /> 등록 후에는 사용한 Knox id와 비밀번호로 조회 및 수정하실 수 있습니다.
+                    작성한 내용은 자동으로 저장되지 않습니다. <br />저장하기 버튼을 눌러 저장해 주세요.
                   </div>
                 </div>
+                {hasExistingData ? (
+                  <div
+                    className="alert alert-info d-flex align-items-center mb-4"
+                    role="alert"
+                    style={{ borderRadius: 12 }}
+                  >
+                    <span className="me-2" aria-hidden="true">ℹ️</span>
+                    <div>
+                      기존에 작성하신 내용을 불러왔습니다.<br /> 필요에 따라 수정하신 후 저장해주세요.
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="alert alert-danger d-flex align-items-center mb-4"
+                    role="alert"
+                    style={{ borderRadius: 12 }}
+                  >
+                    <span className="me-2" aria-hidden="true">⚠️</span>
+                    <div>
+                      저장한 후에는 사용한 Knox id와 비밀번호로 조회 및 수정하실 수 있습니다.
+                    </div>
+                  </div>
+                )}
+
                   <div className="form-section">
                     <h3>기본 정보</h3>
                     <div className="mb-3">
