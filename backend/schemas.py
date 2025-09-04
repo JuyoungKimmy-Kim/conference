@@ -1,74 +1,17 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-# User 스키마
-class UserBase(BaseModel):
-    email: EmailStr
-    first_name: str
-    last_name: str
-    company: Optional[str] = None
-    position: Optional[str] = None
-
-class UserCreate(UserBase):
+# Knox 계정 스키마
+class AccountLogin(BaseModel):
+    knox_id: str
     password: str
 
-class UserResponse(UserBase):
+class AccountResponse(BaseModel):
     id: int
-    is_active: bool
+    knox_id: str
     created_at: datetime
     updated_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
-
-# 컨퍼런스 등록 스키마
-class ConferenceRegistration(BaseModel):
-    first_name: str
-    last_name: str
-    email: EmailStr
-    company: Optional[str] = None
-    position: Optional[str] = None
-    phone: Optional[str] = None
-    track: Optional[str] = None
-    dietary: Optional[str] = None
-    agree_terms: bool
-    agree_marketing: bool = False
-
-class RegistrationResponse(ConferenceRegistration):
-    id: int
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
-
-# 일정 스키마
-class AgendaItem(BaseModel):
-    day: str
-    time: str
-    title: str
-    speaker: Optional[str] = None
-    track: str
-    type: str
-    description: Optional[str] = None
-
-class AgendaResponse(AgendaItem):
-    id: int
-    created_at: datetime
-    updated_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-
-# 로그인 스키마
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
-
-# 토큰 스키마
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-class TokenData(BaseModel):
-    email: Optional[str] = None 

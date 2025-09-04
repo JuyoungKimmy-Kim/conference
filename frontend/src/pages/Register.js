@@ -24,6 +24,7 @@ const Register = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [loginError, setLoginError] = useState('');
 
   const handleLoginInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +32,10 @@ const Register = () => {
       ...prev,
       [name]: value
     }));
+    // 입력 시 에러 메시지 초기화
+    if (loginError) {
+      setLoginError('');
+    }
   };
 
   const handleInputChange = (e) => {
@@ -65,10 +70,39 @@ const Register = () => {
     setTeamMembers(prev => prev.filter(member => member.id !== id));
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    if (loginData.id && loginData.password) {
+    
+    setIsSubmitting(true);
+    setLoginError('');
+    
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ knox_id: loginData.id, password: loginData.password })
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        
+        if (res.status === 400) {
+          setLoginError(errorData.detail || '비밀번호는 필수입니다.');
+        } else if (res.status === 401) {
+          setLoginError(errorData.detail || '패스워드가 다릅니다.');
+        } else {
+          setLoginError('로그인에 실패했습니다. 다시 시도해 주세요.');
+        }
+        return;
+      }
+      
+      await res.json();
       setCurrentStep('register');
+    } catch (err) {
+      console.error(err);
+      setLoginError('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -126,7 +160,7 @@ const Register = () => {
                         <label htmlFor="password" className="form-label">Password *</label>
                         <input
                           type="password"
-                          className="form-control"
+                          className={`form-control ${loginError ? 'is-invalid' : ''}`}
                           id="password"
                           name="password"
                           value={loginData.password}
@@ -135,6 +169,12 @@ const Register = () => {
                           placeholder="비밀번호를 입력하세요"
                         />
                       </div>
+                      
+                      {loginError && (
+                        <div className="alert alert-danger" role="alert">
+                          {loginError}
+                        </div>
+                      )}
                       
                     </div>
                     <small className="form-text text-muted">
@@ -146,9 +186,9 @@ const Register = () => {
                       <button
                         type="submit"
                         className="btn btn-primary btn-lg w-100"
-                        disabled={!loginData.id || !loginData.password}
+                        disabled={!loginData.id || !loginData.password || isSubmitting}
                       >
-                        다음 단계로
+                        {isSubmitting ? '로그인 중...' : '다음 단계로'}
                       </button>
                     </div>
                   </form>

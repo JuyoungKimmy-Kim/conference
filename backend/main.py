@@ -1,23 +1,21 @@
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import List, Optional
+from pathlib import Path
+import os
 import uvicorn
 
 from database import get_db, engine
 from models import Base
 from schemas import (
-    UserCreate, UserResponse, 
-    ConferenceRegistration, RegistrationResponse,
-    AgendaItem, AgendaResponse
+    AccountLogin, AccountResponse
 )
 from crud import (
-    create_user, get_user_by_email,
-    create_registration, get_registrations,
-    create_agenda_item, get_agenda_items
+    create_or_update_account, get_account_by_knox_id
 )
-from auth import create_access_token, get_current_user
 
 # 데이터베이스 테이블 생성
 Base.metadata.create_all(bind=engine)
@@ -28,98 +26,69 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS 설정
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# (선택) 개발 중 CRA dev 서버(3000)에서 호출할 때만 CORS 허용
+# 배포 통합형(프런트와 같은 도메인)에서는 CORS가 필요 없습니다.
+if os.getenv("ENV", "dev") == "dev":
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
-# 보안 설정
-security = HTTPBearer()
+# 보안 설정 제거 (현재 엔드포인트에서 미사용)
 
-@app.get("/")
-async def root():
-    return {"message": "슬슬 AIdea Agent API에 오신 것을 환영합니다!"}
+# -----------------------------
+#       ✅ API 엔드포인트
+#    (모두 /api/* 로 변경)
+# -----------------------------
 
-@app.get("/health")
+@app.get("/api")
+async def api_root():
+    return {"message": "슬슬 AIdea Agnet 경진대회에 오신 것을 환영합니다!"}
+
+@app.get("/api/health")
 async def health_check():
-    return {"status": "healthy", "service": "DevConf API"}
+    return {"status": "healthy", "service": "슬슬 AIdea Agent 경진대회 API"}
 
-# 사용자 관련 엔드포인트
-@app.post("/users/", response_model=UserResponse)
-async def register_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = get_user_by_email(db, email=user.email)
-    if db_user:
+@app.post("/api/login", response_model=AccountResponse)
+async def login_or_register_account(payload: AccountLogin, db: Session = Depends(get_db)):
+    if not payload.password or payload.password.strip() == "":
         raise HTTPException(
-            status_code=400,
-            detail="이미 등록된 이메일입니다."
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="패스워드는 필수입니다."
         )
-    return create_user(db=db, user=user)
+    
+    account = get_account_by_knox_id(db, payload.knox_id)
 
-@app.post("/users/login")
-async def login_user(email: str, password: str, db: Session = Depends(get_db)):
-    user = get_user_by_email(db, email=email)
-    if not user or not user.verify_password(password):
+    if account:
+        if account.verify_password(payload.password):
+            return account
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="잘못된 이메일 또는 비밀번호입니다.",
-            headers={"WWW-Authenticate": "Bearer"},
+            detail="패스워드가 다릅니다."
         )
-    
-    access_token = create_access_token(data={"sub": user.email})
-    return {"access_token": access_token, "token_type": "bearer"}
 
-# 컨퍼런스 등록 관련 엔드포인트
-@app.post("/register/", response_model=RegistrationResponse)
-async def register_conference(
-    registration: ConferenceRegistration, 
-    db: Session = Depends(get_db)
-):
-    return create_registration(db=db, registration=registration)
+    account = create_or_update_account(db, knox_id=payload.knox_id, password=payload.password)
+    return account
 
-@app.get("/register/", response_model=List[RegistrationResponse])
-async def get_conference_registrations(
-    skip: int = 0, 
-    limit: int = 100,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
-):
-    return get_registrations(db, skip=skip, limit=limit)
+# -----------------------------
+#  ✅ CRA 정적 파일 + SPA 라우팅
+# -----------------------------
+# CRA 빌드 폴더 경로 (절대경로 권장)
+BUILD_DIR = (Path(__file__).parent / "../frontend/build").resolve()
+if not BUILD_DIR.exists():
+    raise RuntimeError(f"React build not found: {BUILD_DIR}\nRun `npm run build` in /frontend")
 
-# 일정 관련 엔드포인트
-@app.post("/agenda/", response_model=AgendaResponse)
-async def add_agenda_item(
-    agenda_item: AgendaItem, 
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
-):
-    return create_agenda_item(db=db, agenda_item=agenda_item)
+# CRA 정적 리소스(/static/*) 서빙
+app.mount("/static", StaticFiles(directory=BUILD_DIR / "static"), name="static")
 
-@app.get("/agenda/", response_model=List[AgendaResponse])
-async def get_conference_agenda(
-    day: Optional[str] = None,
-    db: Session = Depends(get_db)
-):
-    agenda_items = get_agenda_items(db)
-    if day:
-        agenda_items = [item for item in agenda_items if item.day == day]
-    return agenda_items
-
-# 통계 엔드포인트
-@app.get("/stats/")
-async def get_conference_stats(db: Session = Depends(get_db)):
-    registrations = get_registrations(db)
-    agenda_items = get_agenda_items(db)
-    
-    return {
-        "total_registrations": len(registrations),
-        "total_agenda_items": len(agenda_items),
-        "tracks": list(set([item.track for item in agenda_items])),
-        "days": list(set([item.day for item in agenda_items]))
-    }
+# 나머지 모든 경로를 index.html로 돌려서 SPA 라우팅 처리
+# (API는 위에서 /api/* 로 먼저 매칭되므로 안전)
+@app.get("/{full_path:path}", include_in_schema=False)
+async def spa(full_path: str):
+    return FileResponse(BUILD_DIR / "index.html")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    uvicorn.run(app, host="0.0.0.0", port=8000)
