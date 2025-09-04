@@ -9,11 +9,8 @@ const Register = () => {
   });
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
     team: '',
-    aidea: '',
-    agreeTerms: false,
-    agreeMarketing: false
+    aidea: ''
   });
 
   const [teamMembers, setTeamMembers] = useState([]);
@@ -25,6 +22,7 @@ const Register = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [teamMemberLimitError, setTeamMemberLimitError] = useState('');
 
   const handleLoginInputChange = (e) => {
     const { name, value } = e.target;
@@ -55,6 +53,12 @@ const Register = () => {
   };
 
   const addTeamMember = () => {
+    // 팀원 제한 확인 (본인 포함 최대 4명, 추가 팀원은 최대 3명)
+    if (teamMembers.length >= 3) {
+      setTeamMemberLimitError('팀원은 본인 포함 최대 4명까지 가능합니다.');
+      return;
+    }
+    
     if (newMember.name && newMember.knoxId) {
       const member = {
         id: Date.now(),
@@ -63,16 +67,18 @@ const Register = () => {
       };
       setTeamMembers(prev => [...prev, member]);
       setNewMember({ name: '', knoxId: '' });
+      setTeamMemberLimitError(''); // 성공적으로 추가되면 에러 메시지 초기화
     }
   };
 
   const removeTeamMember = (id) => {
     setTeamMembers(prev => prev.filter(member => member.id !== id));
+    setTeamMemberLimitError(''); // 팀원 삭제 시 에러 메시지 초기화
   };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    
+
     setIsSubmitting(true);
     setLoginError('');
     
@@ -128,9 +134,9 @@ const Register = () => {
       <div className="register-page">
         <div className="register-hero section-padding">
           <div className="container text-center">
-            <h1 className="register-title">컨퍼런스 등록</h1>
+            <h1 className="register-title">경진대회 등록</h1>
             <p className="register-subtitle">
-              DevConf 2024에 참여하고 싶으시다면 지금 바로 등록하세요!
+              슬슬 AIdea Agent에 참여하고 싶으시다면 지금 바로 등록하세요!
             </p>
           </div>
         </div>
@@ -207,7 +213,7 @@ const Register = () => {
         <div className="container text-center">
           <div className="success-icon">✅</div>
           <h1>등록이 완료되었습니다!</h1>
-          <p>DevConf 2024에 참여해주셔서 감사합니다.</p>
+          <p>슬슬 AIdea Agent 2025에 참여해주셔서 감사합니다.</p>
           <p>등록 확인 이메일을 발송했습니다. 이메일을 확인해주세요.</p>
           <button 
             className="btn btn-primary mt-4"
@@ -224,9 +230,9 @@ const Register = () => {
     <div className="register-page">
       <div className="register-hero section-padding">
         <div className="container text-center">
-          <h1 className="register-title">컨퍼런스 등록</h1>
+          <h1 className="register-title">경진대회 등록</h1>
           <p className="register-subtitle">
-            DevConf 2024에 참여하고 싶으시다면 지금 바로 등록하세요!
+            슬슬 AIdea Agent에 참여하고 싶으시다면 지금 바로 등록하세요!
           </p>
         </div>
       </div>
@@ -237,6 +243,16 @@ const Register = () => {
             <div className="col-lg-8 mx-auto">
               <div className="register-form-container">
                 <form onSubmit={handleSubmit} className="register-form">
+                <div
+                  className="alert alert-danger d-flex align-items-center mb-4"
+                  role="alert"
+                  style={{ borderRadius: 12 }}
+                >
+                  <span className="me-2" aria-hidden="true">⚠️</span>
+                  <div>
+                    작성한 내용은 자동으로 저장되지 않습니다.<br /> 등록 후에는 사용한 Knox id와 비밀번호로 조회 및 수정하실 수 있습니다.
+                  </div>
+                </div>
                   <div className="form-section">
                     <h3>기본 정보</h3>
                     <div className="mb-3">
@@ -263,20 +279,6 @@ const Register = () => {
                         required
                       />
                     </div>
-                    <div className="mb-3">
-                      <label htmlFor="phone" className="form-label">연락처 *</label>
-                      <input
-                        type="tel"
-                        className="form-control"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        placeholder="010-0000-0000"
-                        required
-                      />
-                    </div>
-
                     <div className="mb-3">
                       <label htmlFor="team" className="form-label">팀명 *</label>
                       <input
@@ -320,7 +322,7 @@ const Register = () => {
                               type="button"
                               className="btn btn-outline-primary w-100"
                               onClick={addTeamMember}
-                              disabled={!newMember.name || !newMember.knoxId}
+                              disabled={!newMember.name || !newMember.knoxId || teamMembers.length >= 3}
                             >
                               추가
                             </button>
@@ -346,6 +348,11 @@ const Register = () => {
                                 </div>
                               ))}
                             </div>
+                          </div>
+                        )}
+                        {(teamMemberLimitError || teamMembers.length >= 3) && (
+                          <div className="alert alert-warning mt-2" role="alert">
+                            {teamMemberLimitError || '팀원은 본인 포함 최대 4명까지 가능합니다.'}
                           </div>
                         )}
                         
@@ -375,41 +382,7 @@ const Register = () => {
                     </div>
                   </div>
 
-                  <div className="form-section">
-                    <h3>약관 동의</h3>
-                    <div className="mb-3">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="agreeTerms"
-                          name="agreeTerms"
-                          checked={formData.agreeTerms}
-                          onChange={handleInputChange}
-                          required
-                        />
-                        <label className="form-check-label" htmlFor="agreeTerms">
-                          <a href="#" target="_blank" rel="noopener noreferrer">참가자 약관</a>에 동의합니다 *
-                        </label>
-                      </div>
-                    </div>
 
-                    <div className="mb-3">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="agreeMarketing"
-                          name="agreeMarketing"
-                          checked={formData.agreeMarketing}
-                          onChange={handleInputChange}
-                        />
-                        <label className="form-check-label" htmlFor="agreeMarketing">
-                          마케팅 정보 수신에 동의합니다 (선택사항)
-                        </label>
-                      </div>
-                    </div>
-                  </div>
 
                   <div className="form-submit">
                     <button
@@ -417,7 +390,7 @@ const Register = () => {
                       className="btn btn-primary btn-lg w-100"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? '등록 중...' : '등록 완료하기'}
+                      {isSubmitting ? '등록 중...' : '저장하기'}
                     </button>
                   </div>
                 </form>
