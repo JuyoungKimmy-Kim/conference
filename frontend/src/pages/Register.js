@@ -484,151 +484,158 @@ const Register = () => {
 
                   <div className="form-section">
                     <h3>AIdea 제안서</h3>
-                    <div className="row">
-                      <div className="col-md-6 mb-3">
-                        <label htmlFor="service_name" className="form-label">서비스 이름 *</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="service_name"
-                          name="service_name"
-                          value={formData.service_name}
-                          onChange={handleInputChange}
-                          placeholder="제안하는 서비스의 이름을 입력하세요"
-                          required
-                        />
-                      </div>
-                      <div className="col-md-6 mb-3">
-                        <label htmlFor="persona" className="form-label">페르소나</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="persona"
-                          name="persona"
-                          value={formData.persona}
-                          onChange={handleInputChange}
-                          placeholder="타겟 사용자 페르소나를 입력하세요"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mb-3">
-                      <label htmlFor="problem" className="form-label">문제 정의</label>
-                      <textarea
+                    
+                    {/* 서비스 이름 - 맨 위에 배치 */}
+                    <div className="mb-4">
+                      <label htmlFor="service_name" className="form-label">서비스 이름 *</label>
+                      <input
+                        type="text"
                         className="form-control"
-                        id="problem"
-                        name="problem"
-                        value={formData.problem}
+                        id="service_name"
+                        name="service_name"
+                        value={formData.service_name}
                         onChange={handleInputChange}
-                        rows="3"
-                        placeholder="해결하고자 하는 문제를 구체적으로 설명하세요"
+                        placeholder="제안하는 서비스의 이름을 입력하세요"
+                        required
                       />
                     </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="solution" className="form-label">솔루션</label>
-                      <textarea
-                        className="form-control"
-                        id="solution"
-                        name="solution"
-                        value={formData.solution}
-                        onChange={handleInputChange}
-                        rows="3"
-                        placeholder="제안하는 솔루션을 설명하세요"
-                      />
-                    </div>
-
-                    <div className="row">
-                      <div className="col-md-6 mb-3">
-                        <label htmlFor="data_sources" className="form-label">데이터 소스</label>
-                        <textarea
-                          className="form-control"
-                          id="data_sources"
-                          name="data_sources"
-                          value={formData.data_sources}
-                          onChange={handleInputChange}
-                          rows="3"
-                          placeholder="사용할 데이터 소스를 입력하세요"
-                        />
-                      </div>
-                      <div className="col-md-6 mb-3">
-                        <label htmlFor="tools" className="form-label">사용 도구</label>
-                        <textarea
-                          className="form-control"
-                          id="tools"
-                          name="tools"
-                          value={formData.tools}
-                          onChange={handleInputChange}
-                          rows="3"
-                          placeholder="사용할 도구나 기술을 입력하세요"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mb-3">
-                      <label htmlFor="state_memory" className="form-label">상태/메모리 (선택사항)</label>
-                      <textarea
-                        className="form-control"
-                        id="state_memory"
-                        name="state_memory"
-                        value={formData.state_memory}
-                        onChange={handleInputChange}
-                        rows="2"
-                        placeholder="상태 관리나 메모리 관련 내용을 입력하세요"
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label htmlFor="actions" className="form-label">액션</label>
-                      <textarea
-                        className="form-control"
-                        id="actions"
-                        name="actions"
-                        value={formData.actions}
-                        onChange={handleInputChange}
-                        rows="3"
-                        placeholder="수행할 액션들을 설명하세요"
-                      />
-                    </div>
-
-                    <div className="row">
-                      <div className="col-md-6 mb-3">
-                        <label htmlFor="risk" className="form-label">리스크</label>
-                        <textarea
-                          className="form-control"
-                          id="risk"
-                          name="risk"
-                          value={formData.risk}
-                          onChange={handleInputChange}
-                          rows="3"
-                          placeholder="예상되는 리스크를 입력하세요"
-                        />
-                      </div>
-                      <div className="col-md-6 mb-3">
-                        <label htmlFor="benefits" className="form-label">혜택</label>
-                        <textarea
-                          className="form-control"
-                          id="benefits"
-                          name="benefits"
-                          value={formData.benefits}
-                          onChange={handleInputChange}
-                          rows="3"
-                          placeholder="기대되는 혜택을 입력하세요"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mb-3">
-                      <label htmlFor="plan" className="form-label">계획</label>
-                      <textarea
-                        className="form-control"
-                        id="plan"
-                        name="plan"
-                        value={formData.plan}
-                        onChange={handleInputChange}
-                        rows="4"
-                        placeholder="구체적인 실행 계획을 입력하세요"
-                      />
+                    {/* 표 형식으로 나머지 필드들 배치 */}
+                    <div className="table-responsive">
+                      <table className="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle" style={{ width: '20%' }}>페르소나</td>
+                            <td>
+                              <input
+                                type="text"
+                                className="form-control border-0"
+                                name="persona"
+                                value={formData.persona}
+                                onChange={handleInputChange}
+                                placeholder="타겟 사용자 페르소나를 입력하세요"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle">문제 정의</td>
+                            <td>
+                              <textarea
+                                className="form-control border-0"
+                                name="problem"
+                                value={formData.problem}
+                                onChange={handleInputChange}
+                                rows="3"
+                                placeholder="해결하고자 하는 문제를 구체적으로 설명하세요"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle">솔루션</td>
+                            <td>
+                              <textarea
+                                className="form-control border-0"
+                                name="solution"
+                                value={formData.solution}
+                                onChange={handleInputChange}
+                                rows="3"
+                                placeholder="제안하는 솔루션을 설명하세요"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle">데이터 소스</td>
+                            <td>
+                              <textarea
+                                className="form-control border-0"
+                                name="data_sources"
+                                value={formData.data_sources}
+                                onChange={handleInputChange}
+                                rows="3"
+                                placeholder="사용할 데이터 소스를 입력하세요"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle">사용 도구</td>
+                            <td>
+                              <textarea
+                                className="form-control border-0"
+                                name="tools"
+                                value={formData.tools}
+                                onChange={handleInputChange}
+                                rows="3"
+                                placeholder="사용할 도구나 기술을 입력하세요"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle">상태/메모리</td>
+                            <td>
+                              <textarea
+                                className="form-control border-0"
+                                name="state_memory"
+                                value={formData.state_memory}
+                                onChange={handleInputChange}
+                                rows="2"
+                                placeholder="상태 관리나 메모리 관련 내용을 입력하세요 (선택사항)"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle">액션</td>
+                            <td>
+                              <textarea
+                                className="form-control border-0"
+                                name="actions"
+                                value={formData.actions}
+                                onChange={handleInputChange}
+                                rows="3"
+                                placeholder="수행할 액션들을 설명하세요"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle">리스크</td>
+                            <td>
+                              <textarea
+                                className="form-control border-0"
+                                name="risk"
+                                value={formData.risk}
+                                onChange={handleInputChange}
+                                rows="3"
+                                placeholder="예상되는 리스크를 입력하세요"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle">혜택</td>
+                            <td>
+                              <textarea
+                                className="form-control border-0"
+                                name="benefits"
+                                value={formData.benefits}
+                                onChange={handleInputChange}
+                                rows="3"
+                                placeholder="기대되는 혜택을 입력하세요"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle">계획</td>
+                            <td>
+                              <textarea
+                                className="form-control border-0"
+                                name="plan"
+                                value={formData.plan}
+                                onChange={handleInputChange}
+                                rows="4"
+                                placeholder="구체적인 실행 계획을 입력하세요"
+                              />
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
 
