@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from passlib.hash import bcrypt
-from models import Account, TeamMember
-from schemas import AccountRegister, TeamMemberCreate
+from models import Account, TeamMember, Aidea
+from schemas import AccountRegister, TeamMemberCreate, AideaCreate, AideaUpdate
 
 # Account CRUD
 def get_account_by_knox_id(db: Session, knox_id: str):
@@ -104,3 +104,52 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
         # 기타 예상치 못한 오류 - 롤백 후 재발생
         db.rollback()
         raise Exception(f"팀원 정보 업데이트 중 오류가 발생했습니다: {str(e)}")
+
+# Aidea CRUD
+def create_aidea(db: Session, account_id: int, aidea_data: AideaCreate):
+    aidea = Aidea(
+        account_id=account_id,
+        service_name=aidea_data.service_name,
+        persona=aidea_data.persona,
+        problem=aidea_data.problem,
+        solution=aidea_data.solution,
+        data_sources=aidea_data.data_sources,
+        tools=aidea_data.tools,
+        state_memory=aidea_data.state_memory,
+        actions=aidea_data.actions,
+        risk=aidea_data.risk,
+        benefits=aidea_data.benefits,
+        plan=aidea_data.plan
+    )
+    db.add(aidea)
+    db.commit()
+    db.refresh(aidea)
+    return aidea
+
+def get_aidea_by_id(db: Session, aidea_id: int):
+    return db.query(Aidea).filter(Aidea.id == aidea_id).first()
+
+def get_aideas_by_account(db: Session, account_id: int):
+    return db.query(Aidea).filter(Aidea.account_id == account_id).all()
+
+def update_aidea(db: Session, aidea_id: int, aidea_data: AideaUpdate):
+    aidea = get_aidea_by_id(db, aidea_id)
+    if not aidea:
+        return None
+    
+    update_data = aidea_data.dict(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(aidea, field, value)
+    
+    db.commit()
+    db.refresh(aidea)
+    return aidea
+
+def delete_aidea(db: Session, aidea_id: int):
+    aidea = get_aidea_by_id(db, aidea_id)
+    if not aidea:
+        return False
+    
+    db.delete(aidea)
+    db.commit()
+    return True
