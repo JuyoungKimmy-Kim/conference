@@ -53,7 +53,6 @@ const Register = () => {
   };
 
   const addTeamMember = () => {
-    // 팀원 제한 확인 (본인 포함 최대 4명, 추가 팀원은 최대 3명)
     if (teamMembers.length >= 3) {
       setTeamMemberLimitError('팀원은 본인 포함 최대 4명까지 가능합니다.');
       return;
@@ -67,13 +66,13 @@ const Register = () => {
       };
       setTeamMembers(prev => [...prev, member]);
       setNewMember({ name: '', knoxId: '' });
-      setTeamMemberLimitError(''); // 성공적으로 추가되면 에러 메시지 초기화
+      setTeamMemberLimitError('');
     }
   };
 
   const removeTeamMember = (id) => {
     setTeamMembers(prev => prev.filter(member => member.id !== id));
-    setTeamMemberLimitError(''); // 팀원 삭제 시 에러 메시지 초기화
+    setTeamMemberLimitError('');
   };
 
   const handleLoginSubmit = async (e) => {
@@ -116,13 +115,36 @@ const Register = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // 실제 구현에서는 API 호출
     try {
-      // API 호출 시뮬레이션
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const registrationData = {
+        knox_id: loginData.id,
+        name: formData.name,
+        team_name: formData.team,
+        aidea: formData.aidea,
+        team_members: teamMembers.map(member => ({
+          name: member.name,
+          knox_id: member.knoxId
+        }))
+      };
+
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(registrationData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || '등록에 실패했습니다.');
+      }
+
+      await response.json();
       setSubmitSuccess(true);
     } catch (error) {
       console.error('등록 실패:', error);
+      alert('등록에 실패했습니다: ' + error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -381,8 +403,6 @@ const Register = () => {
                       />
                     </div>
                   </div>
-
-
 
                   <div className="form-submit">
                     <button
