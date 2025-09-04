@@ -8,4 +8,7 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-dotenv==1.0.0
 alembic==1.12.1
-psycopg2-binary==2.9.9 
+psycopg2-binary==2.9.9
+# 테스트 의존성
+pytest==7.4.3
+httpx==0.25.2
