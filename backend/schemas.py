@@ -17,6 +17,18 @@ class AccountRegister(BaseModel):
     name: str
     team_name: str
     team_members: List[TeamMemberCreate] = []
+    # Aidea 정보
+    service_name: str
+    persona: Optional[str] = None
+    problem: Optional[str] = None
+    solution: Optional[str] = None
+    data_sources: Optional[str] = None
+    tools: Optional[str] = None
+    state_memory: Optional[str] = None
+    actions: Optional[str] = None
+    risk: Optional[str] = None
+    benefits: Optional[str] = None
+    plan: Optional[str] = None
 
 # Aidea 스키마
 class AideaCreate(BaseModel):

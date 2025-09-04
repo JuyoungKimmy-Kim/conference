@@ -39,6 +39,7 @@ def create_or_update_account(db: Session, knox_id: str, password: str):
         else:
             raise Exception("계정 생성 중 예상치 못한 오류가 발생했습니다.")
 
+<<<<<<< HEAD
 def update_account_registration(db: Session, registration_data: AccountRegister):
     """
     계정 등록 정보를 업데이트합니다. 트랜잭션 안전성을 보장하기 위해
@@ -89,6 +90,24 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
             )
             db.add(team_member)
         
+        # 기존 Aidea 삭제 및 새 Aidea 생성
+        db.query(Aidea).filter(Aidea.account_id == account.id).delete()
+        aidea = Aidea(
+            account_id=account.id,
+            service_name=registration_data.service_name,
+            persona=registration_data.persona,
+            problem=registration_data.problem,
+            solution=registration_data.solution,
+            data_sources=registration_data.data_sources,
+            tools=registration_data.tools,
+            state_memory=registration_data.state_memory,
+            actions=registration_data.actions,
+            risk=registration_data.risk,
+            benefits=registration_data.benefits,
+            plan=registration_data.plan
+        )
+        db.add(aidea)
+
         db.commit()
         db.refresh(account)
         return account
@@ -130,7 +149,7 @@ def get_aidea_by_id(db: Session, aidea_id: int):
     return db.query(Aidea).filter(Aidea.id == aidea_id).first()
 
 def get_aideas_by_account(db: Session, account_id: int):
-    return db.query(Aidea).filter(Aidea.account_id == account_id).all()
+    return db.query(Aidea).filter(Aidea.account_id == account.id).all()
 
 def update_aidea(db: Session, aidea_id: int, aidea_data: AideaUpdate):
     aidea = get_aidea_by_id(db, aidea_id)
