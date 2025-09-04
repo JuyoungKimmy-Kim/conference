@@ -6,7 +6,6 @@ const Guide = () => {
     <div className="guide-page">
       <div className="guide-hero section-padding">
         <div className="container text-center">
-            <br></br>
           <h1 className="guide-title">대회 안내</h1>
         </div>
       </div>
