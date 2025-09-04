@@ -11,6 +11,11 @@ __pycache__/
 *.sqlite3
 *.db
 *.sqlite
+# SQLite WAL 모드 파일들
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
 
 # VSCode
 .vscode/

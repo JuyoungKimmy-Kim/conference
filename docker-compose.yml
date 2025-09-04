@@ -1,31 +1,22 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    depends_on:
-      - backend
-
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    build: ./backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app
     environment:
-      - DATABASE_URL=sqlite:///./devconf.db
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+      - ENVIRONMENT=production
+      - DATABASE_PATH=/app/data/ssai_aidea_prod.db
+    volumes:
+      - ./data:/app/data  # 데이터베이스 파일을 호스트에 저장
+    restart: unless-stopped
 
-volumes:
-  postgres_data: 
+  # frontend는 backend에서 서빙되므로 별도 컨테이너 불필요
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - backend
+  #   restart: unless-stopped
