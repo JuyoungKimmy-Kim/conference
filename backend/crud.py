@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from passlib.hash import bcrypt
-from models import Account
+from models import Account, TeamMember
+from schemas import AccountRegister, TeamMemberCreate
 
 # Account CRUD
 def get_account_by_knox_id(db: Session, knox_id: str):
@@ -17,6 +18,33 @@ def create_or_update_account(db: Session, knox_id: str, password: str):
         return account
     account = Account(knox_id=knox_id, hashed_password=hashed)
     db.add(account)
+    db.commit()
+    db.refresh(account)
+    return account
+
+def update_account_registration(db: Session, knox_id: str, registration_data: AccountRegister):
+    account = get_account_by_knox_id(db, knox_id)
+    if not account:
+        raise ValueError("Account not found")
+    
+    # 계정 정보 업데이트
+    account.name = registration_data.name
+    account.team_name = registration_data.team_name
+    account.aidea = registration_data.aidea
+    
+    # 기존 팀원 삭제
+    # To-Do: 올바른 방식인지 고민 필요
+    db.query(TeamMember).filter(TeamMember.account_id == account.id).delete()
+    
+    # 새로운 팀원 추가
+    for member_data in registration_data.team_members:
+        team_member = TeamMember(
+            account_id=account.id,
+            name=member_data.name,
+            knox_id=member_data.knox_id
+        )
+        db.add(team_member)
+    
     db.commit()
     db.refresh(account)
     return account

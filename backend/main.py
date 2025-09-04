@@ -11,10 +11,10 @@ import uvicorn
 from database import get_db, engine
 from models import Base
 from schemas import (
-    AccountLogin, AccountResponse
+    AccountLogin, AccountResponse, AccountRegister
 )
 from crud import (
-    create_or_update_account, get_account_by_knox_id
+    create_or_update_account, get_account_by_knox_id, update_account_registration
 )
 
 # 데이터베이스 테이블 생성
@@ -72,6 +72,22 @@ async def login_or_register_account(payload: AccountLogin, db: Session = Depends
 
     account = create_or_update_account(db, knox_id=payload.knox_id, password=payload.password)
     return account
+
+@app.post("/api/register", response_model=AccountResponse)
+async def register_account(payload: AccountRegister, db: Session = Depends(get_db)):
+    try:
+        account = update_account_registration(db, payload.knox_id, payload)
+        return account
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="등록 중 오류가 발생했습니다."
+        )
 
 # -----------------------------
 #  ✅ CRA 정적 파일 + SPA 라우팅
