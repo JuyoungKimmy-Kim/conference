@@ -17,13 +17,15 @@ main {
 .hero-section {
   background: var(--text-dark);
   color: white;
-  padding: 200px 0 150px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
+  z-index: 1;
 }
 
 .hero-section::before {
@@ -37,17 +39,74 @@ main {
   opacity: 0.3;
 }
 
+.hero-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  box-shadow: 
+    25px 25px 0 0 rgba(255,255,255,0.1),
+    75px 75px 0 0 rgba(255,255,255,0.1),
+    50px 10px 0 0 rgba(255,255,255,0.05),
+    10px 60px 0 0 rgba(255,255,255,0.05),
+    90px 40px 0 0 rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+
 .hero-content {
   position: relative;
   z-index: 2;
   width: 100%;
+  text-align: center;
+  animation: contentSlide 1s ease-out;
+}
+
+@keyframes contentSlide {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero-title {
   font-size: 4rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 2rem;
   line-height: 1.2;
+  animation: titleFloat 3s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientPulse 2s ease-in-out infinite;
+}
+
+@keyframes gradientPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 .hero-subtitle {
@@ -56,6 +115,16 @@ main {
   max-width: 800px;
   margin: 0 auto 3rem;
   line-height: 1.6;
+  animation: subtitleFade 4s ease-in-out infinite;
+}
+
+@keyframes subtitleFade {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .hero-buttons {
@@ -81,6 +150,46 @@ main {
   transform: translateY(-2px);
 }
 
+/* 추가적인 파티클 효과 */
+.hero-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+  animation: particleFloat 8s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-20px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(10px) rotate(-1deg);
+  }
+}
+
+.cta-section {
+  background: var(--bg-light);
+  position: relative;
+  z-index: 2;
+  margin-top: 100vh;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2rem;
+}
+
 @media (max-width: 768px) {
   .hero-section {
     padding: 150px 0 100px;
@@ -93,6 +202,10 @@ main {
   
   .hero-subtitle {
     font-size: 1.2rem;
+  }
+  
+  .hero-content {
+    padding: 1rem;
   }
   
   .hero-buttons {

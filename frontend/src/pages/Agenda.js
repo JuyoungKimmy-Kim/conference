@@ -6,48 +6,48 @@ const Agenda = () => {
   
   const agendaData = [
     {
-      time: '9월 4일 낮 12시 ~ 9월 19일 낮 12시',
+      time: '9월 10일 ~ 9월 19일',
       title: '참가 신청',
       track: '온라인',
       type: 'registration',
-      startDate: new Date(2025, 8, 4), // 2025년 9월 4일
+      startDate: new Date(2025, 8, 10), // 2025년 9월 4일
       endDate: new Date(2025, 8, 19)   // 2025년 9월 19일
     },
     {
-      time: '9월 23일 (예정)',
-      title: '서류 심사 발표',
+      time: '9월 20일 ~ 9월 23일',
+      title: '서류 심사',
       track: '온라인',
       type: 'announcement',
-      startDate: new Date(2025, 8, 23), // 2025년 9월 23일
+      startDate: new Date(2025, 8, 20), // 2025년 9월 23일
       endDate: new Date(2025, 8, 23)
     },
     {
-      time: '9월 24일 ~ 10월 15일',
-      title: '예선',
+      time: '9월 24일 ~ 10월 16일',
+      title: '개발 기간',
       track: '온라인',
       type: 'competition',
       startDate: new Date(2025, 8, 24), // 2025년 9월 24일
-      endDate: new Date(2025, 9, 15)    // 2025년 10월 15일
+      endDate: new Date(2025, 9, 16)    // 2025년 10월 15일
     },
     {
-      time: '10월 16일 ~ 10월 19일',
+      time: '10월 17일',
       title: '예선 평가',
       track: '온라인',
       type: 'evaluation',
-      startDate: new Date(2025, 9, 16), // 2025년 10월 16일
-      endDate: new Date(2025, 9, 19)    // 2025년 10월 19일
+      startDate: new Date(2025, 9, 17), // 2025년 10월 16일
+      endDate: new Date(2025, 9, 17)    // 2025년 10월 19일
     },
     {
-      time: '10월 23일 (예정)',
-      title: '본선 평가',
+      time: '10월 18일일 ~ 10월 27일',
+      title: '본선 준비',
       track: '온라인',
       type: 'final',
-      startDate: new Date(2025, 9, 23), // 2025년 10월 23일
-      endDate: new Date(2025, 9, 23)
+      startDate: new Date(2025, 9, 18), // 2025년 10월 23일
+      endDate: new Date(2025, 9, 27)
     },
     {
       time: '10월 28일',
-      title: '시상',
+      title: '본선 및 시상',
       track: '온라인',
       type: 'award',
       startDate: new Date(2025, 9, 28), // 2025년 10월 28일
@@ -189,6 +189,72 @@ const Agenda = () => {
                 <div className="calendar-days">
                   {renderCalendar()}
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 일정 설명 섹션 */}
+          <div className="schedule-description-section">
+            <h3 className="description-title text-center mb-5">일정 상세 안내</h3>
+            <div className="description-grid">
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('registration') }}>
+                    📝
+                  </div>
+                  <h4 className="description-name">참가 신청</h4>
+                </div>
+                <p className="description-text">아이디어 제안서 제출</p>
+              </div>
+
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('announcement') }}>
+                    📋
+                  </div>
+                  <h4 className="description-name">서류 심사</h4>
+                </div>
+                <p className="description-text">제출된 아이디어 제안서 심사</p>
+              </div>
+
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('competition') }}>
+                    💻
+                  </div>
+                  <h4 className="description-name">개발 기간</h4>
+                </div>
+                <p className="description-text">AIdea를 AI Agent로 구현 기간</p>
+              </div>
+
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('evaluation') }}>
+                    🎯
+                  </div>
+                  <h4 className="description-name">예선 평가</h4>
+                </div>
+                <p className="description-text">15분 발표 및 녹스 미팅 데모 시연</p>
+              </div>
+
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('final') }}>
+                    🔧
+                  </div>
+                  <h4 className="description-name">본선 준비</h4>
+                </div>
+                <p className="description-text">본선 발표를 위한 최종 준비 기간</p>
+              </div>
+
+              <div className="description-item">
+                <div className="description-header">
+                  <div className="description-icon" style={{ backgroundColor: getTypeColor('award') }}>
+                    🏆
+                  </div>
+                  <h4 className="description-name">본선 및 시상</h4>
+                </div>
+                <p className="description-text">개발자행사에서 임원 평가 및 임직원 투표 진행 후 시상자 선정</p>
               </div>
             </div>
           </div>

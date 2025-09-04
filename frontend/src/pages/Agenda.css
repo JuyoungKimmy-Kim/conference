@@ -285,6 +285,72 @@
   text-overflow: ellipsis;
 }
 
+/* 일정 설명 섹션 */
+.schedule-description-section {
+  margin-top: 4rem;
+  padding: 2rem 0;
+}
+
+.description-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 3rem;
+}
+
+.description-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.description-item {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.description-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.description-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.description-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  color: white;
+}
+
+.description-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.description-text {
+  color: var(--text-light);
+  line-height: 1.6;
+  font-size: 1rem;
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   .agenda-title {
     font-size: 2rem;
@@ -331,5 +397,26 @@
   .event-block {
     font-size: 0.6rem;
     padding: 0.2rem 0.4rem;
+  }
+
+  .description-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .description-item {
+    padding: 1.5rem;
+  }
+  
+  .description-title {
+    font-size: 1.5rem;
+  }
+  
+  .description-name {
+    font-size: 1.1rem;
+  }
+  
+  .description-text {
+    font-size: 0.9rem;
   }
 } 

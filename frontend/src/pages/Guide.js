@@ -17,20 +17,12 @@ const Guide = () => {
           <section className="guide-section">
             <div className="section-header">
               <h2 className="section-title">대회 목표</h2>
-              <p className="section-subtitle">
-                사내 데이터를 사용하거나 업무에 적용 가능한 아이디어 및 기술 발굴
-              </p>
             </div>
             <div className="goals-grid">
               <div className="goal-card">
                 <div className="goal-icon">🎯</div>
                 <h3>혁신성</h3>
-                <p>창의적이고 혁신적인 기술 솔루션 개발</p>
-              </div>
-              <div className="goal-card">
-                <div className="goal-icon">🤝</div>
-                <h3>협업</h3>
-                <p>팀워크와 협업을 통한 시너지 창출</p>
+                <p>AI 서비스를 넘어 자율적 에이전트 설계</p>
               </div>
               <div className="goal-card">
                 <div className="goal-icon">💡</div>
@@ -92,15 +84,6 @@ const Guide = () => {
                   <h3>시상</h3>
                   <p>우수한 프로젝트에 대해 시상식을 진행합니다</p>
                 </div>
-              </div>
-            </div>
-            
-            {/* 주의사항 */}
-            <div className="notice-section">
-              <h3 className="notice-title">⚠️ 참가 신청 주의사항</h3>
-              <div className="notice-content">
-                <p>사내 다른 경진대회에서 <strong>100만원 이상</strong> 상당의 상품권 혹은 현금을 받은 프로젝트는 제외됩니다.</p>
-                <p>단, 참여만 한 경우나 그 이하의 상금은 재출전이 가능합니다.</p>
               </div>
             </div>
           </section>
@@ -189,13 +172,12 @@ const Guide = () => {
             <div className="contact-info">
               <div className="contact-item">
                 <h4>대회 운영팀</h4>
-                <p>이메일: devconf@company.com</p>
-                <p>전화: 02-1234-5678</p>
+                <p>e-mail: ssai@samsung.com</p>
               </div>
               <div className="contact-item">
                 <h4>기술 지원</h4>
-                <p>이메일: tech-support@company.com</p>
-                <p>Slack: #devconf-support</p>
+                <p>e-mail: ssai@samsung.com</p>
+                <p>mosiac: </p>
               </div>
             </div>
           </section>

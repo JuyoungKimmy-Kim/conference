@@ -21,7 +21,7 @@ from crud import (
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="슬슬 AIdea API",
+    title="슬슬 AIdea Agent API",
     description="사내 개발자 경진대회 컨퍼런스 API",
     version="1.0.0"
 )
