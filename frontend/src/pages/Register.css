@@ -1,13 +1,15 @@
 .register-hero {
-  background: var(--gradient-primary);
+  background: var(--text-dark);
   color: white;
   text-align: center;
+  padding: 120px 0 80px 0; /* 상단 패딩 추가 */
 }
 
 .register-title {
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  margin-top: 0; /* 상단 마진 제거 */
 }
 
 .register-subtitle {
@@ -133,6 +135,24 @@
   color: var(--text-light);
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
+}
+
+/* 등록 페이지 버튼을 홈 페이지와 동일하게 */
+.register-form .btn.btn-primary.btn-lg {
+  padding: 1rem 2rem !important;
+  font-size: 1.1rem !important;
+  border-radius: 25px !important;
+  background: #6366F1 !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.register-form .btn.btn-primary.btn-lg:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+  background: #4F46E5 !important; /* 호버 시 약간 진한 색 */
 }
 
 @media (max-width: 768px) {

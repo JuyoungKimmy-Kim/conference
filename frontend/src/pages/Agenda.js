@@ -60,23 +60,11 @@ const Agenda = () => {
       registration: '#3b82f6',
       announcement: '#8b5cf6',
       competition: '#f59e0b',
-      evaluation: '#06b6d4',
-      final: '#ef4444',
+      evaluation: '#ef4444',
+      final: '#06b6d4',
       award: '#10b981'
     };
     return colors[type] || '#6b7280';
-  };
-
-  const getTypeLabel = (type) => {
-    const labels = {
-      registration: '신청',
-      announcement: '발표',
-      competition: '예선',
-      evaluation: '평가',
-      final: '본선',
-      award: '시상'
-    };
-    return labels[type] || '기타';
   };
 
   // 캘린더 관련 함수들
@@ -147,7 +135,6 @@ const Agenda = () => {
     <div className="agenda-page">
       <div className="agenda-hero section-padding">
         <div className="container text-center">
-          <br></br>
           <h1 className="agenda-title">경진대회 일정</h1>
         </div>
       </div>

@@ -2,12 +2,14 @@
   background: var(--text-dark);
   color: white;
   text-align: center;
+  padding: 120px 0 80px 0; /* 상단 패딩 추가 */
 }
 
 .guide-title {
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  margin-top: 0; /* 상단 마진 제거 */
 }
 
 .guide-subtitle {
