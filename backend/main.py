@@ -26,24 +26,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# (선택) 개발 중 CRA dev 서버(3000)에서 호출할 때만 CORS 허용
-# 배포 통합형(프런트와 같은 도메인)에서는 CORS가 필요 없습니다.
-if os.getenv("ENV", "dev") == "dev":
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
-# 보안 설정 제거 (현재 엔드포인트에서 미사용)
-
-# -----------------------------
-#       ✅ API 엔드포인트
-#    (모두 /api/* 로 변경)
-# -----------------------------
-
 @app.get("/api")
 async def api_root():
     return {"message": "슬슬 AIdea Agnet 경진대회에 오신 것을 환영합니다!"}
@@ -89,10 +71,6 @@ async def register_account(payload: AccountRegister, db: Session = Depends(get_d
             detail="등록 중 오류가 발생했습니다."
         )
 
-# -----------------------------
-#  ✅ CRA 정적 파일 + SPA 라우팅
-# -----------------------------
-# CRA 빌드 폴더 경로 (절대경로 권장)
 BUILD_DIR = (Path(__file__).parent / "../frontend/build").resolve()
 if not BUILD_DIR.exists():
     raise RuntimeError(f"React build not found: {BUILD_DIR}\nRun `npm run build` in /frontend")
@@ -100,8 +78,6 @@ if not BUILD_DIR.exists():
 # CRA 정적 리소스(/static/*) 서빙
 app.mount("/static", StaticFiles(directory=BUILD_DIR / "static"), name="static")
 
-# 나머지 모든 경로를 index.html로 돌려서 SPA 라우팅 처리
-# (API는 위에서 /api/* 로 먼저 매칭되므로 안전)
 @app.get("/{full_path:path}", include_in_schema=False)
 async def spa(full_path: str):
     return FileResponse(BUILD_DIR / "index.html")
