@@ -16,7 +16,6 @@ class Account(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    # 팀원과의 관계
     team_members = relationship("TeamMember", back_populates="account", cascade="all, delete-orphan")
 
     def verify_password(self, password: str) -> bool:
@@ -31,5 +30,4 @@ class TeamMember(Base):
     knox_id = Column(String, nullable=False)  # 팀원 Knox ID
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # 계정과의 관계
     account = relationship("Account", back_populates="team_members")
