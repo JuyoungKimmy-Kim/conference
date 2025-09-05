@@ -39,7 +39,6 @@ def create_or_update_account(db: Session, knox_id: str, password: str):
         else:
             raise Exception("계정 생성 중 예상치 못한 오류가 발생했습니다.")
 
-<<<<<<< HEAD
 def update_account_registration(db: Session, registration_data: AccountRegister):
     """
     계정 등록 정보를 업데이트합니다. 트랜잭션 안전성을 보장하기 위해
