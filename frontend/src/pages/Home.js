@@ -14,27 +14,35 @@ const Home = () => {
 
   const eventFAQs = [
     {
-      question: "슬슬 AIdea Agent란 어떤 행사인가요?",
-      answer: "슬슬 AIdea는 슬시인의 AI와 아이디어를 결합한 개발자 경진대회입니다. 이 대회를 통해 참가자들은 AI 서비스를 Agent 개념까지 확장 및 발전하는 것을 목표로 합니다."
+      question: "슬슬 AIdea란 어떤 행사인가요?",
+      answer: "슬슬 AIdea는 슬시인의 아이디어를 AI Agent로 구현하는 AI Agent 개발 경진대회입니다. 이 대회를 통해 참가자들은 AI 서비스를 넘어 Agent 개념까지 확장 및 발전하는 것을 목표로 합니다."
     },
     {
       question: "꼭 Agent 개념을 사용해야 하나요?",
-      answer: "네, 이번 대회는 AI 서비스를 넘어 Agent 개념까지 확장 및 발전하는 것을 목표로 합니다."
+      answer: "네 , 이번 대회는 AI 서비스를 뛰어 넘어 AI Agent 개념까지 확장 및 발전하는 것을 목표로 합니다."
     },
     {
       question: "AI Service와 AI Agent를 잘 구분하지 못하겠습니다.",
-      answer: "Agent에 대한 자세한 내용은 이곳에서 확인하실 수 있습니다."
+      answer: (
+        <span>
+          Agent에 대한 자세한 내용은 <Link to="/resources">이곳</Link>에서 확인하실 수 있습니다.
+        </span>
+      )
     }
   ];
 
   const registrationFAQs = [
     {
       question: "참가 신청은 어떻게 하나요?",
-      answer: "참가 신청 기간(9월 10일 ~ 9월 19일) 내에 등록 페이지에서 신청을 완료해야 합니다."
+      answer: (
+       <span>
+         참가 신청 기간(9월 10일 ~ 9월 19일) 내에 <Link to="/register">등록 페이지</Link>에서 신청을 완료해야 합니다.
+        </span>
+      )
     },
     {
       question: "팀 구성은 어떻게 하나요?",
-      answer: "개발자 2-4명으로 팀을 구성하여 참가하실 수 있습니다."
+      answer: "자유롭게 1명이상 인원 제한없이 팀을 구성하여 참가하실 수 있습니다."
     },
   ];
 
@@ -47,10 +55,10 @@ const Home = () => {
       }}>
         <div className="hero-content">
           <h1 className="hero-title">
-            슬슬 AIdea Agent <span className="text-gradient">2025</span>
+            슬슬 AIdea <span className="text-gradient">2025</span>
           </h1>
           <p className="hero-subtitle">
-            슬시인의 AIdea (AI+Idea) Agent, 업무 혁신을 이루는 AI Agent
+            슬시인의 AIdea(AI+Idea)로 업무 혁신을 이루는 AI Agent 개발 경진대회
           </p>
         </div>
       </section>
@@ -67,24 +75,20 @@ const Home = () => {
           
           <div className="schedule-info mb-4">
             <div className="schedule-item">
-              <div className="schedule-label">참가 신청 기간</div>
+              <div className="schedule-label">제안서 제출 기간</div>
               <div className="schedule-date">9월 10일 ~ 9월 19일</div>
             </div>
             <div className="schedule-item">
               <div className="schedule-label">개발 기간</div>
-              <div className="schedule-date">9월 24일 ~ 10월 16일</div>
+              <div className="schedule-date">9월 24일 ~ 10월 29일</div>
             </div>
             <div className="schedule-item">
               <div className="schedule-label">예선 평가</div>
-              <div className="schedule-date">10월 17일</div>
+              <div className="schedule-date">10월 30일 ~ 10월 31일</div>
             </div>
             <div className="schedule-item">
               <div className="schedule-label">본선 및 시상</div>
-              <div className="schedule-date">10월 28일</div>
-            </div>
-            <div className="schedule-item">
-              <div className="schedule-label">시상</div>
-              <div className="schedule-date">10월 28일 (개발자 경진대회)</div>
+              <div className="schedule-date">11월 11일</div>
             </div>
           </div>
           
@@ -100,7 +104,7 @@ const Home = () => {
                 <div className="point-content">
                   <h4 className="point-title">업무 속 고민을 AI Agent로</h4>
                   <p className="point-description">
-                    현업에서 Agent로 활용하면 좋겠다라고 생각했던 아이디어를 구체화할 수 있는 기회
+                    현업에서 "AI Agent로 활용하면 좋겠다"고 생각했던 아이디어를 구체화할 수 있는 기회
                   </p>
                 </div>
               </div>
@@ -119,17 +123,7 @@ const Home = () => {
                 <div className="point-content">
                   <h4 className="point-title">전문가 그룹의 실전 지원</h4>
                   <p className="point-description">
-                    사내 AI Agent 그룹이 아이디어 구체화 및 멘토링, 
-                    개발 환경 지원을 제공
-                  </p>
-                </div>
-              </div>
-              
-              <div className="point-item">
-                <div className="point-content">
-                  <h4 className="point-title">참가자 전원 혜택</h4>
-                  <p className="point-description">
-                    서류 참가자 전원에게 ㅇㅇㅇ쿠폰 제공
+                    사내 AI Agent 그룹이 멘토링 및 개발 환경 지원
                   </p>
                 </div>
               </div>

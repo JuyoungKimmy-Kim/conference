@@ -114,6 +114,128 @@
   margin-bottom: 0.25rem;
 }
 
+/* 비교 표 스타일 */
+.comparison {
+  margin-top: 1.5rem;
+}
+
+.comparison > h3 {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+}
+
+.comparison-table {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 1fr;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+
+.comparison-table .row {
+  display: contents;
+}
+
+.comparison-table .cell {
+  padding: 0.75rem 0.9rem;
+  border-top: 1px solid #f1f5f9;
+  border-right: 1px solid #f1f5f9;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+ 
+
+.comparison-table .row .cell:last-child {
+  border-right: none;
+}
+
+.comparison-table .row.header .cell {
+  background: #f8fafc;
+  font-weight: 700;
+  color: var(--text-dark);
+  border-top: none;
+  font-size: 1rem;
+}
+
+/* 첫 행(헤더)의 첫 번째 셀은 구분선 유지 */
+.comparison-table .row.header .cell:first-child {
+  color: var(--text-dark);
+  border-right: 1px solid #f1f5f9;
+}
+
+@media (max-width: 768px) {
+  .comparison-table {
+    grid-template-columns: 1fr;
+  }
+  .comparison-table .row.header .cell:nth-child(n+2) {
+    display: none;
+  }
+  .comparison-table .row .cell:first-child {
+    background: #f9fafb;
+    font-weight: 600;
+  }
+}
+
+/* Agent 필수 요소 - 예쁜 원형 스텝 */
+.agent-steps {
+  margin-top: 0.5rem;
+}
+
+.steps-circles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+  margin-bottom: 1rem;
+}
+
+.step-circle {
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  text-align: center;
+}
+
+.step-title {
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.25rem;
+}
+
+.step-sub {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.steps-notes {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--text-dark);
+}
+
+.steps-notes li {
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .steps-circles { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 520px) {
+  .steps-circles { grid-template-columns: 1fr; }
+}
+
 /* 제안서 템플릿 스타일 */
 .template-section {
   max-width: 800px;
@@ -203,6 +325,82 @@
 .template-size,
 .template-download-btn {
   display: none;
+}
+
+/* 판별 매트릭스 표 스타일 */
+.matrix { margin-top: 1.5rem; }
+.matrix > h3 {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+}
+.matrix-table {
+  display: grid;
+  grid-template-columns: 2fr 0.9fr 0.7fr 0.9fr 0.7fr 0.9fr 1.1fr 2fr;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+.matrix-table .row { display: contents; }
+.matrix-table .cell {
+  padding: 0.65rem 0.8rem;
+  border-top: 1px solid #f1f5f9;
+  border-right: 1px solid #f1f5f9;
+  color: var(--text-dark);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+.matrix-table .row .cell:last-child { border-right: none; }
+.matrix-table .row.header .cell {
+  background: #f8fafc;
+  font-weight: 700;
+  color: var(--text-dark);
+  border-top: none;
+  font-size: 1rem;
+}
+@media (max-width: 1024px) {
+  .matrix-table { grid-template-columns: 1.6fr 0.8fr 0.6fr 0.8fr 0.6fr 0.8fr 1fr 1.6fr; }
+}
+@media (max-width: 768px) {
+  .matrix-table { grid-template-columns: 1fr; }
+  .matrix-table .row.header .cell:nth-child(n+2) { display: none; }
+  .matrix-table .row .cell:first-child { background: #f9fafb; font-weight: 600; }
+}
+
+/* 아이디어 표 스타일 */
+.ideas { margin-top: 1.5rem; }
+.ideas > h3 {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+}
+.ideas-table {
+  display: grid;
+  grid-template-columns: 0.3fr 2.7fr;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+.ideas-table .row { display: contents; }
+.ideas-table .cell {
+  padding: 0.7rem 0.9rem;
+  border-top: 1px solid #f1f5f9;
+  border-right: 1px solid #f1f5f9;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.ideas-table .row .cell:last-child { border-right: none; }
+.ideas-table .row.header .cell {
+  background: #f8fafc;
+  font-weight: 700;
+  color: var(--text-dark);
+  border-top: none;
+}
+@media (max-width: 768px) {
+  .ideas-table { grid-template-columns: 0.4fr 2.6fr; }
 }
 
 @media (max-width: 768px) {
