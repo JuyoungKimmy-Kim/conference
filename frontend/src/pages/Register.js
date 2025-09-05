@@ -18,7 +18,8 @@ const Register = () => {
     solution: '',
     data_sources: '',
     scenario: '',
-    workflow: ''
+    workflow: '',
+    benefit: '' // 기대효과 필드 추가
   });
 
   const [teamMembers, setTeamMembers] = useState([]);
@@ -105,7 +106,8 @@ const Register = () => {
         solution: accountData.aideas?.[0]?.solution || '',
         data_sources: accountData.aideas?.[0]?.data_sources || '',
         scenario: accountData.aideas?.[0]?.scenario || '',
-        workflow: accountData.aideas?.[0]?.workflow || ''
+        workflow: accountData.aideas?.[0]?.workflow || '',
+        benefit: accountData.aideas?.[0]?.benefit || '' // 기대효과 필드 추가
       });
       
       if (accountData.team_members && accountData.team_members.length > 0) {
@@ -183,7 +185,8 @@ const Register = () => {
         solution: formData.solution,
         data_sources: formData.data_sources,
         scenario: formData.scenario,
-        workflow: formData.workflow
+        workflow: formData.workflow,
+        benefit: formData.benefit // 기대효과 필드 추가
       };
 
       const response = await fetch('/api/register', {
@@ -554,6 +557,19 @@ const Register = () => {
                                 onChange={handleInputChange}
                                 rows="3"
                                 placeholder="수행할 시나리오를 설명하세요"
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="bg-light fw-bold text-center align-middle">기대효과</td>
+                            <td>
+                              <textarea
+                                className="form-control border-0"
+                                name="benefit"
+                                value={formData.benefit}
+                                onChange={handleInputChange}
+                                rows="3"
+                                placeholder="이 Agent를 통해 얻을 수 있는 기대효과를 설명하세요"
                               />
                             </td>
                           </tr>
