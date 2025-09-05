@@ -88,26 +88,44 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
             )
             db.add(team_member)
         
-        # 기존 Aidea 삭제 및 새 Aidea 생성
-        db.query(Aidea).filter(Aidea.account_id == account.id).delete()
+        # 기존 Aidea 업데이트 또는 새로 생성
+        existing_aidea = db.query(Aidea).filter(Aidea.account_id == account.id).first()
         
-        # Aidea 정보가 있는 경우에만 생성
-        if registration_data.service_name and registration_data.service_name.strip():
-            aidea = Aidea(
-                account_id=account.id,
-                service_name=registration_data.service_name.strip(),
-                persona=registration_data.persona,
-                problem=registration_data.problem,
-                solution=registration_data.solution,
-                data_sources=registration_data.data_sources,
-                tools=registration_data.tools,
-                state_memory=registration_data.state_memory,
-                actions=registration_data.actions,
-                risk=registration_data.risk,
-                benefits=registration_data.benefits,
-                plan=registration_data.plan
-            )
-            db.add(aidea)
+        if existing_aidea:
+            # 기존 Aidea가 있으면 업데이트
+            if registration_data.service_name and registration_data.service_name.strip():
+                existing_aidea.service_name = registration_data.service_name.strip()
+                existing_aidea.persona = registration_data.persona
+                existing_aidea.problem = registration_data.problem
+                existing_aidea.solution = registration_data.solution
+                existing_aidea.data_sources = registration_data.data_sources
+                existing_aidea.tools = registration_data.tools
+                existing_aidea.state_memory = registration_data.state_memory
+                existing_aidea.actions = registration_data.actions
+                existing_aidea.risk = registration_data.risk
+                existing_aidea.benefits = registration_data.benefits
+                existing_aidea.plan = registration_data.plan
+            else:
+                # service_name이 비어있으면 기존 Aidea 삭제
+                db.delete(existing_aidea)
+        else:
+            # 기존 Aidea가 없으면 새로 생성
+            if registration_data.service_name and registration_data.service_name.strip():
+                aidea = Aidea(
+                    account_id=account.id,
+                    service_name=registration_data.service_name.strip(),
+                    persona=registration_data.persona,
+                    problem=registration_data.problem,
+                    solution=registration_data.solution,
+                    data_sources=registration_data.data_sources,
+                    tools=registration_data.tools,
+                    state_memory=registration_data.state_memory,
+                    actions=registration_data.actions,
+                    risk=registration_data.risk,
+                    benefits=registration_data.benefits,
+                    plan=registration_data.plan
+                )
+                db.add(aidea)
 
         db.commit()
         db.refresh(account)
