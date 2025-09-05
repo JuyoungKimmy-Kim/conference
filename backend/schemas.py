@@ -18,7 +18,7 @@ class AccountRegister(BaseModel):
     team_name: str
     team_members: List[TeamMemberCreate] = []
     # Aidea 정보
-    service_name: str
+    service_name: Optional[str] = None
     persona: Optional[str] = None
     problem: Optional[str] = None
     solution: Optional[str] = None

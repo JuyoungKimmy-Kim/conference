@@ -69,7 +69,6 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
         # 계정 기본 정보 업데이트
         account.name = registration_data.name.strip()
         account.team_name = registration_data.team_name.strip()
-        account.aidea = registration_data.aidea
         db.add(account)
         
         existing_members = db.query(TeamMember).filter(TeamMember.account_id == account.id).all()
@@ -91,21 +90,24 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
         
         # 기존 Aidea 삭제 및 새 Aidea 생성
         db.query(Aidea).filter(Aidea.account_id == account.id).delete()
-        aidea = Aidea(
-            account_id=account.id,
-            service_name=registration_data.service_name,
-            persona=registration_data.persona,
-            problem=registration_data.problem,
-            solution=registration_data.solution,
-            data_sources=registration_data.data_sources,
-            tools=registration_data.tools,
-            state_memory=registration_data.state_memory,
-            actions=registration_data.actions,
-            risk=registration_data.risk,
-            benefits=registration_data.benefits,
-            plan=registration_data.plan
-        )
-        db.add(aidea)
+        
+        # Aidea 정보가 있는 경우에만 생성
+        if registration_data.service_name and registration_data.service_name.strip():
+            aidea = Aidea(
+                account_id=account.id,
+                service_name=registration_data.service_name.strip(),
+                persona=registration_data.persona,
+                problem=registration_data.problem,
+                solution=registration_data.solution,
+                data_sources=registration_data.data_sources,
+                tools=registration_data.tools,
+                state_memory=registration_data.state_memory,
+                actions=registration_data.actions,
+                risk=registration_data.risk,
+                benefits=registration_data.benefits,
+                plan=registration_data.plan
+            )
+            db.add(aidea)
 
         db.commit()
         db.refresh(account)
@@ -148,7 +150,7 @@ def get_aidea_by_id(db: Session, aidea_id: int):
     return db.query(Aidea).filter(Aidea.id == aidea_id).first()
 
 def get_aideas_by_account(db: Session, account_id: int):
-    return db.query(Aidea).filter(Aidea.account_id == account.id).all()
+    return db.query(Aidea).filter(Aidea.account_id == account_id).all()
 
 def update_aidea(db: Session, aidea_id: int, aidea_data: AideaUpdate):
     aidea = get_aidea_by_id(db, aidea_id)
