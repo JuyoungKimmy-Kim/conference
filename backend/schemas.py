@@ -18,59 +18,43 @@ class AccountRegister(BaseModel):
     team_name: str
     team_members: List[TeamMemberCreate] = []
     # Aidea 정보
-    service_name: Optional[str] = None
+    project: Optional[str] = None
     persona: Optional[str] = None
     problem: Optional[str] = None
     solution: Optional[str] = None
     data_sources: Optional[str] = None
-    tools: Optional[str] = None
-    state_memory: Optional[str] = None
-    actions: Optional[str] = None
-    risk: Optional[str] = None
-    benefits: Optional[str] = None
-    plan: Optional[str] = None
+    scenario: Optional[str] = None
+    workflow: Optional[str] = None
 
 # Aidea 스키마
 class AideaCreate(BaseModel):
-    service_name: str
+    project: str
     persona: Optional[str] = None
     problem: Optional[str] = None
     solution: Optional[str] = None
     data_sources: Optional[str] = None
-    tools: Optional[str] = None
-    state_memory: Optional[str] = None
-    actions: Optional[str] = None
-    risk: Optional[str] = None
-    benefits: Optional[str] = None
-    plan: Optional[str] = None
+    scenario: Optional[str] = None
+    workflow: Optional[str] = None
 
 class AideaUpdate(BaseModel):
-    service_name: Optional[str] = None
+    project: Optional[str] = None
     persona: Optional[str] = None
     problem: Optional[str] = None
     solution: Optional[str] = None
     data_sources: Optional[str] = None
-    tools: Optional[str] = None
-    state_memory: Optional[str] = None
-    actions: Optional[str] = None
-    risk: Optional[str] = None
-    benefits: Optional[str] = None
-    plan: Optional[str] = None
+    scenario: Optional[str] = None
+    workflow: Optional[str] = None
 
 class AideaResponse(BaseModel):
     id: int
     account_id: int
-    service_name: str
+    project: str
     persona: Optional[str] = None
     problem: Optional[str] = None
     solution: Optional[str] = None
     data_sources: Optional[str] = None
-    tools: Optional[str] = None
-    state_memory: Optional[str] = None
-    actions: Optional[str] = None
-    risk: Optional[str] = None
-    benefits: Optional[str] = None
-    plan: Optional[str] = None
+    scenario: Optional[str] = None
+    workflow: Optional[str] = None
     created_at: datetime
     updated_at: Optional[datetime] = None
 
