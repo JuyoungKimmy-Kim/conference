@@ -10,48 +10,48 @@ const Agenda = () => {
       title: '참가 신청',
       track: '온라인',
       type: 'registration',
-      startDate: new Date(2025, 8, 10), // 2025년 9월 4일
-      endDate: new Date(2025, 8, 19)   // 2025년 9월 19일
+      startDate: new Date(2025, 8, 10),
+      endDate: new Date(2025, 8, 19)
     },
     {
       time: '9월 20일 ~ 9월 23일',
       title: '서류 심사',
       track: '온라인',
       type: 'announcement',
-      startDate: new Date(2025, 8, 20), // 2025년 9월 23일
+      startDate: new Date(2025, 8, 20),
       endDate: new Date(2025, 8, 23)
     },
     {
-      time: '9월 24일 ~ 10월 16일',
+      time: '9월 24일 ~ 10월 29일',
       title: '개발 기간',
       track: '온라인',
       type: 'competition',
-      startDate: new Date(2025, 8, 24), // 2025년 9월 24일
-      endDate: new Date(2025, 9, 16)    // 2025년 10월 15일
+      startDate: new Date(2025, 8, 24),
+      endDate: new Date(2025, 9, 29)
     },
     {
-      time: '10월 17일',
+      time: '10월 30일',
       title: '예선 평가',
       track: '온라인',
       type: 'evaluation',
-      startDate: new Date(2025, 9, 17), // 2025년 10월 16일
-      endDate: new Date(2025, 9, 17)    // 2025년 10월 19일
+      startDate: new Date(2025, 9, 30),
+      endDate: new Date(2025, 9, 31)
     },
     {
-      time: '10월 18일일 ~ 10월 27일',
+      time: '11월 3일일 ~ 11월 7일',
       title: '본선 준비',
       track: '온라인',
       type: 'final',
-      startDate: new Date(2025, 9, 18), // 2025년 10월 23일
-      endDate: new Date(2025, 9, 27)
+      startDate: new Date(2025, 10, 1),
+      endDate: new Date(2025, 10, 10)
     },
     {
-      time: '10월 28일',
+      time: '11월 11일',
       title: '본선 및 시상',
       track: '온라인',
       type: 'award',
-      startDate: new Date(2025, 9, 28), // 2025년 10월 28일
-      endDate: new Date(2025, 9, 28)
+      startDate: new Date(2025, 10, 11),
+      endDate: new Date(2025, 10, 11)
     }
   ];
 
@@ -211,7 +211,7 @@ const Agenda = () => {
                   </div>
                   <h4 className="description-name">개발 기간</h4>
                 </div>
-                <p className="description-text">AIdea를 AI Agent로 구현 기간</p>
+                <p className="description-text">Agent 개발 기간</p>
               </div>
 
               <div className="description-item">
@@ -241,7 +241,7 @@ const Agenda = () => {
                   </div>
                   <h4 className="description-name">본선 및 시상</h4>
                 </div>
-                <p className="description-text">개발자행사에서 임원 평가 및 임직원 투표 진행 후 시상자 선정</p>
+                <p className="description-text">임원 평가 및 임직원 투표 진행 후 시상자 선정</p>
               </div>
             </div>
           </div>
