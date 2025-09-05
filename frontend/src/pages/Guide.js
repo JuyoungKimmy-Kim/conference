@@ -16,72 +16,89 @@ const Guide = () => {
           <section className="guide-section">
             <div className="section-header">
               <h2 className="section-title">대회 목표</h2>
+              <p className="section-subtitle">
+                업무 현장 실사용 가능한 AI Agent 발굴 및 확산
+              </p>
             </div>
             <div className="goals-grid">
               <div className="goal-card">
-                <div className="goal-icon">🎯</div>
-                <h3>혁신성</h3>
-                <p>AI 서비스를 넘어 자율적 에이전트 설계</p>
+                <div className="goal-icon">🏢</div>
+                <h3>실무 적용</h3>
+                <p>업무 현장에서 즉시 활용 가능한<br />실용적인 AI Agent 개발</p>
               </div>
               <div className="goal-card">
-                <div className="goal-icon">💡</div>
-                <h3>실용성</h3>
-                <p>실제 업무에 적용 가능한 실용적인 솔루션</p>
+                <div className="goal-icon">🤖</div>
+                <h3>AI Agent 발굴</h3>
+                <p>혁신적이고 독창적인<br /> AI Agent 솔루션 발굴 및 검증</p>
               </div>
               <div className="goal-card">
-                <div className="goal-icon">🚀</div>
-                <h3>성장</h3>
-                <p>개발자들의 기술적 성장과 역량 강화</p>
+                <div className="goal-icon">📈</div>
+                <h3>확산 및 성장</h3>
+                <p>AI Agent의<br />조직 내 확산과 지속적 성장</p>
               </div>
             </div>
           </section>
 
-          {/* 참가 방법 */}
+          {/* 대회의 Agent의 최소 요건 */}
           <section className="guide-section">
             <div className="section-header">
-              <h2 className="section-title">참가 방법</h2>
+              <h2 className="section-title">대회의 최소 요건</h2>
             </div>
-            <div className="process-steps">
-              <div className="step-item">
-                <div className="step-number">1</div>
-                <div className="step-content">
-                  <h3>팀 구성</h3>
-                  <p>개발자 2-4명으로 팀을 구성합니다</p>
-                </div>
+            <div className="conditions-grid">
+              <div className="condition-card">
+                <div className="condition-icon">👥</div>
+                <h3>팀 구성</h3>
+                <p>개발자 2-4명으로 팀을 구성</p>
               </div>
-              <div className="step-item">
-                <div className="step-number">2</div>
-                <div className="step-content">
-                  <h3>참가 신청</h3>
-                  <p>온라인으로 팀 정보와 프로젝트 계획을 제출합니다</p>
-                </div>
+              <div className="condition-card">
+                <div className="condition-icon">🔄</div>
+                <h3>Agent 필수 요소 충족</h3>
+                <p>계획/도구호출/검증/리포트 중<br />2개 이상 포함</p>
+                <p className="condition-note">자세한 내용 자료실 참고</p>
               </div>
-              <div className="step-item">
-                <div className="step-number">3</div>
-                <div className="step-content">
-                  <h3>서류 심사</h3>
-                  <p>제출된 서류를 바탕으로 1차 심사를 진행합니다</p>
-                </div>
+              <div className="condition-card">
+                <div className="condition-icon">🔧</div>
+                <h3>도구 연동</h3>
+                <p>도구 1개 이상 연동</p>
+                <br></br>
+                <p className="condition-note">자세한 내용 자료실 참고</p>
               </div>
-              <div className="step-item">
-                <div className="step-number">4</div>
-                <div className="step-content">
-                  <h3>개발 진행</h3>
-                  <p>선정된 팀들이 프로젝트를 개발합니다</p>
-                </div>
-              </div>
-              <div className="step-item">
-                <div className="step-number">5</div>
-                <div className="step-content">
-                  <h3>예선/본선 심사</h3>
-                  <p>개발된 프로젝트를 평가하여 수상팀을 선정합니다</p>
-                </div>
-              </div>
-              <div className="step-item">
-                <div className="step-number">6</div>
-                <div className="step-content">
-                  <h3>시상</h3>
-                  <p>우수한 프로젝트에 대해 시상식을 진행합니다</p>
+            </div>
+          </section>
+
+          {/* 운영 방법 */}
+          <section className="guide-section">
+            <div className="section-header">
+              <h2 className="section-title">운영 방법</h2>
+            </div>
+            <div className="process-overview">
+              <div className="process-card">
+                <h3>대회 진행 과정</h3>
+                <div className="process-content">
+                  <div className="process-item">
+                    <span className="process-step">1. 서류 심사</span>
+                    <span className="process-desc">참가 신청서 기반 평가</span>
+                  </div>
+                  <div className="process-item">
+                    <span className="process-step">2. 개발 기간</span>
+                    <span className="process-desc">약 6주</span>
+                  </div>
+                  <div className="mentor-notice">
+                    <div className="notice-icon">📢</div>
+                    <p className="condition-note">개발 기간 동안 각 팀에 전담 멘토(진행 지원), 조커 멘토(기술 지원)을 AI Agent Group에서 배정합니다.</p>
+                  </div>
+                  <div className="process-item">
+                    <span className="process-step">3. 예선 평가</span>
+                    <span className="process-desc">개발 성과 발표 및 심사</span>
+                  </div>
+                  <div className="process-item">
+                    <span className="process-step">4. 본선 준비</span>
+                    <span className="process-desc">예선 통과 팀은 1주간 추가 개발 및 발표 준비</span>
+                  </div>
+                  <div className="process-item">
+                    <span className="process-step">5. 최종 평가</span>
+                    <span className="process-desc">최종 발표 및 시상식 진행</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -96,29 +113,29 @@ const Guide = () => {
               <div className="rule-category">
                 <h3>서류 심사</h3>
                 <ul>
-                  <li>혁신성(10점)</li>
-                  <li>기술적 실현 가능성(10점)</li>
-                  <li>기대효과 (10점)</li>
+                  <li>아이디어 혁신성</li>
+                  <li>기술 실현 가능성</li>
+                  <li>업무 효과성</li>
                 </ul>
               </div>
               <div className="rule-category">
                 <h3>예선 평가</h3>
                 <ul>
-                  <li>기능 구현 (30점)</li>
-                  <li>기술적 완성도 (30점)</li>
-                  <li>기획안 대비 진척도 (20점)</li>
-                  <li>발표 품질 (20점)</li>
+                  <li>핵심 기능 구현</li>
+                  <li>기술적 완성도</li>
+                  <li>사용자 경험</li>
+                  <li>발표 품질</li>
                 </ul>
               </div>
               <div className="rule-category">
                 <h3>본선 평가</h3>
                 <ul>
-                  <li>기술적 우수성 (40점)</li>
-                  <li>확장성 (25점)</li>
-                  <li>사용자 경험 (25점)</li>
-                  <li>기대 효과 (30점)</li>
-                  <li>발표 및 데모 전달력 (10점)</li>
-                  <li>임직원 사전 투표 (10점)</li>
+                  <li>AI 모델 성능</li>
+                  <li>기술 혁신성</li>
+                  <li>확장성 및 범용성</li>
+                  <li>비즈니스 임팩트</li>
+                  <li>발표 및 데모</li>
+                  <li>임직원 사전 투표</li>
                 </ul>
               </div>
             </div>
@@ -136,26 +153,20 @@ const Guide = () => {
               <div className="award-card gold">
                 <div className="award-rank">🥇</div>
                 <h3>대상</h3>
-                <div className="award-prize">상금 500만원</div>
+                <div className="award-prize">상금 3000만원</div>
                 <p>최우수 프로젝트 1팀</p>
               </div>
               <div className="award-card silver">
                 <div className="award-rank">🥈</div>
                 <h3>금상</h3>
-                <div className="award-prize">상금 300만원</div>
+                <div className="award-prize">상금 1000만원</div>
                 <p>우수 프로젝트 1팀</p>
               </div>
               <div className="award-card bronze">
                 <div className="award-rank">🥉</div>
                 <h3>은상</h3>
-                <div className="award-prize">상금 200만원</div>
+                <div className="award-prize">상금 500만원</div>
                 <p>우수 프로젝트 1팀</p>
-              </div>
-              <div className="award-card special">
-                <div className="award-rank">🏆</div>
-                <h3>특별상</h3>
-                <div className="award-prize">상금 100만원</div>
-                <p>특별한 아이디어 2팀</p>
               </div>
             </div>
           </section>
@@ -186,4 +197,4 @@ const Guide = () => {
   );
 };
 
-export default Guide; 
+export default Guide;

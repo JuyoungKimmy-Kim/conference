@@ -101,6 +101,7 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
                 existing_aidea.data_sources = registration_data.data_sources
                 existing_aidea.scenario = registration_data.scenario
                 existing_aidea.workflow = registration_data.workflow
+                existing_aidea.benefit = registration_data.benefit  # 기대효과 필드 추가
             else:
                 # project가 비어있으면 기존 Aidea 삭제
                 db.delete(existing_aidea)
@@ -115,7 +116,8 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
                     solution=registration_data.solution,
                     data_sources=registration_data.data_sources,
                     scenario=registration_data.scenario,
-                    workflow=registration_data.workflow
+                    workflow=registration_data.workflow,
+                    benefit=registration_data.benefit  # 기대효과 필드 추가
                 )
                 db.add(aidea)
 
@@ -145,7 +147,8 @@ def create_aidea(db: Session, account_id: int, aidea_data: AideaCreate):
         solution=aidea_data.solution,
         data_sources=aidea_data.data_sources,
         scenario=aidea_data.scenario,
-        workflow=aidea_data.workflow
+        workflow=aidea_data.workflow,
+        benefit=aidea_data.benefit  # 기대효과 필드 추가
     )
     db.add(aidea)
     db.commit()
@@ -179,3 +182,16 @@ def delete_aidea(db: Session, aidea_id: int):
     db.delete(aidea)
     db.commit()
     return True
+
+# 마이그레이션 스크립트 (migrate.py)
+from sqlalchemy import text
+from database import engine
+
+def add_benefit_column():
+    with engine.connect() as conn:
+        conn.execute(text("ALTER TABLE aideas ADD COLUMN benefit TEXT"))
+        conn.commit()
+        print("benefit 컬럼이 성공적으로 추가되었습니다.")
+
+if __name__ == "__main__":
+    add_benefit_column()

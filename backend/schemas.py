@@ -25,6 +25,7 @@ class AccountRegister(BaseModel):
     data_sources: Optional[str] = None
     scenario: Optional[str] = None
     workflow: Optional[str] = None
+    benefit: Optional[str] = None  # 기대효과 필드 추가
 
 # Aidea 스키마
 class AideaCreate(BaseModel):
@@ -35,6 +36,7 @@ class AideaCreate(BaseModel):
     data_sources: Optional[str] = None
     scenario: Optional[str] = None
     workflow: Optional[str] = None
+    benefit: Optional[str] = None  # 기대효과 필드 추가
 
 class AideaUpdate(BaseModel):
     project: Optional[str] = None
@@ -44,6 +46,7 @@ class AideaUpdate(BaseModel):
     data_sources: Optional[str] = None
     scenario: Optional[str] = None
     workflow: Optional[str] = None
+    benefit: Optional[str] = None
 
 class AideaResponse(BaseModel):
     id: int

@@ -46,6 +46,7 @@ class Aidea(Base):
     data_sources = Column(Text, nullable=True)  # 데이터 소스
     scenario = Column(Text, nullable=True)  # 시나리오
     workflow = Column(Text, nullable=True)  # 워크플로우
+    benefit = Column(Text, nullable=True)  # 기대효과
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
