@@ -39,17 +39,13 @@ class Aidea(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
-    service_name = Column(String, nullable=False)  # 서비스 이름
+    project = Column(String, nullable=False)  # 프로젝트 이름
     persona = Column(Text, nullable=True)  # 페르소나
     problem = Column(Text, nullable=True)  # 문제 정의
     solution = Column(Text, nullable=True)  # 솔루션
     data_sources = Column(Text, nullable=True)  # 데이터 소스
-    tools = Column(Text, nullable=True)  # 사용 도구
-    state_memory = Column(Text, nullable=True)  # 상태/메모리 (선택사항)
-    actions = Column(Text, nullable=True)  # 액션
-    risk = Column(Text, nullable=True)  # 리스크
-    benefits = Column(Text, nullable=True)  # 혜택
-    plan = Column(Text, nullable=True)  # 계획
+    scenario = Column(Text, nullable=True)  # 시나리오
+    workflow = Column(Text, nullable=True)  # 워크플로우
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

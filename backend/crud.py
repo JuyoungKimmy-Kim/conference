@@ -93,37 +93,29 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
         
         if existing_aidea:
             # 기존 Aidea가 있으면 업데이트
-            if registration_data.service_name and registration_data.service_name.strip():
-                existing_aidea.service_name = registration_data.service_name.strip()
+            if registration_data.project and registration_data.project.strip():
+                existing_aidea.project = registration_data.project.strip()
                 existing_aidea.persona = registration_data.persona
                 existing_aidea.problem = registration_data.problem
                 existing_aidea.solution = registration_data.solution
                 existing_aidea.data_sources = registration_data.data_sources
-                existing_aidea.tools = registration_data.tools
-                existing_aidea.state_memory = registration_data.state_memory
-                existing_aidea.actions = registration_data.actions
-                existing_aidea.risk = registration_data.risk
-                existing_aidea.benefits = registration_data.benefits
-                existing_aidea.plan = registration_data.plan
+                existing_aidea.scenario = registration_data.scenario
+                existing_aidea.workflow = registration_data.workflow
             else:
-                # service_name이 비어있으면 기존 Aidea 삭제
+                # project가 비어있으면 기존 Aidea 삭제
                 db.delete(existing_aidea)
         else:
             # 기존 Aidea가 없으면 새로 생성
-            if registration_data.service_name and registration_data.service_name.strip():
+            if registration_data.project and registration_data.project.strip():
                 aidea = Aidea(
                     account_id=account.id,
-                    service_name=registration_data.service_name.strip(),
+                    project=registration_data.project.strip(),
                     persona=registration_data.persona,
                     problem=registration_data.problem,
                     solution=registration_data.solution,
                     data_sources=registration_data.data_sources,
-                    tools=registration_data.tools,
-                    state_memory=registration_data.state_memory,
-                    actions=registration_data.actions,
-                    risk=registration_data.risk,
-                    benefits=registration_data.benefits,
-                    plan=registration_data.plan
+                    scenario=registration_data.scenario,
+                    workflow=registration_data.workflow
                 )
                 db.add(aidea)
 
@@ -147,17 +139,13 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
 def create_aidea(db: Session, account_id: int, aidea_data: AideaCreate):
     aidea = Aidea(
         account_id=account_id,
-        service_name=aidea_data.service_name,
+        project=aidea_data.project,
         persona=aidea_data.persona,
         problem=aidea_data.problem,
         solution=aidea_data.solution,
         data_sources=aidea_data.data_sources,
-        tools=aidea_data.tools,
-        state_memory=aidea_data.state_memory,
-        actions=aidea_data.actions,
-        risk=aidea_data.risk,
-        benefits=aidea_data.benefits,
-        plan=aidea_data.plan
+        scenario=aidea_data.scenario,
+        workflow=aidea_data.workflow
     )
     db.add(aidea)
     db.commit()

@@ -12,17 +12,13 @@ const Register = () => {
     name: '',
     team: '',
     // Aidea 필드들
-    service_name: '',
+    project: '',
     persona: '',
     problem: '',
     solution: '',
     data_sources: '',
-    tools: '',
-    state_memory: '',
-    actions: '',
-    risk: '',
-    benefits: '',
-    plan: ''
+    scenario: '',
+    workflow: ''
   });
 
   const [teamMembers, setTeamMembers] = useState([]);
@@ -103,17 +99,13 @@ const Register = () => {
         name: accountData.name || '',
         team: accountData.team_name || '',
         // Aidea 데이터 로드
-        service_name: accountData.aideas?.[0]?.service_name || '',
+        project: accountData.aideas?.[0]?.project || '',
         persona: accountData.aideas?.[0]?.persona || '',
         problem: accountData.aideas?.[0]?.problem || '',
         solution: accountData.aideas?.[0]?.solution || '',
         data_sources: accountData.aideas?.[0]?.data_sources || '',
-        tools: accountData.aideas?.[0]?.tools || '',
-        state_memory: accountData.aideas?.[0]?.state_memory || '',
-        actions: accountData.aideas?.[0]?.actions || '',
-        risk: accountData.aideas?.[0]?.risk || '',
-        benefits: accountData.aideas?.[0]?.benefits || '',
-        plan: accountData.aideas?.[0]?.plan || ''
+        scenario: accountData.aideas?.[0]?.scenario || '',
+        workflow: accountData.aideas?.[0]?.workflow || ''
       });
       
       if (accountData.team_members && accountData.team_members.length > 0) {
@@ -185,17 +177,13 @@ const Register = () => {
           knox_id: member.knoxId
         })),
         // Aidea 데이터 추가
-        service_name: formData.service_name,
+        project: formData.project,
         persona: formData.persona,
         problem: formData.problem,
         solution: formData.solution,
         data_sources: formData.data_sources,
-        tools: formData.tools,
-        state_memory: formData.state_memory,
-        actions: formData.actions,
-        risk: formData.risk,
-        benefits: formData.benefits,
-        plan: formData.plan
+        scenario: formData.scenario,
+        workflow: formData.workflow
       };
 
       const response = await fetch('/api/register', {
@@ -487,15 +475,15 @@ const Register = () => {
                     
                     {/* 서비스 이름 - 맨 위에 배치 */}
                     <div className="mb-4">
-                      <label htmlFor="service_name" className="form-label">서비스 이름 *</label>
+                      <label htmlFor="project" className="form-label">프로젝트 이름 *</label>
                       <input
                         type="text"
                         className="form-control"
-                        id="service_name"
-                        name="service_name"
-                        value={formData.service_name}
+                        id="project"
+                        name="project"
+                        value={formData.project}
                         onChange={handleInputChange}
-                        placeholder="제안하는 서비스의 이름을 입력하세요"
+                        placeholder="제안하는 프로젝트의 이름을 입력하세요"
                         required
                       />
                     </div>
@@ -526,12 +514,12 @@ const Register = () => {
                                 value={formData.problem}
                                 onChange={handleInputChange}
                                 rows="3"
-                                placeholder="해결하고자 하는 문제를 구체적으로 설명하세요"
+                                placeholder="해당 Agent가 나오게 된 이슈, 배경 등 개발 목적 또는 문제 정의"
                               />
                             </td>
                           </tr>
                           <tr>
-                            <td className="bg-light fw-bold text-center align-middle">솔루션</td>
+                            <td className="bg-light fw-bold text-center align-middle">해결 방법</td>
                             <td>
                               <textarea
                                 className="form-control border-0"
@@ -539,12 +527,12 @@ const Register = () => {
                                 value={formData.solution}
                                 onChange={handleInputChange}
                                 rows="3"
-                                placeholder="제안하는 솔루션을 설명하세요"
+                                placeholder="해당 Agent의 역할, 개발 목표"
                               />
                             </td>
                           </tr>
                           <tr>
-                            <td className="bg-light fw-bold text-center align-middle">데이터 소스</td>
+                            <td className="bg-light fw-bold text-center align-middle">활용 데이터</td>
                             <td>
                               <textarea
                                 className="form-control border-0"
@@ -552,85 +540,33 @@ const Register = () => {
                                 value={formData.data_sources}
                                 onChange={handleInputChange}
                                 rows="3"
-                                placeholder="사용할 데이터 소스를 입력하세요"
+                                placeholder="예: 내부 문서, Jira, github, web search 등"
                               />
                             </td>
                           </tr>
                           <tr>
-                            <td className="bg-light fw-bold text-center align-middle">사용 도구</td>
+                            <td className="bg-light fw-bold text-center align-middle">동작 시나리오</td>
                             <td>
                               <textarea
                                 className="form-control border-0"
-                                name="tools"
-                                value={formData.tools}
+                                name="scenario"
+                                value={formData.scenario}
                                 onChange={handleInputChange}
                                 rows="3"
-                                placeholder="사용할 도구나 기술을 입력하세요"
+                                placeholder="수행할 시나리오를 설명하세요"
                               />
                             </td>
                           </tr>
                           <tr>
-                            <td className="bg-light fw-bold text-center align-middle">상태/메모리</td>
+                            <td className="bg-light fw-bold text-center align-middle">워크 플로우</td>
                             <td>
                               <textarea
                                 className="form-control border-0"
-                                name="state_memory"
-                                value={formData.state_memory}
-                                onChange={handleInputChange}
-                                rows="2"
-                                placeholder="상태 관리나 메모리 관련 내용을 입력하세요 (선택사항)"
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="bg-light fw-bold text-center align-middle">액션</td>
-                            <td>
-                              <textarea
-                                className="form-control border-0"
-                                name="actions"
-                                value={formData.actions}
-                                onChange={handleInputChange}
-                                rows="3"
-                                placeholder="수행할 액션들을 설명하세요"
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="bg-light fw-bold text-center align-middle">리스크</td>
-                            <td>
-                              <textarea
-                                className="form-control border-0"
-                                name="risk"
-                                value={formData.risk}
-                                onChange={handleInputChange}
-                                rows="3"
-                                placeholder="예상되는 리스크를 입력하세요"
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="bg-light fw-bold text-center align-middle">혜택</td>
-                            <td>
-                              <textarea
-                                className="form-control border-0"
-                                name="benefits"
-                                value={formData.benefits}
-                                onChange={handleInputChange}
-                                rows="3"
-                                placeholder="기대되는 혜택을 입력하세요"
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="bg-light fw-bold text-center align-middle">계획</td>
-                            <td>
-                              <textarea
-                                className="form-control border-0"
-                                name="plan"
-                                value={formData.plan}
+                                name="workflow"
+                                value={formData.workflow}
                                 onChange={handleInputChange}
                                 rows="4"
-                                placeholder="구체적인 실행 계획을 입력하세요"
+                                placeholder="Agent의 5가지 요소를 포함하여 설명하세요. url 링크를 남겨주세요."
                               />
                             </td>
                           </tr>
