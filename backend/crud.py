@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from passlib.hash import bcrypt
-from models import Account, TeamMember
-from schemas import AccountRegister, TeamMemberCreate
+from models import Account, TeamMember, Aidea
+from schemas import AccountRegister, TeamMemberCreate, AideaCreate, AideaUpdate
 
 # Account CRUD
 def get_account_by_knox_id(db: Session, knox_id: str):
@@ -69,7 +69,6 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
         # 계정 기본 정보 업데이트
         account.name = registration_data.name.strip()
         account.team_name = registration_data.team_name.strip()
-        account.aidea = registration_data.aidea
         db.add(account)
         
         existing_members = db.query(TeamMember).filter(TeamMember.account_id == account.id).all()
@@ -89,6 +88,45 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
             )
             db.add(team_member)
         
+        # 기존 Aidea 업데이트 또는 새로 생성
+        existing_aidea = db.query(Aidea).filter(Aidea.account_id == account.id).first()
+        
+        if existing_aidea:
+            # 기존 Aidea가 있으면 업데이트
+            if registration_data.service_name and registration_data.service_name.strip():
+                existing_aidea.service_name = registration_data.service_name.strip()
+                existing_aidea.persona = registration_data.persona
+                existing_aidea.problem = registration_data.problem
+                existing_aidea.solution = registration_data.solution
+                existing_aidea.data_sources = registration_data.data_sources
+                existing_aidea.tools = registration_data.tools
+                existing_aidea.state_memory = registration_data.state_memory
+                existing_aidea.actions = registration_data.actions
+                existing_aidea.risk = registration_data.risk
+                existing_aidea.benefits = registration_data.benefits
+                existing_aidea.plan = registration_data.plan
+            else:
+                # service_name이 비어있으면 기존 Aidea 삭제
+                db.delete(existing_aidea)
+        else:
+            # 기존 Aidea가 없으면 새로 생성
+            if registration_data.service_name and registration_data.service_name.strip():
+                aidea = Aidea(
+                    account_id=account.id,
+                    service_name=registration_data.service_name.strip(),
+                    persona=registration_data.persona,
+                    problem=registration_data.problem,
+                    solution=registration_data.solution,
+                    data_sources=registration_data.data_sources,
+                    tools=registration_data.tools,
+                    state_memory=registration_data.state_memory,
+                    actions=registration_data.actions,
+                    risk=registration_data.risk,
+                    benefits=registration_data.benefits,
+                    plan=registration_data.plan
+                )
+                db.add(aidea)
+
         db.commit()
         db.refresh(account)
         return account
@@ -104,3 +142,52 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
         # 기타 예상치 못한 오류 - 롤백 후 재발생
         db.rollback()
         raise Exception(f"팀원 정보 업데이트 중 오류가 발생했습니다: {str(e)}")
+
+# Aidea CRUD
+def create_aidea(db: Session, account_id: int, aidea_data: AideaCreate):
+    aidea = Aidea(
+        account_id=account_id,
+        service_name=aidea_data.service_name,
+        persona=aidea_data.persona,
+        problem=aidea_data.problem,
+        solution=aidea_data.solution,
+        data_sources=aidea_data.data_sources,
+        tools=aidea_data.tools,
+        state_memory=aidea_data.state_memory,
+        actions=aidea_data.actions,
+        risk=aidea_data.risk,
+        benefits=aidea_data.benefits,
+        plan=aidea_data.plan
+    )
+    db.add(aidea)
+    db.commit()
+    db.refresh(aidea)
+    return aidea
+
+def get_aidea_by_id(db: Session, aidea_id: int):
+    return db.query(Aidea).filter(Aidea.id == aidea_id).first()
+
+def get_aideas_by_account(db: Session, account_id: int):
+    return db.query(Aidea).filter(Aidea.account_id == account_id).all()
+
+def update_aidea(db: Session, aidea_id: int, aidea_data: AideaUpdate):
+    aidea = get_aidea_by_id(db, aidea_id)
+    if not aidea:
+        return None
+    
+    update_data = aidea_data.dict(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(aidea, field, value)
+    
+    db.commit()
+    db.refresh(aidea)
+    return aidea
+
+def delete_aidea(db: Session, aidea_id: int):
+    aidea = get_aidea_by_id(db, aidea_id)
+    if not aidea:
+        return False
+    
+    db.delete(aidea)
+    db.commit()
+    return True
