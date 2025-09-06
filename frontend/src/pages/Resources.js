@@ -301,99 +301,117 @@ const Resources = () => {
           {activeTab === 'template' && (
             <div className="template-section">
               <h2 className="section-title text-center mb-5">제안서 템플릿 예시</h2>
-              <div className="template-form">
-                <div className="form-group">
-                  <label className="form-label">서비스 이름</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
-                    value={proposalExample.serviceName}
-                    readOnly
-                  />
-                </div>
+              
+              {/* 프로젝트 이름 - 맨 위에 배치 */}
+              <div className="mb-4">
+                <label className="form-label">프로젝트 이름</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={proposalExample.serviceName}
+                  readOnly
+                  style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                />
+              </div>
 
-                <div className="form-group">
-                  <label className="form-label">Persona</label>
-                  <textarea 
-                    className="form-textarea" 
-                    value={proposalExample.target_user}
-                    readOnly
-                    rows="3"
-                  />
-                </div>
+              {/* 표 형식으로 나머지 필드들 배치 */}
+              <div className="table-responsive">
+                <table className="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td className="bg-light fw-bold text-center align-middle" style={{ width: '20%' }}>주 사용자</td>
+                      <td>
+                        <input
+                          type="text"
+                          className="form-control border-0"
+                          value={proposalExample.target_user}
+                          readOnly
+                          style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="bg-light fw-bold text-center align-middle">문제 정의</td>
+                      <td>
+                        <textarea
+                          className="form-control border-0"
+                          rows="3"
+                          value={proposalExample.problem}
+                          readOnly
+                          style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="bg-light fw-bold text-center align-middle">해결 방법</td>
+                      <td>
+                        <textarea
+                          className="form-control border-0"
+                          rows="3"
+                          value={proposalExample.solution}
+                          readOnly
+                          style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="bg-light fw-bold text-center align-middle">활용 데이터</td>
+                      <td>
+                        <textarea
+                          className="form-control border-0"
+                          rows="3"
+                          value={proposalExample.dataSources}
+                          readOnly
+                          style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="bg-light fw-bold text-center align-middle">동작 시나리오</td>
+                      <td>
+                        <textarea
+                          className="form-control border-0"
+                          rows="3"
+                          value={proposalExample.actions}
+                          readOnly
+                          style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="bg-light fw-bold text-center align-middle">기대효과</td>
+                      <td>
+                        <textarea
+                          className="form-control border-0"
+                          rows="3"
+                          value={proposalExample.benefits}
+                          readOnly
+                          style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="bg-light fw-bold text-center align-middle">워크 플로우</td>
+                      <td>
+                        <textarea
+                          className="form-control border-0"
+                          rows="4"
+                          value={proposalExample.plan}
+                          readOnly
+                          style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-                <div className="form-group">
-                  <label className="form-label">Problem</label>
-                  <textarea 
-                    className="form-textarea" 
-                    value={proposalExample.problem}
-                    readOnly
-                    rows="3"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Solution</label>
-                  <textarea 
-                    className="form-textarea" 
-                    value={proposalExample.solution}
-                    readOnly
-                    rows="3"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Data Sources</label>
-                  <textarea 
-                    className="form-textarea" 
-                    value={proposalExample.dataSources}
-                    readOnly
-                    rows="2"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Actions</label>
-                  <textarea 
-                    className="form-textarea" 
-                    value={proposalExample.actions}
-                    readOnly
-                    rows="3"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Risk</label>
-                  <textarea 
-                    className="form-textarea" 
-                    value={proposalExample.risk}
-                    readOnly
-                    rows="2"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Benefits</label>
-                  <textarea 
-                    className="form-textarea" 
-                    value={proposalExample.benefits}
-                    readOnly
-                    rows="2"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Plan</label>
-                  <textarea 
-                    className="form-textarea" 
-                    value={proposalExample.plan}
-                    readOnly
-                    rows="3"
-                  />
-                </div>
-
-                <div className="template-note">
-                  <p><strong>참고:</strong> 위 예시를 참고하여 본인의 AI Agent 아이디어로 제안서를 작성해주세요.</p>
+              <div className="template-note mt-4">
+                <div className="alert alert-info d-flex align-items-center" role="alert" style={{ borderRadius: 12 }}>
+                  <span className="me-2" aria-hidden="true">ℹ️</span>
+                  <div>
+                    <strong>참고:</strong> 위 예시를 참고하여 본인의 AI Agent 아이디어로 제안서를 작성해주세요.
+                  </div>
                 </div>
               </div>
             </div>
