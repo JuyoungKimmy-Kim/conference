@@ -239,7 +239,7 @@ const Resources = () => {
 
   const proposalExample = {
     serviceName: "스마트 회의 도우미 Agent",
-    persona: "바쁜 직장인들이 효율적인 회의를 진행할 수 있도록 도와주는 AI Agent",
+    target_user: "바쁜 직장인들이 효율적인 회의를 진행할 수 있도록 도와주는 AI Agent",
     problem: "회의 시간이 길어지고, 중요한 내용이 놓치거나 후속 조치가 제대로 이루어지지 않는 문제",
     solution: "회의 내용을 실시간으로 분석하고, 액션 아이템을 자동으로 추출하여 참석자들에게 알림을 보내는 AI Agent",
     dataSources: "회의 녹음 파일, 채팅 메시지, 캘린더 정보, 이메일 데이터",
@@ -316,7 +316,7 @@ const Resources = () => {
                   <label className="form-label">Persona</label>
                   <textarea 
                     className="form-textarea" 
-                    value={proposalExample.persona}
+                    value={proposalExample.target_user}
                     readOnly
                     rows="3"
                   />

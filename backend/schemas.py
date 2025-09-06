@@ -19,7 +19,7 @@ class AccountRegister(BaseModel):
     team_members: List[TeamMemberCreate] = []
     # Aidea 정보
     project: Optional[str] = None
-    persona: Optional[str] = None
+    target_user: Optional[str] = None
     problem: Optional[str] = None
     solution: Optional[str] = None
     data_sources: Optional[str] = None
@@ -30,7 +30,7 @@ class AccountRegister(BaseModel):
 # Aidea 스키마
 class AideaCreate(BaseModel):
     project: str
-    persona: Optional[str] = None
+    target_user: Optional[str] = None
     problem: Optional[str] = None
     solution: Optional[str] = None
     data_sources: Optional[str] = None
@@ -40,7 +40,7 @@ class AideaCreate(BaseModel):
 
 class AideaUpdate(BaseModel):
     project: Optional[str] = None
-    persona: Optional[str] = None
+    target_user: Optional[str] = None
     problem: Optional[str] = None
     solution: Optional[str] = None
     data_sources: Optional[str] = None
@@ -52,7 +52,7 @@ class AideaResponse(BaseModel):
     id: int
     account_id: int
     project: str
-    persona: Optional[str] = None
+    target_user: Optional[str] = None
     problem: Optional[str] = None
     solution: Optional[str] = None
     data_sources: Optional[str] = None

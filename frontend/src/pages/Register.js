@@ -13,7 +13,7 @@ const Register = () => {
     team: '',
     // Aidea 필드들
     project: '',
-    persona: '',
+    target_user: '',
     problem: '',
     solution: '',
     data_sources: '',
@@ -101,7 +101,7 @@ const Register = () => {
         team: accountData.team_name || '',
         // Aidea 데이터 로드
         project: accountData.aideas?.[0]?.project || '',
-        persona: accountData.aideas?.[0]?.persona || '',
+        target_user: accountData.aideas?.[0]?.target_user || '',
         problem: accountData.aideas?.[0]?.problem || '',
         solution: accountData.aideas?.[0]?.solution || '',
         data_sources: accountData.aideas?.[0]?.data_sources || '',
@@ -180,7 +180,7 @@ const Register = () => {
         })),
         // Aidea 데이터 추가
         project: formData.project,
-        persona: formData.persona,
+        target_user: formData.target_user,
         problem: formData.problem,
         solution: formData.solution,
         data_sources: formData.data_sources,
@@ -496,15 +496,15 @@ const Register = () => {
                       <table className="table table-bordered">
                         <tbody>
                           <tr>
-                            <td className="bg-light fw-bold text-center align-middle" style={{ width: '20%' }}>페르소나</td>
+                            <td className="bg-light fw-bold text-center align-middle" style={{ width: '20%' }}>주 사용자</td>
                             <td>
                               <input
                                 type="text"
                                 className="form-control border-0"
-                                name="persona"
-                                value={formData.persona}
+                                name="target_user"
+                                value={formData.target_user}
                                 onChange={handleInputChange}
-                                placeholder="타겟 사용자 페르소나를 입력하세요"
+                                placeholder="타겟 사용자 주 사용자를 입력하세요"
                               />
                             </td>
                           </tr>
