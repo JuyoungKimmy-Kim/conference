@@ -11,13 +11,12 @@ const Resources = () => {
     {
       title: "AI Agent란?",
       content: `
-        <h3>요청·목표를 이해하고, 스스로 계획을 세워 여러 도구를 사용해 결과를 만드는 행동형 AI입니다.</h3>
-        
-        <p>사람에게 출장 준비를 요청하면, 보통 항공권 찾기 → 일정 조율 → 결제 확인 등의 계획을 세우고 필요한 도구(앱, 데이터)를 써서 처리한 뒤, 
-        잘 끝났는지 점검하고 결과를 보고합니다.
-
-        <strong>AI 에이전트도 이와 같습니다.</strong> 사용자의 목표를 이해하고 계획을 세운 다음, 
-        도구(API·앱·데이터)를 활용해 실행하고, 결과를 검토하며 필요하면 다시 시도하여 결과를 보고합니다.</p>
+        <div class="video-container">
+          <video controls width="100%" height="auto">
+            <source src="/assets/ai-agent-intro.mp4" type="video/mp4">
+            브라우저가 비디오를 지원하지 않습니다.
+          </video>
+        </div>
       `
     },
     {
@@ -517,33 +516,7 @@ print(agent.execute_plan())`
                     />
                   </div>
                 ))}
-
-                {/* 참고자료 다운로드 카드 */}
-                <div className="concept-card">
-                  <h3 className="concept-title">참고자료 다운로드</h3>
-                  <p className="concept-description">AI Agent 개념과 제안서 작성에 도움이 되는 발표 자료</p>
-                  <div className="concept-content">
-                    <div className="text-center">
-                      <div className="mb-3">
-                        <i className="fas fa-file-powerpoint fa-3x text-warning"></i>
-                      </div>
-                      <h5 className="mb-3">AI Agent 개념 발표 자료</h5>
-                      <p className="text-muted mb-4">
-                        AI Agent의 기본 개념, 작동 원리, 최소 요건 등을 포함한 발표 자료입니다.
-                      </p>
-                      <a 
-                        href="/downloads/ai-agent-concepts.pptx" 
-                        className="btn btn-warning"
-                        download="ai-agent-concepts.pptx"
-                      >
-                        <i className="fas fa-download me-2"></i>PPTX 다운로드
-                      </a>
-                    </div>
-                  </div>
-                </div>
               </div>
-
-              {/* 참고자료 다운로드 섹션 삭제 */}
             </div>
           )}
 
