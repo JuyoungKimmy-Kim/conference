@@ -46,6 +46,37 @@ const Home = () => {
     },
   ];
 
+  const mentoringFAQs = [
+    {
+      question: "멘토링은 어떻게 운영되나요?",
+      answer: (
+        <span>
+          서류 심사를 통과한 팀에는 운영 멘토와 기술 지원 멘토가 각각 1명씩 배정됩니다.
+          <br /><br />
+          <strong>운영 멘토:</strong> 프로젝트 운영 전반(일정 관리, 발표 준비 등)에 대한 지원을 제공합니다.
+          <br />
+          <strong>기술 지원 멘토:</strong> 기술 설계와 구현 과정에 직접 참여하여 팀이 개발을 원활히 진행할 수 있도록 돕습니다.
+        </span>
+      )
+    },
+    {
+      question: "멘토 배정은 언제 이루어지나요?",
+      answer: "서류 심사 결과 발표 후, 팀별 멘토가 안내됩니다."
+    },
+    {
+      question: "멘토링은 어떤 방식으로 진행되나요?",
+      answer: "기본적으로 온라인 중심으로 진행되며, 필요 시 오프라인 멘토링이나 추가 미팅도 협의 가능합니다."
+    },
+    {
+      question: "멘토링은 언제 받을 수 있나요?",
+      answer: "멘토링은 평일(Working Day) 오전 9시부터 오후 6시 사이에 진행됩니다. 팀과 멘토가 협의하여 구체적인 일정과 시간을 조율할 수 있습니다."
+    },
+    {
+      question: "멘토를 교체할 수 있나요?",
+      answer: "원칙적으론 불가능하지만 특별한 사유가 있는 경우에만 운영 측과 협의하여 변경이 가능합니다."
+    }
+  ];
+
   return (
     <div className="home">
       {/* Hero Section - 전체 화면 */}
@@ -151,6 +182,12 @@ const Home = () => {
             >
               참가 신청
             </button>
+            <button 
+              className={`faq-tab ${activeTab === 'mentoring' ? 'active' : ''}`}
+              onClick={() => setActiveTab('mentoring')}
+            >
+              멘토링
+            </button>
           </div>
 
           {/* FAQ 내용 */}
@@ -173,6 +210,21 @@ const Home = () => {
             {activeTab === 'registration' && (
               <div className="faq-items">
                 {registrationFAQs.map((faq, index) => (
+                  <div key={index} className="faq-item">
+                    <div className="faq-question">
+                      <strong>{faq.question}</strong>
+                    </div>
+                    <div className="faq-answer">
+                      {faq.answer}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'mentoring' && (
+              <div className="faq-items">
+                {mentoringFAQs.map((faq, index) => (
                   <div key={index} className="faq-item">
                     <div className="faq-question">
                       <strong>{faq.question}</strong>
