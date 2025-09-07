@@ -48,7 +48,7 @@ const Guide = () => {
               <div className="condition-card">
                 <div className="condition-icon">👥</div>
                 <h3>팀 구성</h3>
-                <p>개발자 2-4명으로 팀을 구성</p>
+                <p>자유롭게 1명이상 인원 제한없이 팀을 구성하여 참가하실 수 있습니다.</p>
               </div>
               <div className="condition-card">
                 <div className="condition-icon">🔄</div>

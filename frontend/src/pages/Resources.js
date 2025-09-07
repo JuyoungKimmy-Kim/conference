@@ -657,10 +657,9 @@ print(agent.execute_plan())`
                 </table>
               </div>
 
-              <div className="template-note mt-4">
-                <div className="text-center text-muted">
-                  <strong>참고:</strong> 위 예시를 참고하여 본인의 아이디어로 제안서를 작성해주세요.
-                </div>
+              {/* 참고 안내 */}
+              <div className="alert alert-info">
+                <strong>참고:</strong> 위 예시를 참고하여 본인의 아이디어로 제안서를 작성해주세요.
               </div>
             </div>
           )}
@@ -868,7 +867,7 @@ print(agent.execute_plan())`
 
                 {/* HTML 다운로드 섹션 */}
                 <div className="concept-card">
-                  <h3 className="concept-title">4. 주피터 노트북을 HTML로 변환한 자료</h3>
+                  <h3 className="concept-title">다운로드</h3>
                   <div className="concept-content">
                     <p className="text-muted mb-3">
                       Git clone과 VSCode IDE로 실행하기 힘든 환경이라면, 주피터 노터북 파일을 HTML로 변환한 자료를 다운로드하여 읽어보세요.
@@ -877,7 +876,7 @@ print(agent.execute_plan())`
                       <div className="col-md-6 mb-3">
                         <div className="card">
                           <div className="card-body text-center">
-                            <h6 className="card-title">📄 Agent RAG 4예제</h6>
+                            <h6 className="card-title">📄 Agent RAG 예제</h6>
                             <p className="card-text small text-muted">Agentic RAG 시스템 4가지 패턴 예제</p>
                             <a 
                               href="/downloads/Agent_RAG_4examples.html" 
