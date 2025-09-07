@@ -53,23 +53,6 @@ const Resources = () => {
       `
     },
     {
-      title: "Agent의 핵심 구성 요소",
-      description: "AI Agent를 구성하는 핵심 요소들을 설명합니다.",
-      content: `
-        <h3>1. 인지 (Perception)</h3>
-        <p>환경으로부터 정보를 수집하고 이해하는 능력</p>
-        
-        <h3>2. 추론 (Reasoning)</h3>
-        <p>수집된 정보를 바탕으로 판단하고 결정하는 능력</p>
-        
-        <h3>3. 행동 (Action)</h3>
-        <p>환경에 영향을 미치는 행동을 수행하는 능력</p>
-        
-        <h3>4. 학습 (Learning)</h3>
-        <p>경험을 통해 성능을 개선하는 능력</p>
-      `
-    },
-    {
       title: "AI Service vs AI Agent",
       content: `
         <h3>AI Service: 특정 작업을 수행하는 AI 기반 서비스</h3>
@@ -129,10 +112,40 @@ const Resources = () => {
       `
     },
     {
-      title: "AI Agent 판별 예시",
+      title: "이번 대회의 Agent 최소 요건",
       content: `
+        <h3>필수 요소</h3>
+        <ul>
+          <li><strong>다단계 플로우</strong>: 계획/도구호출/검증/리포트 중 2개 이상 포함
+            <ul>
+              <li><strong>계획</strong>: 사용자의 목표/제약을 해석해 실행 가능한 단계 목록(플랜)을 만든다. 각 단계는 목적·입력·도구·성공조건을 포함</li>
+              <li><strong>도구 호출</strong>: Agent 외부 시스템/API/서비스를 실제 호출해 읽기/쓰기/변경을 수행한다</li>
+              <li><strong>검증</strong>: 중간/최종 산출물을 명시적 규칙/근거/지표로 검사하고, 실패 시 재시도 등을 수행한다</li>
+              <li><strong>리포트</strong>: 결과를 구조화된 산출물(요약, 링크, 첨부, 지표)로 제공하고 다음 스텝 제안/트리거(알림, 티켓, 일정)까지 마무리한다</li>
+            </ul>
+          </li>
+          <li><strong>도구 1개 이상 연동</strong></li>
+            <ul>
+              <li>Jira, 메일, 캘린더 등</li>
+              <li>DB</li>
+              <li>문서 Parser</li>
+              <li>mcp</li>
+              <li>webhook / fast api</li>
+            </ul>
+        </ul>
+
+        <h3>가점 요소 (본선 진출할 세 팀 선정 가점 예정)</h3>
+        <ul>
+          <li><strong>상태/메모리 중 1개 이상</strong>
+            <ul>
+              <li>최근 컨텍스트 유지 (대회/세션/프로젝트별 메모리)</li>
+              <li>장기기억, RAG 참조</li>
+              <li>실패 복구 전략: 재시도</li>
+            </ul>
+          </li>
+        </ul>
+        <h3>판별 예시(빠른 체크)</h3>
         <div class="matrix">
-          <h3>사례별 에이전트성 판별</h3>
           <div class="matrix-table">
             <div class="row header">
               <div class="cell">사례</div>
@@ -504,7 +517,33 @@ print(agent.execute_plan())`
                     />
                   </div>
                 ))}
+
+                {/* 참고자료 다운로드 카드 */}
+                <div className="concept-card">
+                  <h3 className="concept-title">참고자료 다운로드</h3>
+                  <p className="concept-description">AI Agent 개념과 제안서 작성에 도움이 되는 발표 자료</p>
+                  <div className="concept-content">
+                    <div className="text-center">
+                      <div className="mb-3">
+                        <i className="fas fa-file-powerpoint fa-3x text-warning"></i>
+                      </div>
+                      <h5 className="mb-3">AI Agent 개념 발표 자료</h5>
+                      <p className="text-muted mb-4">
+                        AI Agent의 기본 개념, 작동 원리, 최소 요건 등을 포함한 발표 자료입니다.
+                      </p>
+                      <a 
+                        href="/downloads/ai-agent-concepts.pptx" 
+                        className="btn btn-warning"
+                        download="ai-agent-concepts.pptx"
+                      >
+                        <i className="fas fa-download me-2"></i>PPTX 다운로드
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* 참고자료 다운로드 섹션 삭제 */}
             </div>
           )}
 
@@ -832,7 +871,7 @@ print(agent.execute_plan())`
                   <h3 className="concept-title">4. 주피터 노트북을 HTML로 변환한 자료</h3>
                   <div className="concept-content">
                     <p className="text-muted mb-3">
-                      Git clone과 VSCode IDE로 실행하기 힘든 환경이라면, 주피터 노트북 파일을 HTML로 변환한 자료를 다운로드하여 읽어보세요.
+                      Git clone과 VSCode IDE로 실행하기 힘든 환경이라면, 주피터 노터북 파일을 HTML로 변환한 자료를 다운로드하여 읽어보세요.
                     </p>
                     <div className="row">
                       <div className="col-md-6 mb-3">
@@ -871,6 +910,8 @@ print(agent.execute_plan())`
               </div>
             </div>
           )}
+
+          {/* 참고자료 다운로드 탭 제거 */}
         </div>
       </div>
     </div>
