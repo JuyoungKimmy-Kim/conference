@@ -95,7 +95,7 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
             # 기존 Aidea가 있으면 업데이트
             if registration_data.project and registration_data.project.strip():
                 existing_aidea.project = registration_data.project.strip()
-                existing_aidea.persona = registration_data.persona
+                existing_aidea.target_user = registration_data.target_user
                 existing_aidea.problem = registration_data.problem
                 existing_aidea.solution = registration_data.solution
                 existing_aidea.data_sources = registration_data.data_sources
@@ -111,7 +111,7 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
                 aidea = Aidea(
                     account_id=account.id,
                     project=registration_data.project.strip(),
-                    persona=registration_data.persona,
+                    target_user=registration_data.target_user,
                     problem=registration_data.problem,
                     solution=registration_data.solution,
                     data_sources=registration_data.data_sources,
@@ -142,7 +142,7 @@ def create_aidea(db: Session, account_id: int, aidea_data: AideaCreate):
     aidea = Aidea(
         account_id=account_id,
         project=aidea_data.project,
-        persona=aidea_data.persona,
+        target_user=aidea_data.target_user,
         problem=aidea_data.problem,
         solution=aidea_data.solution,
         data_sources=aidea_data.data_sources,

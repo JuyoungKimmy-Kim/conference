@@ -40,7 +40,7 @@ class Aidea(Base):
     id = Column(Integer, primary_key=True, index=True)
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
     project = Column(String, nullable=False)  # 프로젝트 이름
-    persona = Column(Text, nullable=True)  # 페르소나
+    target_user = Column(Text, nullable=True)  # 주 사용자
     problem = Column(Text, nullable=True)  # 문제 정의
     solution = Column(Text, nullable=True)  # 솔루션
     data_sources = Column(Text, nullable=True)  # 데이터 소스
