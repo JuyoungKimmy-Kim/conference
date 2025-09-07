@@ -604,13 +604,14 @@ print(agent.execute_plan())`
                     <tr>
                       <td className="bg-light fw-bold text-center align-middle">워크 플로우</td>
                       <td>
-                        <textarea
-                          className="form-control border-0"
-                          rows="4"
-                          value={proposalExample.plan}
-                          readOnly
-                          style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
-                        />
+                        <div className="text-center">
+                          <img 
+                            src="/assets/workflow.png" 
+                            alt="워크플로우" 
+                            className="img-fluid rounded"
+                            style={{ maxWidth: '100%', height: 'auto' }}
+                          />
+                        </div>
                       </td>
                     </tr>
                   </tbody>
@@ -618,11 +619,8 @@ print(agent.execute_plan())`
               </div>
 
               <div className="template-note mt-4">
-                <div className="alert alert-info d-flex align-items-center" role="alert" style={{ borderRadius: 12 }}>
-                  <span className="me-2" aria-hidden="true">ℹ️</span>
-                  <div>
-                    <strong>참고:</strong> 위 예시를 참고하여 본인의 AI Agent 아이디어로 제안서를 작성해주세요.
-                  </div>
+                <div className="text-center text-muted">
+                  <strong>참고:</strong> 위 예시를 참고하여 본인의 아이디어로 제안서를 작성해주세요.
                 </div>
               </div>
             </div>
