@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from passlib.hash import bcrypt
-from models import Account, TeamMember, Aidea, Judge
+from models import Account, TeamMember, Aidea, Judge, Evaluation
 from schemas import AccountRegister, TeamMemberCreate, AideaCreate, AideaUpdate
 
 # Account CRUD
@@ -235,6 +235,54 @@ def get_all_projects_with_accounts(db: Session):
 def get_projects_with_aideas_only(db: Session):
     """Aidea가 있는 Account만 가져옵니다."""
     return db.query(Account).join(Aidea).all()
+
+# Evaluation CRUD
+def create_evaluation(db: Session, account_id: int, judge_id: int, innovation_score: int, feasibility_score: int, effectiveness_score: int):
+    """평가를 생성합니다."""
+    total_score = innovation_score + feasibility_score + effectiveness_score
+    
+    # 이미 같은 심사위원이 같은 계정을 평가했는지 확인
+    existing_evaluation = db.query(Evaluation).filter(
+        Evaluation.account_id == account_id,
+        Evaluation.judge_id == judge_id
+    ).first()
+    
+    if existing_evaluation:
+        existing_evaluation.innovation_score = innovation_score
+        existing_evaluation.feasibility_score = feasibility_score
+        existing_evaluation.effectiveness_score = effectiveness_score
+        existing_evaluation.total_score = total_score
+        db.commit()
+        db.refresh(existing_evaluation)
+        return existing_evaluation
+    else:
+        evaluation = Evaluation(
+            account_id=account_id,
+            judge_id=judge_id,
+            innovation_score=innovation_score,
+            feasibility_score=feasibility_score,
+            effectiveness_score=effectiveness_score,
+            total_score=total_score
+        )
+        db.add(evaluation)
+        db.commit()
+        db.refresh(evaluation)
+        return evaluation
+
+def get_evaluations_by_account(db: Session, account_id: int):
+    """특정 계정의 모든 평가를 가져옵니다."""
+    return db.query(Evaluation).filter(Evaluation.account_id == account_id).all()
+
+def get_evaluation_by_judge_and_account(db: Session, judge_id: int, account_id: int):
+    """특정 심사위원이 특정 계정에 대해 한 평가를 가져옵니다."""
+    return db.query(Evaluation).filter(
+        Evaluation.judge_id == judge_id,
+        Evaluation.account_id == account_id
+    ).first()
+
+def get_all_evaluations(db: Session):
+    """모든 평가를 가져옵니다."""
+    return db.query(Evaluation).all()
 
 if __name__ == "__main__":
     add_benefit_column()

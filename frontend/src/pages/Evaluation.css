@@ -559,3 +559,209 @@
     max-height: 500px;
   }
 }
+
+/* Evaluation Form Styles */
+.evaluation-form {
+  padding: 1.5rem 0;
+}
+
+.evaluation-item {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.evaluation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.evaluation-title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.1rem;
+  color: #495057;
+}
+
+.grade-options-inline {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.grade-display {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+
+.grade-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  border: 2px solid #e9ecef;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.grade-option:hover {
+  border-color: #667eea;
+  background: #f8f9fa;
+}
+
+.grade-option input[type="radio"] {
+  display: none;
+}
+
+.grade-option input[type="radio"]:checked + .grade-label {
+  color: white;
+  font-weight: 600;
+}
+
+.grade-option input[type="radio"]:checked {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+}
+
+.grade-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #495057;
+  transition: all 0.3s ease;
+}
+
+.grade-option:has(input[type="radio"]:checked) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+}
+
+.grade-option:has(input[type="radio"]:checked) .grade-label {
+  color: white;
+  font-weight: 600;
+}
+
+.score-description {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.evaluation-summary {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  text-align: center;
+  border: 2px solid #dee2e6;
+}
+
+.total-score {
+  font-size: 1.2rem;
+  color: #495057;
+}
+
+.evaluation-actions {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.evaluation-actions .btn {
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.evaluation-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Detailed Description Styles */
+.description-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.description-header:hover {
+  color: #667eea;
+}
+
+.expand-icon-small {
+  font-size: 0.8rem;
+  color: #6c757d;
+  transition: transform 0.2s ease;
+}
+
+.detailed-description {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  animation: slideDown 0.3s ease-out;
+}
+
+.detailed-description h6 {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.detailed-description ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.detailed-description li {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #495057;
+}
+
+.detailed-description li strong {
+  color: #667eea;
+  font-weight: 600;
+}
+
+/* Responsive Design for Evaluation */
+@media (max-width: 768px) {
+  .evaluation-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .evaluation-title-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .grade-options-inline {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

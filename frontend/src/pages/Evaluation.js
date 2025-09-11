@@ -10,12 +10,24 @@ const Evaluation = () => {
   const [loginError, setLoginError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [projects, setProjects] = useState([]);
-  const [showProjects, setShowProjects] = useState(false);
   const [loadingProjects, setLoadingProjects] = useState(false);
-  const [viewMode, setViewMode] = useState('dashboard'); // 'dashboard' 또는 'projects'
+  const [viewMode, setViewMode] = useState('projects'); // 'projects' 또는 'detail'
   const [selectedProject, setSelectedProject] = useState(null);
   const [isTeamInfoExpanded, setIsTeamInfoExpanded] = useState(false);
   const [isProjectDetailExpanded, setIsProjectDetailExpanded] = useState(true);
+  const [isEvaluationExpanded, setIsEvaluationExpanded] = useState(true);
+  const [evaluationScores, setEvaluationScores] = useState({
+    innovation: '',
+    feasibility: '',
+    effectiveness: ''
+  });
+  const [expandedDescriptions, setExpandedDescriptions] = useState({
+    innovation: false,
+    feasibility: false,
+    effectiveness: false
+  });
+  const [currentJudge, setCurrentJudge] = useState(null);
+  const [isSubmittingEvaluation, setIsSubmittingEvaluation] = useState(false);
 
   const handleLoginInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,7 +70,11 @@ const Evaluation = () => {
       }
       
       const judgeData = await res.json();
+      setCurrentJudge(judgeData);
       setIsLoggedIn(true);
+      setViewMode('projects');
+      // 로그인 성공 후 바로 프로젝트 목록 가져오기
+      fetchProjects();
     } catch (err) {
       console.error(err);
       setLoginError('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
@@ -69,11 +85,11 @@ const Evaluation = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setCurrentJudge(null);
     setLoginData({ judgeId: '', password: '' });
     setLoginError('');
     setProjects([]);
-    setShowProjects(false);
-    setViewMode('dashboard');
+    setViewMode('projects');
   };
 
   const fetchProjects = async () => {
@@ -85,7 +101,6 @@ const Evaluation = () => {
       }
       const projectsData = await response.json();
       setProjects(projectsData);
-      setShowProjects(true);
     } catch (error) {
       console.error('프로젝트 목록 조회 오류:', error);
       alert('프로젝트 목록을 가져오는데 실패했습니다: ' + error.message);
@@ -94,16 +109,7 @@ const Evaluation = () => {
     }
   };
 
-  const handleShowProjects = () => {
-    if (projects.length === 0) {
-      fetchProjects();
-    }
-    setViewMode('projects');
-  };
 
-  const handleBackToDashboard = () => {
-    setViewMode('dashboard');
-  };
 
   const handleProjectClick = (project) => {
     setSelectedProject(project);
@@ -113,6 +119,92 @@ const Evaluation = () => {
   const handleBackToProjects = () => {
     setSelectedProject(null);
     setViewMode('projects');
+  };
+
+  const handleGradeChange = (category, grade) => {
+    setEvaluationScores(prev => ({
+      ...prev,
+      [category]: grade
+    }));
+  };
+
+  const getGradeValue = (grade, category) => {
+    if (category === 'innovation' || category === 'feasibility') {
+      // 아이디어 혁신성, 기술 실현 가능성: UN(6), NI(12), GD(18), VG(24), EX(30)
+      const gradeValues = { 'UN': 6, 'NI': 12, 'GD': 18, 'VG': 24, 'EX': 30 };
+      return gradeValues[grade] || 0;
+    } else {
+      // 업무 효과성: UN(8), NI(16), GD(24), VG(32), EX(40)
+      const gradeValues = { 'UN': 8, 'NI': 16, 'GD': 24, 'VG': 32, 'EX': 40 };
+      return gradeValues[grade] || 0;
+    }
+  };
+
+  const getTotalScore = () => {
+    return getGradeValue(evaluationScores.innovation, 'innovation') + 
+           getGradeValue(evaluationScores.feasibility, 'feasibility') + 
+           getGradeValue(evaluationScores.effectiveness, 'effectiveness');
+  };
+
+  const handleSubmitEvaluation = async () => {
+    if (!currentJudge || !selectedProject) {
+      alert('로그인 정보 또는 프로젝트 정보가 없습니다.');
+      return;
+    }
+
+    // 모든 평가 항목이 선택되었는지 확인
+    if (!evaluationScores.innovation || !evaluationScores.feasibility || !evaluationScores.effectiveness) {
+      alert('모든 평가 항목을 선택해주세요.');
+      return;
+    }
+
+    setIsSubmittingEvaluation(true);
+    try {
+      const evaluationData = {
+        account_id: selectedProject.account.id,
+        judge_id: currentJudge.id,
+        innovation_score: getGradeValue(evaluationScores.innovation, 'innovation'),
+        feasibility_score: getGradeValue(evaluationScores.feasibility, 'feasibility'),
+        effectiveness_score: getGradeValue(evaluationScores.effectiveness, 'effectiveness')
+      };
+
+      const response = await fetch('/api/evaluations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(evaluationData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || '평가 제출에 실패했습니다.');
+      }
+
+      const result = await response.json();
+      console.log('평가 제출 성공:', result);
+      alert(`평가가 완료되었습니다!\n총점: ${result.total_score}/100점`);
+      
+      // 평가 완료 후 상태 초기화
+      setEvaluationScores({
+        innovation: '',
+        feasibility: '',
+        effectiveness: ''
+      });
+      
+    } catch (error) {
+      console.error('평가 제출 오류:', error);
+      alert('평가 제출 중 오류가 발생했습니다: ' + error.message);
+    } finally {
+      setIsSubmittingEvaluation(false);
+    }
+  };
+
+  const toggleDescription = (category) => {
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
   };
 
   if (!isLoggedIn) {
@@ -192,85 +284,6 @@ const Evaluation = () => {
     );
   }
 
-  // 프로젝트 목록 전용 화면
-  if (isLoggedIn && viewMode === 'projects') {
-    return (
-      <div className="evaluation-page">
-        <div className="evaluation-hero section-padding">
-          <div className="container text-center">
-            <h1 className="evaluation-title">제출된 프로젝트 목록</h1>
-            <p className="evaluation-subtitle">
-              AI Agent 경진대회에 제출된 프로젝트들을 확인하세요
-            </p>
-          </div>
-        </div>
-
-        <div className="evaluation-content section-padding">
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="projects-full-section">
-                  <div className="projects-header">
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                      <h2>📊 제출된 프로젝트 목록</h2>
-                      <div>
-                        <button 
-                          className="btn btn-outline-secondary me-2"
-                          onClick={handleBackToDashboard}
-                        >
-                          ← 대시보드로 돌아가기
-                        </button>
-                        <button 
-                          className="btn btn-primary"
-                          onClick={fetchProjects}
-                          disabled={loadingProjects}
-                        >
-                          {loadingProjects ? '로딩 중...' : '새로고침'}
-                        </button>
-                      </div>
-                    </div>
-                    <p className="text-muted">총 {projects.length}개의 프로젝트가 제출되었습니다.</p>
-                  </div>
-                  
-                  {projects.length === 0 ? (
-                    <div className="alert alert-info text-center">
-                      <h5>📝 아직 제출된 프로젝트가 없습니다</h5>
-                      <p className="mb-0">참가자들이 프로젝트를 제출하면 여기에 표시됩니다.</p>
-                    </div>
-                  ) : (
-                    <div className="projects-list">
-                      <div className="table-responsive">
-                        <table className="table table-hover">
-                          <thead className="table-dark">
-                            <tr>
-                              <th>사업팀</th>
-                              <th>팀명</th>
-                              <th>프로젝트 이름</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {projects.map((project, index) => (
-                              <tr key={project.aidea.id} onClick={() => handleProjectClick(project)} style={{cursor: 'pointer'}}>
-                                <td>{project.account.department || "미입력"}</td>
-                                <td>{project.account.team_name || "미입력"}</td>
-                                <td>
-                                  <strong>{project.aidea.project}</strong>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (isLoggedIn && viewMode === 'detail' && selectedProject) {
     return (
@@ -362,33 +375,227 @@ const Evaluation = () => {
                           {isProjectDetailExpanded && (
                             <div className="detail-card-content">
                               <div className="detail-item">
+                                <strong>주 사용자:</strong>
+                                <div className="detail-content">
+                                  {selectedProject.aidea.target_user || "미입력"}
+                                </div>
+                              </div>                              
+                              <div className="detail-item">
                                 <strong>문제 정의:</strong>
                                 <div className="detail-content">
                                   {selectedProject.aidea.problem || "미입력"}
                                 </div>
                               </div>
                               <div className="detail-item">
-                                <strong>해결 방안:</strong>
+                                <strong>해결 방법:</strong>
                                 <div className="detail-content">
                                   {selectedProject.aidea.solution || "미입력"}
                                 </div>
                               </div>
                               <div className="detail-item">
-                                <strong>데이터 소스:</strong>
+                                <strong>활용 데이터:</strong>
                                 <div className="detail-content">
                                   {selectedProject.aidea.data_sources || "미입력"}
                                 </div>
                               </div>
                               <div className="detail-item">
-                                <strong>시나리오:</strong>
+                                <strong>동작 시나리오:</strong>
                                 <div className="detail-content">
                                   {selectedProject.aidea.scenario || "미입력"}
                                 </div>
                               </div>
                               <div className="detail-item">
-                                <strong>워크플로우:</strong>
+                                <strong>기대효과:</strong>
                                 <div className="detail-content">
-                                  {selectedProject.aidea.workflow || "미입력"}
+                                  {selectedProject.aidea.benefit || "미입력"}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="row mt-4">
+                      <div className="col-12">
+                        <div className="detail-card">
+                          <div 
+                            className="detail-card-header" 
+                            onClick={() => setIsEvaluationExpanded(!isEvaluationExpanded)}
+                            style={{cursor: 'pointer'}}
+                          >
+                            <h4>📊 평가하기</h4>
+                            <span className="expand-icon">
+                              {isEvaluationExpanded ? '▼' : '▶'}
+                            </span>
+                          </div>
+                          {isEvaluationExpanded && (
+                            <div className="detail-card-content">
+                              <div className="evaluation-form">
+                                <div className="evaluation-item">
+                                  <div className="evaluation-header">
+                                    <div className="evaluation-title-section">
+                                      <strong>아이디어 혁신성</strong>
+                                      <span className="grade-display">
+                                        {evaluationScores.innovation || '미선택'}
+                                        {evaluationScores.innovation && ` (${getGradeValue(evaluationScores.innovation, 'innovation')}점)`}
+                                      </span>
+                                    </div>
+                                    <div className="grade-options-inline">
+                                      {['UN', 'NI', 'GD', 'VG', 'EX'].map((grade) => (
+                                        <label key={grade} className="grade-option">
+                                          <input
+                                            type="radio"
+                                            name="innovation"
+                                            value={grade}
+                                            checked={evaluationScores.innovation === grade}
+                                            onChange={(e) => handleGradeChange('innovation', e.target.value)}
+                                          />
+                                          <span className="grade-label">{grade}</span>
+                                        </label>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <div className="score-description">
+                                    <div 
+                                      className="description-header"
+                                      onClick={() => toggleDescription('innovation')}
+                                      style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem'}}
+                                    >
+                                      <span>새로운 아이디어의 창의성과 혁신성을 평가합니다.</span>
+                                      <span className="expand-icon-small">
+                                        {expandedDescriptions.innovation ? '▼' : '▶'}
+                                      </span>
+                                    </div>
+                                    {expandedDescriptions.innovation && (
+                                      <div className="detailed-description">
+                                        <h6>평가 기준:</h6>
+                                        <ul>
+                                          <li><strong>EX (30점):</strong> 완전히 새로운 접근법이나 혁신적인 아이디어로, 기존 방식과 완전히 차별화됨</li>
+                                          <li><strong>VG (24점):</strong> 기존 아이디어를 크게 개선하거나 새로운 관점을 제시함</li>
+                                          <li><strong>GD (18점):</strong> 기존 아이디어에 일부 개선사항이나 새로운 요소를 추가함</li>
+                                          <li><strong>NI (12점):</strong> 기존 아이디어와 유사하지만 약간의 차별점이 있음</li>
+                                          <li><strong>UN (6점):</strong> 기존 아이디어와 거의 동일하거나 혁신성이 부족함</li>
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                
+                                <div className="evaluation-item">
+                                  <div className="evaluation-header">
+                                    <div className="evaluation-title-section">
+                                      <strong>기술 실현 가능성</strong>
+                                      <span className="grade-display">
+                                        {evaluationScores.feasibility || '미선택'}
+                                        {evaluationScores.feasibility && ` (${getGradeValue(evaluationScores.feasibility, 'feasibility')}점)`}
+                                      </span>
+                                    </div>
+                                    <div className="grade-options-inline">
+                                      {['UN', 'NI', 'GD', 'VG', 'EX'].map((grade) => (
+                                        <label key={grade} className="grade-option">
+                                          <input
+                                            type="radio"
+                                            name="feasibility"
+                                            value={grade}
+                                            checked={evaluationScores.feasibility === grade}
+                                            onChange={(e) => handleGradeChange('feasibility', e.target.value)}
+                                          />
+                                          <span className="grade-label">{grade}</span>
+                                        </label>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <div className="score-description">
+                                    <div 
+                                      className="description-header"
+                                      onClick={() => toggleDescription('feasibility')}
+                                      style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem'}}
+                                    >
+                                      <span>제안된 기술의 구현 가능성과 현실성을 평가합니다.</span>
+                                      <span className="expand-icon-small">
+                                        {expandedDescriptions.feasibility ? '▼' : '▶'}
+                                      </span>
+                                    </div>
+                                    {expandedDescriptions.feasibility && (
+                                      <div className="detailed-description">
+                                        <h6>평가 기준:</h6>
+                                        <ul>
+                                          <li><strong>EX (30점):</strong> 현재 기술로 완전히 구현 가능하며, 명확한 로드맵과 구체적인 실행 계획이 있음</li>
+                                          <li><strong>VG (24점):</strong> 대부분 구현 가능하며, 일부 기술적 도전과제가 있지만 해결 가능함</li>
+                                          <li><strong>GD (18점):</strong> 기본적인 구현은 가능하지만, 상당한 기술적 개선이나 추가 개발이 필요함</li>
+                                          <li><strong>NI (12점):</strong> 구현 가능성은 있지만, 기술적 제약이나 리소스 부족으로 어려움이 예상됨</li>
+                                          <li><strong>UN (6점):</strong> 현재 기술 수준으로는 구현이 매우 어렵거나 불가능함</li>
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                
+                                <div className="evaluation-item">
+                                  <div className="evaluation-header">
+                                    <div className="evaluation-title-section">
+                                      <strong>업무 효과성</strong>
+                                      <span className="grade-display">
+                                        {evaluationScores.effectiveness || '미선택'}
+                                        {evaluationScores.effectiveness && ` (${getGradeValue(evaluationScores.effectiveness, 'effectiveness')}점)`}
+                                      </span>
+                                    </div>
+                                    <div className="grade-options-inline">
+                                      {['UN', 'NI', 'GD', 'VG', 'EX'].map((grade) => (
+                                        <label key={grade} className="grade-option">
+                                          <input
+                                            type="radio"
+                                            name="effectiveness"
+                                            value={grade}
+                                            checked={evaluationScores.effectiveness === grade}
+                                            onChange={(e) => handleGradeChange('effectiveness', e.target.value)}
+                                          />
+                                          <span className="grade-label">{grade}</span>
+                                        </label>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <div className="score-description">
+                                    <div 
+                                      className="description-header"
+                                      onClick={() => toggleDescription('effectiveness')}
+                                      style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem'}}
+                                    >
+                                      <span>업무 효율성 향상과 비즈니스 가치 창출을 평가합니다.</span>
+                                      <span className="expand-icon-small">
+                                        {expandedDescriptions.effectiveness ? '▼' : '▶'}
+                                      </span>
+                                    </div>
+                                    {expandedDescriptions.effectiveness && (
+                                      <div className="detailed-description">
+                                        <h6>평가 기준:</h6>
+                                        <ul>
+                                          <li><strong>EX (40점):</strong> 업무 효율성이 극적으로 향상되며, 명확한 ROI와 비즈니스 임팩트가 예상됨</li>
+                                          <li><strong>VG (32점):</strong> 상당한 업무 효율성 향상과 비즈니스 가치 창출이 기대됨</li>
+                                          <li><strong>GD (24점):</strong> 일정 수준의 업무 개선과 비즈니스 효과가 예상됨</li>
+                                          <li><strong>NI (16점):</strong> 약간의 업무 개선은 있지만, 비즈니스 임팩트는 제한적임</li>
+                                          <li><strong>UN (8점):</strong> 업무 개선 효과가 미미하거나 비즈니스 가치가 불분명함</li>
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                
+                                <div className="evaluation-summary">
+                                  <div className="total-score">
+                                    <strong>총점: {getTotalScore()}/100</strong>
+                                  </div>
+                                </div>
+                                
+                                <div className="evaluation-actions">
+                                  <button 
+                                    className="btn btn-primary btn-lg"
+                                    onClick={handleSubmitEvaluation}
+                                    disabled={isSubmittingEvaluation}
+                                  >
+                                    {isSubmittingEvaluation ? '제출 중...' : '평가 제출'}
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -406,73 +613,96 @@ const Evaluation = () => {
     );
   }
 
-  return (
-    <div className="evaluation-page">
-      <div className="evaluation-hero section-padding">
-        <div className="container text-center">
-          <h1 className="evaluation-title">평가</h1>
-          <p className="evaluation-subtitle">
-            AI Agent 경진대회 심사위원을 위한 페이지 입니다.
-          </p>
+  // 로그인된 상태에서 기본적으로 프로젝트 목록 표시
+  if (isLoggedIn) {
+    return (
+      <div className="evaluation-page">
+        <div className="evaluation-hero section-padding">
+          <div className="container text-center">
+            <h1 className="evaluation-title">제출된 프로젝트 목록</h1>
+            <p className="evaluation-subtitle">
+              AI Agent 경진대회에 제출된 프로젝트들을 확인하세요
+            </p>
+            <div className="mt-3">
+              <button 
+                className="btn btn-outline-secondary"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="evaluation-content section-padding">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-10 mx-auto">
-              <div className="evaluation-dashboard">
-                <div className="dashboard-header">
-                  <h2>심사위원 대시보드</h2>
-                  <button 
-                    className="btn btn-outline-secondary"
-                    onClick={handleLogout}
-                  >
-                    로그아웃
-                  </button>
-                </div>
-                
-                <div className="dashboard-content">
+        <div className="evaluation-content section-padding">
+          <div className="container">
+            <div className="row">
+              <div className="col-12">
+                <div className="projects-full-section">
                   <div className="alert alert-info">
                     <p className="mb-0">
-                    📋 심사위원으로 로그인하셨습니다. 제출된 프로젝트들을 평가해주세요.
+                      📋 심사위원으로 로그인하셨습니다. 제출된 프로젝트들을 평가해주세요.
                     </p>
- 
                   </div>
                   
-                  <div className="evaluation-sections">
-                    <div className="row">
-                      <div className="col-md-6 mb-4">
-                        <div className="evaluation-card">
-                          <h4>📊 제출된 프로젝트</h4>
-                          <p>등록된 AI Agent 프로젝트 목록을 확인하고 평가할 수 있습니다.</p>
-                          <button 
-                            className="btn btn-primary"
-                            onClick={handleShowProjects}
-                            disabled={loadingProjects}
-                          >
-                            {loadingProjects ? '로딩 중...' : '프로젝트 목록 보기'}
-                          </button>
-                        </div>
-                      </div>
-                      <div className="col-md-6 mb-4">
-                        <div className="evaluation-card">
-                          <h4>📈 평가 현황</h4>
-                          <p>현재까지의 평가 진행 상황을 확인할 수 있습니다.</p>
-                          <button className="btn btn-primary">현황 확인</button>
-                        </div>
+                  <div className="projects-header">
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                      <h2>📊 제출된 프로젝트</h2>
+                      <div>
+                        <button 
+                          className="btn btn-primary"
+                          onClick={fetchProjects}
+                          disabled={loadingProjects}
+                        >
+                          {loadingProjects ? '로딩 중...' : '새로고침'}
+                        </button>
                       </div>
                     </div>
+                    <p className="text-muted text-start">총 {projects.length}개의 프로젝트가 제출되었습니다.</p>
                   </div>
-
+                  
+                  {projects.length === 0 ? (
+                    <div className="alert alert-info text-center">
+                      <h5>📝 아직 제출된 프로젝트가 없습니다</h5>
+                      <p className="mb-0">참가자들이 프로젝트를 제출하면 여기에 표시됩니다.</p>
+                    </div>
+                  ) : (
+                    <div className="projects-list">
+                      <div className="table-responsive">
+                        <table className="table table-hover">
+                          <thead className="table-dark">
+                            <tr>
+                              <th>사업팀</th>
+                              <th>팀명</th>
+                              <th>프로젝트 이름</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {projects.map((project, index) => (
+                              <tr key={project.aidea.id} onClick={() => handleProjectClick(project)} style={{cursor: 'pointer'}}>
+                                <td>{project.account.department || "미입력"}</td>
+                                <td>{project.account.team_name || "미입력"}</td>
+                                <td>
+                                  <strong>{project.aidea.project}</strong>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  // 로그인되지 않은 상태에서는 로그인 폼 표시
+  return null;
 };
 
 export default Evaluation;
