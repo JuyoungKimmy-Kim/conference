@@ -12,6 +12,7 @@ class Account(Base):
     hashed_password = Column(String, nullable=False)
     name = Column(String, nullable=True)  # 사용자 이름
     team_name = Column(String, nullable=True)  # 팀명
+    department = Column(String, nullable=True)  # 부서 (문자열로 저장)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

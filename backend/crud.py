@@ -69,6 +69,14 @@ def update_account_registration(db: Session, registration_data: AccountRegister)
         # 계정 기본 정보 업데이트
         account.name = registration_data.name.strip()
         account.team_name = registration_data.team_name.strip()
+        
+        # 부서 정보 처리: 새로운 값이 있으면 업데이트, 없으면 기존 값 유지
+        if hasattr(registration_data, 'department') and registration_data.department is not None:
+            if registration_data.department.strip():
+                account.department = registration_data.department.strip()
+            # 빈 문자열이면 기존 값 유지 (변경하지 않음)
+        # department가 없으면 기존 값 유지 (변경하지 않음)
+        
         db.add(account)
         
         existing_members = db.query(TeamMember).filter(TeamMember.account_id == account.id).all()
