@@ -1,16 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
-  const [scrollY, setScrollY] = useState(0);
   const [activeTab, setActiveTab] = useState('event');
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const eventFAQs = [
     {
@@ -80,10 +73,7 @@ const Home = () => {
   return (
     <div className="home">
       {/* Hero Section - 전체 화면 */}
-      <section className="hero-section" style={{ 
-        transform: `translateY(${scrollY * 0.5}px)`,
-        opacity: Math.max(0, 1 - scrollY / 500)
-      }}>
+      <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">
             슬슬 AIdea <span className="text-gradient">2025</span>
@@ -95,13 +85,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section - 스크롤 시 나타남 */}
-      <section 
-        className="cta-section section-padding"
-        style={{
-          opacity: Math.min(1, (scrollY - 400) / 400),
-          transform: `translateY(${Math.max(0, 400 - scrollY)}px)`
-        }}
-      >
+      <section className="cta-section section-padding">
         <div className="container text-center">
           
           {/* 개발 워크플로우 섹션 */}
