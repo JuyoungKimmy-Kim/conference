@@ -187,6 +187,217 @@
   transition: all 0.3s ease;
 }
 
+/* 프로젝트 목록 스타일 */
+.projects-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.projects-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.projects-header h3 {
+  color: var(--text-dark);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.projects-list {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.projects-list .table {
+  margin-bottom: 0;
+}
+
+.projects-list .table th {
+  background: #343a40;
+  color: white;
+  border: 1px solid #495057;
+  padding: 1rem;
+  font-weight: 600;
+  text-align: left !important;
+}
+
+.projects-list .table td {
+  padding: 1rem;
+  vertical-align: middle;
+  border: 1px solid #dee2e6;
+  text-align: left;
+}
+
+.projects-list .table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.projects-list .table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.projects-list .table tbody tr:nth-child(even):hover {
+  background-color: #e9ecef;
+}
+
+/* 프로젝트 상세보기 스타일 */
+.project-detail-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.project-title-section {
+  background: linear-gradient(135deg, var(--primary-color), #6c5ce7);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.project-meta {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.project-team {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.project-user {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.project-detail-header h2 {
+  color: var(--text-dark);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.detail-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+.detail-card h4 {
+  color: var(--primary-color);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+}
+
+.detail-item {
+  margin-bottom: 1rem;
+}
+
+.detail-item strong {
+  color: var(--text-dark);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.detail-content {
+  background: white;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  min-height: 60px;
+}
+
+.team-members-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+}
+
+.team-members-list li {
+  background: white;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+/* 프로젝트 목록 전용 화면 스타일 */
+.projects-full-section {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.projects-full-section .projects-header h2 {
+  color: var(--text-dark);
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.projects-full-section .projects-list {
+  background: #f8f9fa;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.projects-full-section .projects-list .table {
+  margin-bottom: 0;
+}
+
+.projects-full-section .projects-list .table th {
+  background: #343a40;
+  color: white;
+  border: none;
+  padding: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.projects-full-section .projects-list .table td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-color: #e9ecef;
+}
+
+.projects-full-section .projects-list .table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.projects-full-section .projects-list .table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.projects-full-section .projects-list .table tbody tr:nth-child(even):hover {
+  background-color: #e9ecef;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .evaluation-title {
@@ -222,6 +433,30 @@
   .evaluation-card {
     padding: 1.5rem;
   }
+  
+  .projects-section {
+    padding: 1.5rem;
+  }
+  
+  .projects-list .table th,
+  .projects-list .table td {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .projects-full-section {
+    padding: 1.5rem;
+  }
+  
+  .projects-full-section .projects-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .projects-full-section .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 1rem;
+  }
 }
 
 @media (max-width: 576px) {
@@ -243,5 +478,84 @@
   
   .evaluation-card {
     padding: 1rem;
+  }
+  
+  .projects-section {
+    padding: 1rem;
+  }
+  
+  .projects-list .table th,
+  .projects-list .table td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .projects-full-section {
+    padding: 1rem;
+  }
+  
+  .projects-full-section .projects-header h2 {
+    font-size: 1.3rem;
+  }
+}
+/* Table Column Widths */
+.projects-list .table th:nth-child(1),
+.projects-list .table td:nth-child(1) {
+  width: 15%;
+  min-width: 120px;
+}
+
+.projects-list .table th:nth-child(2),
+.projects-list .table td:nth-child(2) {
+  width: 25%;
+  min-width: 150px;
+}
+
+.projects-list .table th:nth-child(3),
+.projects-list .table td:nth-child(3) {
+  width: 60%;
+}
+
+/* Expandable Card Styles */
+.detail-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8f9fa;
+  border-radius: 8px 8px 0 0;
+  transition: background-color 0.2s ease;
+}
+
+.detail-card-header:hover {
+  background: #e9ecef;
+}
+
+.detail-card-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.expand-icon {
+  font-size: 0.8rem;
+  color: #6b7280;
+  transition: transform 0.2s ease;
+}
+
+.detail-card-content {
+  padding: 1rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
   }
 }

@@ -237,5 +237,13 @@ def verify_judge_login(db: Session, judge_id: str, password: str):
         return judge
     return None
 
+def get_all_projects_with_accounts(db: Session):
+    """제출된 모든 Aidea 프로젝트와 계정 정보를 함께 가져옵니다."""
+    return db.query(Account).outerjoin(Aidea).all()
+
+def get_projects_with_aideas_only(db: Session):
+    """Aidea가 있는 Account만 가져옵니다."""
+    return db.query(Account).join(Aidea).all()
+
 if __name__ == "__main__":
     add_benefit_column()

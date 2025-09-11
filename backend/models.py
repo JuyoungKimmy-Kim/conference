@@ -17,7 +17,6 @@ class Account(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     team_members = relationship("TeamMember", back_populates="account", cascade="all, delete-orphan")
-    # Aidea와의 관계
     aideas = relationship("Aidea", back_populates="account", cascade="all, delete-orphan")
 
     def verify_password(self, password: str) -> bool:
@@ -32,7 +31,6 @@ class TeamMember(Base):
     knox_id = Column(String, nullable=False)  # 팀원 Knox ID
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # 계정과의 관계
     account = relationship("Account", back_populates="team_members")
 
 class Aidea(Base):
@@ -51,7 +49,6 @@ class Aidea(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    # 계정과의 관계
     account = relationship("Account", back_populates="aideas")
 
 class Judge(Base):
