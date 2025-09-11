@@ -9,6 +9,7 @@ from pathlib import Path
 import os
 import uvicorn
 import logging
+import httpx  # HTTP 클라이언트 라이브러리
 
 from database import get_db, engine
 from models import Base
@@ -130,6 +131,33 @@ async def register_account(payload: AccountRegister, db: Session = Depends(get_d
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="등록 중 오류가 발생했습니다."
+        )
+
+@app.post("/api/send-email")
+async def send_email(email_data: dict):
+    """
+    Knox email server로 메일 발송 요청을 프록시합니다.
+    """
+    try:
+        # Knox email server로 요청 전달
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "http://10.229.19.169:1111/knox_api",
+                json=email_data,
+                headers={"Content-Type": "application/json"},
+                timeout=30.0
+            )
+            
+            if response.status_code == 200:
+                return {"message": "메일 발송 성공", "data": response.json()}
+            else:
+                return {"message": "메일 발송 실패", "error": response.text}
+                
+    except Exception as e:
+        logger.error(f"메일 발송 오류: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"메일 발송 중 오류가 발생했습니다: {str(e)}"
         )
 
 BUILD_DIR = (Path(__file__).parent / "../frontend/build").resolve()
