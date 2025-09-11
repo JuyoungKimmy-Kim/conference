@@ -53,3 +53,16 @@ class Aidea(Base):
 
     # 계정과의 관계
     account = relationship("Account", back_populates="aideas")
+
+class Judge(Base):
+    __tablename__ = "judges"
+
+    id = Column(Integer, primary_key=True, index=True)
+    judge_id = Column(String, unique=True, index=True, nullable=False)  # 심사위원 ID
+    hashed_password = Column(String, nullable=False)  # 비밀번호
+    name = Column(String, nullable=False)  # 심사위원 이름
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    def verify_password(self, password: str) -> bool:
+        return bcrypt.verify(password, self.hashed_password)

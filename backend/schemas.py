@@ -87,3 +87,18 @@ class AccountResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+# Judge 스키마
+class JudgeLogin(BaseModel):
+    judge_id: str
+    password: str
+
+class JudgeResponse(BaseModel):
+    id: int
+    judge_id: str
+    name: str
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True

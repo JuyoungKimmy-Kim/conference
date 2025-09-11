@@ -8,6 +8,7 @@ import Guide from './pages/Guide';
 import Agenda from './pages/Agenda';
 import Resources from './pages/Resources';
 import Register from './pages/Register';
+import Evaluation from './pages/Evaluation';
 import './App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
             <Route path="/agenda" element={<Agenda />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/evaluation" element={<Evaluation />} />
           </Routes>
         </main>
         <Footer />
