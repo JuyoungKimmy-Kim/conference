@@ -173,7 +173,7 @@ ${teamMembers.map(member => `• 팀원: ${member.name} (${member.knoxId})`).joi
         contents: contents
       };
 
-      const emailResponse = await fetch('/knox_api', {
+      const emailResponse = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
