@@ -11,6 +11,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
     team: '',
+    department: '', // 부서 필드 추가
     // Aidea 필드들
     project: '',
     target_user: '',
@@ -99,6 +100,7 @@ const Register = () => {
       setFormData({
         name: accountData.name || '',
         team: accountData.team_name || '',
+        department: accountData.department || '', // 부서 데이터 로드
         // Aidea 데이터 로드
         project: accountData.aideas?.[0]?.project || '',
         target_user: accountData.aideas?.[0]?.target_user || '',
@@ -174,6 +176,7 @@ const Register = () => {
         knox_id: loginData.knoxId,
         name: formData.name,
         team_name: formData.team,
+        department: formData.department, // 부서 데이터 추가
         team_members: teamMembers.map(member => ({
           name: member.name,
           knox_id: member.knoxId
@@ -385,6 +388,23 @@ const Register = () => {
                         onChange={handleInputChange}
                         required
                       />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="department" className="form-label">부서 *</label>
+                      <select
+                        className="form-control"
+                        id="department"
+                        name="department"
+                        value={formData.department}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">사업팀을 선택하세요</option>
+                        <option value="SOC">SOC사업팀</option>
+                        <option value="LSI">LSI사업팀</option>
+                        <option value="SENSOR">Sensor사업팀</option>
+                        <option value="DIRECT">직속팀</option>
+                      </select>
                     </div>
                     <div className="mb-3">
                       <label htmlFor="team" className="form-label">팀명 *</label>

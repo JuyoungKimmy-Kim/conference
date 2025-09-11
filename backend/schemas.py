@@ -16,6 +16,7 @@ class AccountRegister(BaseModel):
     knox_id: str
     name: str
     team_name: str
+    department: Optional[str] = None  # 부서는 선택사항
     team_members: List[TeamMemberCreate] = []
     # Aidea 정보
     project: Optional[str] = None
@@ -78,6 +79,7 @@ class AccountResponse(BaseModel):
     knox_id: str
     name: Optional[str] = None
     team_name: Optional[str] = None
+    department: Optional[str] = None  # 부서 필드 추가
     created_at: datetime
     updated_at: Optional[datetime] = None
     team_members: List[TeamMemberResponse] = []
