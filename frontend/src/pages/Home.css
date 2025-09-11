@@ -295,6 +295,139 @@
   background: #4F46E5 !important; /* 호버 시 약간 진한 색 */
 }
 
+/* 워크플로우 섹션 스타일 */
+.workflow-section {
+  margin-bottom: 3rem;
+}
+
+.workflow-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2rem;
+}
+
+.workflow-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.workflow-step {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  min-width: 180px;
+  flex: 1;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workflow-step:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0 auto 1rem;
+}
+
+.step-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.step-date {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+.workflow-arrow {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  font-weight: bold;
+  margin: 0 0.25rem;
+  flex-shrink: 0;
+}
+
+/* 개발 기간 특별 스타일 */
+.development-phase {
+  min-width: 250px;
+  flex: 1.2;
+}
+
+.development-teams {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.team-section {
+  flex: 1;
+  padding: 0.75rem;
+  background: var(--bg-light);
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.team-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.25rem;
+}
+
+.team-description {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+.team-divider {
+  width: 1px;
+  height: 30px;
+  background: #d1d5db;
+  margin: 0 0.25rem;
+}
+
+/* 개발 지원팀 강조 메시지 */
+.support-message {
+  background: none;
+  color: var(--text-dark);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-top: 2rem;
+  border: none;
+}
+
+.support-text {
+  font-size: 1.1rem;
+  margin: 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* 모바일 반응형 */
 @media (max-width: 768px) {
   .section-title,
   .cta-title {
@@ -319,7 +452,7 @@
   }
   
   .schedule-date {
-    font-size: 1rem; /* 0.9rem에서 1rem으로 증가 */
+    font-size: 1rem;
   }
   
   .btn-lg {
@@ -375,5 +508,40 @@
     font-size: 1rem !important;
     padding: 0.875rem 1.75rem !important;
     border-radius: 20px !important;
+  }
+
+  .workflow-container {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .workflow-arrow {
+    transform: rotate(90deg);
+    font-size: 1.5rem;
+  }
+  
+  .workflow-step {
+    min-width: 280px;
+    flex: none;
+  }
+  
+  .development-phase {
+    min-width: 280px;
+    flex: none;
+  }
+  
+  .development-teams {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .team-divider {
+    width: 40px;
+    height: 1px;
+    margin: 0.5rem 0;
+  }
+  
+  .support-text {
+    font-size: 1rem;
   }
 } 
