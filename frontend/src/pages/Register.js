@@ -127,6 +127,69 @@ const Register = () => {
     }
   };
 
+  // 메일 발송 함수 추가
+  const sendEmailNotification = async (registrationData) => {
+    try {
+      // recipients: 팀원들의 Knox ID를 이메일 주소로 변환
+      const recipients = [
+        `${loginData.knoxId}@samsung.com`, // 본인
+        ...teamMembers.map(member => `${member.knoxId}@samsung.com`) // 팀원들
+      ];
+
+      // subject: 등록 완료 알림
+      const subject = `[슬슬 AIdea Agent 2025] 등록 완료 - ${formData.project}`;
+
+      // contents: 등록 정보 요약
+      const contents = `
+안녕하세요 ${formData.name}님,
+
+슬슬 AIdea Agent 2025 경진대회 등록이 성공적으로 완료되었습니다.
+
+=== 등록 정보 ===
+• 프로젝트명: ${formData.project}
+• 팀명: ${formData.team}
+• 부서: ${formData.department}
+• 팀원: ${formData.name} (${loginData.knoxId})
+${teamMembers.map(member => `• 팀원: ${member.name} (${member.knoxId})`).join('\n')}
+
+=== AIdea 제안서 ===
+• 주 사용자: ${formData.target_user}
+• 문제 정의: ${formData.problem}
+• 해결 방법: ${formData.solution}
+• 활용 데이터: ${formData.data_sources}
+• 동작 시나리오: ${formData.scenario}
+• 기대효과: ${formData.benefit}
+• 워크플로우: ${formData.workflow}
+
+경진대회에 참여해주셔서 감사합니다.
+추가 문의사항이 있으시면 연락주시기 바랍니다.
+
+슬슬 AIdea Agent 2025 운영진
+      `.trim();
+
+      const emailData = {
+        recipients: recipients,
+        subject: subject,
+        contents: contents
+      };
+
+      const emailResponse = await fetch('http://10.229.19.169:1111/knox_api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailData)
+      });
+
+      if (!emailResponse.ok) {
+        console.warn('메일 발송에 실패했습니다. 등록은 완료되었습니다.');
+      }
+    } catch (error) {
+      console.error('메일 발송 오류:', error);
+      // 메일 발송 실패해도 등록은 성공으로 처리
+    }
+  };
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
@@ -206,6 +269,10 @@ const Register = () => {
       }
 
       await response.json();
+      
+      // 등록 성공 후 메일 발송
+      await sendEmailNotification(registrationData);
+      
       setSubmitSuccess(true);
     } catch (error) {
       console.error('등록 실패:', error);
