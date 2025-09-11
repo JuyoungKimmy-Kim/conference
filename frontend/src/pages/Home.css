@@ -279,8 +279,8 @@
 
 /* CTA 섹션의 참가 신청 버튼 */
 .cta-section .btn.btn-primary.btn-lg {
-  padding: 1rem 2rem !important;
-  font-size: 1.1rem !important;
+  padding: 1.25rem 2.5rem !important;
+  font-size: 1.4rem !important; /* 1.2rem에서 1.4rem으로 증가 */
   border-radius: 25px !important;
   background: #6366F1 !important;
   border: none !important;
