@@ -17,12 +17,12 @@ from datetime import datetime, timedelta
 from database import get_db, engine
 from models import Base
 from schemas import (
-    AccountLogin, AccountResponse, AccountRegister, AdminLogin, AdminResponse,
-    AccountListResponse
+    AccountLogin, AccountResponse, AccountRegister, AdminLogin, AdminResponse, AccountListResponse, JudgeLogin, JudgeResponse
+    
 )
 from crud import (
     create_or_update_account, get_account_by_knox_id, update_account_registration,
-    get_all_accounts, get_all_aideas
+    get_all_accounts, get_all_aideas, verify_judge_login
 )
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
@@ -207,6 +207,39 @@ async def register_account(payload: AccountRegister, db: Session = Depends(get_d
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="등록 중 오류가 발생했습니다."
+        )
+
+@app.post("/api/judge/login", response_model=JudgeResponse)
+async def judge_login(payload: JudgeLogin, db: Session = Depends(get_db)):
+    """
+    심사위원 로그인을 처리합니다.
+    """
+    try:
+        if not payload.password or payload.password.strip() == "":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="비밀번호는 필수입니다."
+            )
+        
+        judge = verify_judge_login(db, payload.judge_id, payload.password)
+        
+        if not judge:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="심사위원 ID 또는 패스워드가 다릅니다."
+            )
+        
+        logger.info(f"심사위원 로그인 성공: {payload.judge_id}")
+        return judge
+        
+    except HTTPException as http_exc:
+        logger.warning(f"심사위원 로그인 HTTP 오류: {http_exc.detail}")
+        raise http_exc
+    except Exception as e:
+        logger.error(f"심사위원 로그인 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="서버 오류가 발생했습니다."
         )
 
 @app.post("/api/send-email")

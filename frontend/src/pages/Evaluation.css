@@ -1,0 +1,247 @@
+/* Evaluation Page Styles */
+.evaluation-page {
+  min-height: 100vh;
+}
+
+.evaluation-hero {
+  background: var(--text-dark);
+  color: white;
+  text-align: center;
+  padding: 120px 0 80px 0; /* 상단 패딩 추가 */
+}
+
+.evaluation-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  margin-top: 0; /* 상단 마진 제거 */
+}
+
+.evaluation-subtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.evaluation-content {
+  background: white;
+  padding: 80px 0;
+}
+
+/* 로그인 폼 스타일 */
+.evaluation-form-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.evaluation-form {
+  padding: 2rem;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+}
+
+.form-section h3 {
+  color: var(--text-dark);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-color);
+  display: inline-block;
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+  outline: none;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.form-text {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.form-submit {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* 등록 페이지 버튼을 홈 페이지와 동일하게 */
+.evaluation-form .btn.btn-primary.btn-lg {
+  padding: 1rem 2rem !important;
+  font-size: 1.1rem !important;
+  border-radius: 25px !important;
+  background: #6366F1 !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.evaluation-form .btn.btn-primary.btn-lg:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+  background: #4F46E5 !important;
+}
+
+/* 대시보드 스타일 */
+.evaluation-dashboard {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.dashboard-header {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-header h2 {
+  color: var(--text-dark);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.dashboard-content {
+  padding: 2rem;
+}
+
+.evaluation-sections {
+  margin-top: 2rem;
+}
+
+.evaluation-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  height: 100%;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.evaluation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.evaluation-card h4 {
+  color: var(--text-dark);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.evaluation-card p {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.evaluation-card .btn {
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .evaluation-title {
+    font-size: 2rem;
+  }
+  
+  .evaluation-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .evaluation-form {
+    padding: 1.5rem;
+  }
+  
+  .form-section h3 {
+    font-size: 1.25rem;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .dashboard-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .dashboard-content {
+    padding: 1.5rem;
+  }
+  
+  .evaluation-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .evaluation-hero {
+    padding: 60px 0;
+  }
+  
+  .evaluation-title {
+    font-size: 1.8rem;
+  }
+  
+  .evaluation-form {
+    padding: 1rem;
+  }
+  
+  .dashboard-content {
+    padding: 1rem;
+  }
+  
+  .evaluation-card {
+    padding: 1rem;
+  }
+}

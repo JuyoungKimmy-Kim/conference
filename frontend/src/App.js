@@ -10,6 +10,7 @@ import Resources from './pages/Resources';
 import Register from './pages/Register';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import Evaluation from './pages/Evaluation';
 import './App.css';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/evaluation" element={<Evaluation />} />
           </Routes>
         </main>
         <Footer />

@@ -11,7 +11,8 @@ const Navbar = () => {
     { path: '/guide', label: '안내' },
     { path: '/agenda', label: '일정' },
     { path: '/resources', label: '자료실' },
-    { path: '/register', label: '등록' }
+    { path: '/register', label: '등록' },
+    { path: '/evaluation', label: '평가' }
   ];
 
   const isActive = (path) => location.pathname === path;

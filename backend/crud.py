@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from passlib.hash import bcrypt
-from models import Account, TeamMember, Aidea
+from models import Account, TeamMember, Aidea, Judge
 from schemas import AccountRegister, TeamMemberCreate, AideaCreate, AideaUpdate
 
 # Account CRUD
@@ -209,6 +209,33 @@ def add_benefit_column():
         conn.execute(text("ALTER TABLE aideas ADD COLUMN benefit TEXT"))
         conn.commit()
         print("benefit 컬럼이 성공적으로 추가되었습니다.")
+
+# Judge CRUD
+def get_judge_by_judge_id(db: Session, judge_id: str):
+    return db.query(Judge).filter(Judge.judge_id == judge_id).first()
+
+def get_judge_by_id(db: Session, judge_id: int):
+    return db.query(Judge).filter(Judge.id == judge_id).first()
+
+def create_judge(db: Session, judge_id: str, password: str, name: str):
+    hashed = bcrypt.hash(password)
+    judge = Judge(
+        judge_id=judge_id,
+        hashed_password=hashed,
+        name=name
+    )
+    db.add(judge)
+    db.commit()
+    db.refresh(judge)
+    return judge
+
+def verify_judge_login(db: Session, judge_id: str, password: str):
+    judge = get_judge_by_judge_id(db, judge_id)
+    if not judge:
+        return None
+    if judge.verify_password(password):
+        return judge
+    return None
 
 if __name__ == "__main__":
     add_benefit_column()
