@@ -121,9 +121,21 @@ const Home = () => {
               {/* 화살표 */}
               <div className="workflow-arrow">→</div>
 
-              {/* 2단계: 개발 기간 */}
-              <div className="workflow-step development-phase">
+              {/* 2단계: 서류 심사 */}
+              <div className="workflow-step">
                 <div className="step-number">2</div>
+                <div className="step-content">
+                  <h4 className="step-title">서류 심사</h4>
+                  <p className="step-date">9월 20일 ~ 9월 21일</p>
+                </div>
+              </div>
+
+              {/* 화살표 */}
+              <div className="workflow-arrow">→</div>
+
+              {/* 3단계: 개발 기간 */}
+              <div className="workflow-step development-phase">
+                <div className="step-number">3</div>
                 <div className="step-content">
                   <h4 className="step-title">개발 기간</h4>
                   <p className="step-date">9월 22일 ~ 11월 10일</p>
@@ -131,7 +143,7 @@ const Home = () => {
                   {/* 개발팀과 기술지원팀으로 나누기 */}
                   <div className="development-teams">
                     <div className="team-section">
-                      <h5 className="team-title">개발팀</h5>
+                      <h5 className="team-title">선발팀</h5>
                       <p className="team-description">AI Agent 구현 및 개발</p>
                     </div>
                     <div className="team-divider"></div>
@@ -146,9 +158,9 @@ const Home = () => {
               {/* 화살표 */}
               <div className="workflow-arrow">→</div>
 
-              {/* 3단계: 본선 및 시상 */}
+              {/* 4단계: 본선 및 시상 */}
               <div className="workflow-step">
-                <div className="step-number">3</div>
+                <div className="step-number">4</div>
                 <div className="step-content">
                   <h4 className="step-title">본선 및 시상</h4>
                   <p className="step-date">11월 11일</p>
@@ -159,7 +171,7 @@ const Home = () => {
             {/* 개발 지원팀 강조 메시지 */}
             <div className="support-message mt-4">
               <p className="support-text">
-                <strong>개발 지원팀이 함께합니다. 업무 혁신의 시작은 바로 여러분의 아이디어입니다!</strong>
+                <strong>전문가로 구성된 개발 지원팀이 함께합니다. 업무 혁신의 시작은 바로 여러분의 아이디어입니다!</strong>
               </p>
             </div>
           </div>
