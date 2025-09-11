@@ -173,7 +173,7 @@ ${teamMembers.map(member => `• 팀원: ${member.name} (${member.knoxId})`).joi
         contents: contents
       };
 
-      const emailResponse = await fetch('http://10.229.19.169:1111/knox_api', {
+      const emailResponse = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,6 +188,8 @@ ${teamMembers.map(member => `• 팀원: ${member.name} (${member.knoxId})`).joi
       }
     } catch (error) {
       console.error('메일 발송 오류:', error);
+      console.error('메일 발송 오류 상세:', error.message);
+      console.error('메일 발송 오류 타입:', error.name);
       // 메일 발송 실패해도 등록은 성공으로 처리
     }
   };
