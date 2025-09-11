@@ -127,7 +127,7 @@ const Home = () => {
                   {/* 개발팀과 기술지원팀으로 나누기 */}
                   <div className="development-teams">
                     <div className="team-section">
-                      <h5 className="team-title">선발팀</h5>
+                      <h5 className="team-title">선발된 개발팀</h5>
                       <p className="team-description">AI Agent 구현 및 개발</p>
                     </div>
                     <div className="team-divider"></div>
