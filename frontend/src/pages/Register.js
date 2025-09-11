@@ -182,7 +182,9 @@ ${teamMembers.map(member => `• 팀원: ${member.name} (${member.knoxId})`).joi
       });
 
       if (!emailResponse.ok) {
+        const errorBody = await emailResponse.text();
         console.warn('메일 발송에 실패했습니다. 등록은 완료되었습니다.');
+        console.error('메일 발송 실패 응답 body:', errorBody);
       }
     } catch (error) {
       console.error('메일 발송 오류:', error);
