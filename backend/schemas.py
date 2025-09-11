@@ -123,3 +123,32 @@ class ProjectWithAccount(BaseModel):
 
     class Config:
         from_attributes = True
+
+# Evaluation 스키마
+class EvaluationCreate(BaseModel):
+    account_id: int
+    judge_id: int
+    innovation_score: int
+    feasibility_score: int
+    effectiveness_score: int
+
+class EvaluationResponse(BaseModel):
+    id: int
+    account_id: int
+    judge_id: int
+    innovation_score: int
+    feasibility_score: int
+    effectiveness_score: int
+    total_score: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    judge: JudgeResponse
+
+    class Config:
+        from_attributes = True
+
+class AccountWithEvaluations(AccountResponse):
+    evaluations: List[EvaluationResponse] = []
+
+    class Config:
+        from_attributes = True
