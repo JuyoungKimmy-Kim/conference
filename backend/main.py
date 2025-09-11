@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from typing import List, Optional
+from typing import List
 from pathlib import Path
 import os
 import uvicorn
@@ -14,11 +14,11 @@ import httpx  # HTTP 클라이언트 라이브러리
 from database import get_db, engine
 from models import Base
 from schemas import (
-    AccountLogin, AccountResponse, AccountRegister, JudgeLogin, JudgeResponse
+    AccountLogin, AccountResponse, AccountRegister, JudgeLogin, JudgeResponse, ProjectWithAccount, AideaResponse, TeamMemberResponse
 )
 from crud import (
     create_or_update_account, get_account_by_knox_id, update_account_registration,
-    verify_judge_login
+    verify_judge_login, get_all_projects_with_accounts
 )
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
@@ -157,11 +157,62 @@ async def judge_login(payload: JudgeLogin, db: Session = Depends(get_db)):
         logger.info(f"심사위원 로그인 성공: {payload.judge_id}")
         return judge
         
-    except HTTPException as http_exc:
-        logger.warning(f"심사위원 로그인 HTTP 오류: {http_exc.detail}")
-        raise http_exc
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"심사위원 로그인 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="서버 오류가 발생했습니다."
+        )
+
+@app.get("/api/projects", response_model=List[ProjectWithAccount])
+async def get_projects(db: Session = Depends(get_db)):
+    """
+    제출된 모든 프로젝트 목록을 가져옵니다.
+    """
+    try:
+        projects = get_all_projects_with_accounts(db)
+        
+        project_list = []
+        for account in projects:
+            team_members_response = [
+                TeamMemberResponse.model_validate(member) 
+                for member in account.team_members
+            ]
+            
+            account_response = AccountResponse.model_validate(account)
+            
+            if account.aideas:
+                aidea = account.aideas[0]
+                aidea_response = AideaResponse.model_validate(aidea)
+            else:
+                # Aidea가 없는 경우: 빈 AideaResponse로 프로젝트 항목 생성
+                aidea_response = AideaResponse(
+                    id=0,
+                    account_id=account.id,
+                    project="(프로젝트 미제출)",
+                    target_user="",
+                    problem="",
+                    solution="",
+                    data_sources="",
+                    scenario="",
+                    workflow="",
+                    created_at=account.created_at,
+                    updated_at=account.updated_at
+                )
+
+            project_item = ProjectWithAccount(
+                account=account_response,
+                team_members=team_members_response,
+                aidea=aidea_response
+            )
+            project_list.append(project_item)
+        
+        return project_list
+        
+    except Exception as e:
+        logger.error(f"프로젝트 목록 조회 오류: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="서버 오류가 발생했습니다."

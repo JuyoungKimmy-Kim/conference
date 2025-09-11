@@ -102,3 +102,11 @@ class JudgeResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class ProjectWithAccount(BaseModel):
+    account: AccountResponse
+    team_members: List[TeamMemberResponse]
+    aidea: AideaResponse
+
+    class Config:
+        from_attributes = True
