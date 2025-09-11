@@ -104,22 +104,63 @@ const Home = () => {
       >
         <div className="container text-center">
           
-          <div className="schedule-info mb-4">
-            <div className="schedule-item">
-              <div className="schedule-label">제안서 제출 기간</div>
-              <div className="schedule-date">9월 10일 ~ 9월 19일</div>
+          {/* 개발 워크플로우 섹션 */}
+          <div className="workflow-section mb-5">
+            <h3 className="workflow-title mb-4">진행 일정</h3>
+            
+            <div className="workflow-container">
+              {/* 1단계: 제안서 제출 */}
+              <div className="workflow-step">
+                <div className="step-number">1</div>
+                <div className="step-content">
+                  <h4 className="step-title">제안서 제출</h4>
+                  <p className="step-date">9월 12일 ~ 9월 19일</p>
+                </div>
+              </div>
+
+              {/* 화살표 */}
+              <div className="workflow-arrow">→</div>
+
+              {/* 2단계: 개발 기간 */}
+              <div className="workflow-step development-phase">
+                <div className="step-number">2</div>
+                <div className="step-content">
+                  <h4 className="step-title">개발 기간</h4>
+                  <p className="step-date">9월 22일 ~ 11월 10일</p>
+                  
+                  {/* 개발팀과 기술지원팀으로 나누기 */}
+                  <div className="development-teams">
+                    <div className="team-section">
+                      <h5 className="team-title">개발팀</h5>
+                      <p className="team-description">AI Agent 구현 및 개발</p>
+                    </div>
+                    <div className="team-divider"></div>
+                    <div className="team-section">
+                      <h5 className="team-title">기술 지원팀</h5>
+                      <p className="team-description">멘토링 및 기술 지원</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 화살표 */}
+              <div className="workflow-arrow">→</div>
+
+              {/* 3단계: 본선 및 시상 */}
+              <div className="workflow-step">
+                <div className="step-number">3</div>
+                <div className="step-content">
+                  <h4 className="step-title">본선 및 시상</h4>
+                  <p className="step-date">11월 11일</p>
+                </div>
+              </div>
             </div>
-            <div className="schedule-item">
-              <div className="schedule-label">개발 기간</div>
-              <div className="schedule-date">9월 24일 ~ 10월 29일</div>
-            </div>
-            <div className="schedule-item">
-              <div className="schedule-label">예선 평가</div>
-              <div className="schedule-date">10월 30일 ~ 10월 31일</div>
-            </div>
-            <div className="schedule-item">
-              <div className="schedule-label">본선 및 시상</div>
-              <div className="schedule-date">11월 11일</div>
+
+            {/* 개발 지원팀 강조 메시지 */}
+            <div className="support-message mt-4">
+              <p className="support-text">
+                <strong>개발 지원팀이 함께합니다. 업무 혁신의 시작은 바로 여러분의 아이디어입니다!</strong>
+              </p>
             </div>
           </div>
           
