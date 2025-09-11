@@ -412,17 +412,19 @@
 
 /* 개발 지원팀 강조 메시지 */
 .support-message {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: none;
+  color: var(--text-dark);
   padding: 1.5rem;
   border-radius: 12px;
   margin-top: 2rem;
+  border: none;
 }
 
 .support-text {
   font-size: 1.1rem;
   margin: 0;
   text-align: center;
+  font-weight: 600;
 }
 
 /* 모바일 반응형 */
