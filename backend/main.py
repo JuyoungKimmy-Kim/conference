@@ -20,7 +20,7 @@ from schemas import (
 from crud import (
     create_or_update_account, get_account_by_knox_id, update_account_registration,
     verify_judge_login, get_all_projects_with_accounts,
-    create_evaluation, get_evaluations_by_account, get_judge_by_id
+    create_evaluation, get_evaluations_by_account, get_judge_by_id, get_evaluation_by_judge_and_account
 )
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
@@ -169,47 +169,40 @@ async def judge_login(payload: JudgeLogin, db: Session = Depends(get_db)):
         )
 
 @app.get("/api/projects", response_model=List[ProjectWithAccount])
-async def get_projects(db: Session = Depends(get_db)):
+async def get_projects(judge_id: int = None, db: Session = Depends(get_db)):
     """
     제출된 모든 프로젝트 목록을 가져옵니다.
+    judge_id가 제공되면 해당 심사위원의 평가 여부를 포함합니다.
     """
     try:
         projects = get_all_projects_with_accounts(db)
         
         project_list = []
         for account in projects:
-            team_members_response = [
-                TeamMemberResponse.model_validate(member) 
-                for member in account.team_members
-            ]
-            
-            account_response = AccountResponse.model_validate(account)
-            
+            # Aidea가 있는 경우에만 프로젝트 목록에 추가
             if account.aideas:
+                team_members_response = [
+                    TeamMemberResponse.model_validate(member) 
+                    for member in account.team_members
+                ]
+                
+                account_response = AccountResponse.model_validate(account)
                 aidea = account.aideas[0]
                 aidea_response = AideaResponse.model_validate(aidea)
-            else:
-                # Aidea가 없는 경우: 빈 AideaResponse로 프로젝트 항목 생성
-                aidea_response = AideaResponse(
-                    id=0,
-                    account_id=account.id,
-                    project="(프로젝트 미제출)",
-                    target_user="",
-                    problem="",
-                    solution="",
-                    data_sources="",
-                    scenario="",
-                    workflow="",
-                    created_at=account.created_at,
-                    updated_at=account.updated_at
-                )
 
-            project_item = ProjectWithAccount(
-                account=account_response,
-                team_members=team_members_response,
-                aidea=aidea_response
-            )
-            project_list.append(project_item)
+                # 평가 여부 확인
+                is_evaluated = False
+                if judge_id:
+                    existing_evaluation = get_evaluation_by_judge_and_account(db, judge_id, account.id)
+                    is_evaluated = existing_evaluation is not None
+
+                project_item = ProjectWithAccount(
+                    account=account_response,
+                    team_members=team_members_response,
+                    aidea=aidea_response,
+                    is_evaluated=is_evaluated
+                )
+                project_list.append(project_item)
         
         return project_list
         
@@ -286,6 +279,28 @@ async def get_evaluations(account_id: int, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="평가 조회 중 오류가 발생했습니다."
+        )
+
+@app.get("/api/evaluations/{account_id}/judge/{judge_id}", response_model=EvaluationResponse)
+async def get_evaluation_by_judge(account_id: int, judge_id: int, db: Session = Depends(get_db)):
+    """
+    특정 심사위원이 특정 계정에 대해 한 평가를 가져옵니다.
+    """
+    try:
+        evaluation = get_evaluation_by_judge_and_account(db, judge_id, account_id)
+        if not evaluation:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="해당 심사위원의 평가를 찾을 수 없습니다."
+            )
+        return evaluation
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"심사위원 평가 조회 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="심사위원 평가 조회 중 오류가 발생했습니다."
         )
 
 @app.post("/api/send-email")
