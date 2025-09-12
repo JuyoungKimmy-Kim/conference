@@ -765,3 +765,48 @@
     justify-content: flex-start;
   }
 }
+
+/* 필터 토글 컨테이너 스타일 */
+.filter-toggle-container {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.filter-toggle-container:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.filter-toggle-container .form-check {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-toggle-container .form-check-input {
+  margin: 0;
+  width: 2.5rem;
+  height: 1.25rem;
+}
+
+.filter-toggle-container .form-check-input:checked {
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.filter-toggle-container .form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+}
+
+.filter-toggle-container .form-check-label {
+  font-weight: 500;
+  color: #495057;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+}

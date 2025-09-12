@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Evaluation.css';
 
 const Evaluation = () => {
@@ -28,6 +28,20 @@ const Evaluation = () => {
   });
   const [currentJudge, setCurrentJudge] = useState(null);
   const [isSubmittingEvaluation, setIsSubmittingEvaluation] = useState(false);
+  const [hasExistingEvaluation, setHasExistingEvaluation] = useState(false);
+  const [showOnlyUnevaluated, setShowOnlyUnevaluated] = useState(false);
+
+  // currentJudge가 설정되면 프로젝트 목록을 자동으로 가져오기
+  useEffect(() => {
+    if (currentJudge && isLoggedIn) {
+      fetchProjects();
+    }
+  }, [currentJudge, isLoggedIn]);
+
+  // 필터링된 프로젝트 목록 계산
+  const filteredProjects = showOnlyUnevaluated 
+    ? projects.filter(project => !project.is_evaluated)
+    : projects;
 
   const handleLoginInputChange = (e) => {
     const { name, value } = e.target;
@@ -73,8 +87,6 @@ const Evaluation = () => {
       setCurrentJudge(judgeData);
       setIsLoggedIn(true);
       setViewMode('projects');
-      // 로그인 성공 후 바로 프로젝트 목록 가져오기
-      fetchProjects();
     } catch (err) {
       console.error(err);
       setLoginError('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
@@ -90,12 +102,23 @@ const Evaluation = () => {
     setLoginError('');
     setProjects([]);
     setViewMode('projects');
+    setEvaluationScores({
+      innovation: '',
+      feasibility: '',
+      effectiveness: ''
+    });
+    setHasExistingEvaluation(false);
   };
 
   const fetchProjects = async () => {
     setLoadingProjects(true);
     try {
-      const response = await fetch('/api/projects');
+      let url = '/api/projects';
+      if (currentJudge) {
+        url += `?judge_id=${currentJudge.id}`;
+      }
+      
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('프로젝트 목록을 가져오는데 실패했습니다.');
       }
@@ -109,16 +132,68 @@ const Evaluation = () => {
     }
   };
 
+  const fetchExistingEvaluation = async (accountId, judgeId) => {
+    try {
+      const response = await fetch(`/api/evaluations/${accountId}/judge/${judgeId}`);
+      if (response.ok) {
+        const evaluation = await response.json();
+        // 점수를 등급으로 변환하여 상태에 설정
+        setEvaluationScores({
+          innovation: getGradeFromScore(evaluation.innovation_score, 'innovation'),
+          feasibility: getGradeFromScore(evaluation.feasibility_score, 'feasibility'),
+          effectiveness: getGradeFromScore(evaluation.effectiveness_score, 'effectiveness')
+        });
+        setHasExistingEvaluation(true);
+        return evaluation;
+      } else if (response.status === 404) {
+        // 평가가 없는 경우 - 상태를 초기화
+        setEvaluationScores({
+          innovation: '',
+          feasibility: '',
+          effectiveness: ''
+        });
+        setHasExistingEvaluation(false);
+        return null;
+      } else {
+        throw new Error('평가 조회에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('기존 평가 조회 오류:', error);
+      // 오류 발생 시 상태를 초기화
+      setEvaluationScores({
+        innovation: '',
+        feasibility: '',
+        effectiveness: ''
+      });
+      setHasExistingEvaluation(false);
+      return null;
+    }
+  };
 
-
-  const handleProjectClick = (project) => {
+  const handleProjectClick = async (project) => {
     setSelectedProject(project);
     setViewMode('detail');
+    
+    // 기존 평가 데이터 불러오기
+    if (currentJudge) {
+      await fetchExistingEvaluation(project.account.id, currentJudge.id);
+    }
   };
 
   const handleBackToProjects = () => {
     setSelectedProject(null);
     setViewMode('projects');
+    // 평가 상태 초기화
+    setEvaluationScores({
+      innovation: '',
+      feasibility: '',
+      effectiveness: ''
+    });
+    setHasExistingEvaluation(false);
+  };
+
+  const toggleUnevaluatedFilter = () => {
+    setShowOnlyUnevaluated(!showOnlyUnevaluated);
   };
 
   const handleGradeChange = (category, grade) => {
@@ -137,6 +212,18 @@ const Evaluation = () => {
       // 업무 효과성: UN(8), NI(16), GD(24), VG(32), EX(40)
       const gradeValues = { 'UN': 8, 'NI': 16, 'GD': 24, 'VG': 32, 'EX': 40 };
       return gradeValues[grade] || 0;
+    }
+  };
+
+  const getGradeFromScore = (score, category) => {
+    if (category === 'innovation' || category === 'feasibility') {
+      // 아이디어 혁신성, 기술 실현 가능성: UN(6), NI(12), GD(18), VG(24), EX(30)
+      const scoreToGrade = { 6: 'UN', 12: 'NI', 18: 'GD', 24: 'VG', 30: 'EX' };
+      return scoreToGrade[score] || '';
+    } else {
+      // 업무 효과성: UN(8), NI(16), GD(24), VG(32), EX(40)
+      const scoreToGrade = { 8: 'UN', 16: 'NI', 24: 'GD', 32: 'VG', 40: 'EX' };
+      return scoreToGrade[score] || '';
     }
   };
 
@@ -183,14 +270,18 @@ const Evaluation = () => {
 
       const result = await response.json();
       console.log('평가 제출 성공:', result);
-      alert(`평가가 완료되었습니다!\n총점: ${result.total_score}/100점`);
       
-      // 평가 완료 후 상태 초기화
-      setEvaluationScores({
-        innovation: '',
-        feasibility: '',
-        effectiveness: ''
-      });
+      const message = hasExistingEvaluation 
+        ? `평가가 수정되었습니다!\n총점: ${result.total_score}/100점`
+        : `평가가 완료되었습니다!\n총점: ${result.total_score}/100점`;
+      
+      alert(message);
+      
+      // 평가 완료 후 상태는 유지 (기존 평가가 체크된 상태로 유지)
+      setHasExistingEvaluation(true);
+      
+      // 프로젝트 목록 새로고침하여 평가 여부 업데이트
+      fetchProjects();
       
     } catch (error) {
       console.error('평가 제출 오류:', error);
@@ -214,7 +305,7 @@ const Evaluation = () => {
           <div className="container text-center">
             <h1 className="evaluation-title">평가</h1>
             <p className="evaluation-subtitle">
-              AI Agent 경진대회 심사위원을 위한 페이지 입니다.
+            슬슬 AIdea 2025 심사위원을 위한 페이지 입니다.
             </p>
           </div>
         </div>
@@ -283,7 +374,6 @@ const Evaluation = () => {
       </div>
     );
   }
-
 
   if (isLoggedIn && viewMode === 'detail' && selectedProject) {
     return (
@@ -594,7 +684,12 @@ const Evaluation = () => {
                                     onClick={handleSubmitEvaluation}
                                     disabled={isSubmittingEvaluation}
                                   >
-                                    {isSubmittingEvaluation ? '제출 중...' : '평가 제출'}
+                                    {isSubmittingEvaluation 
+                                      ? '제출 중...' 
+                                      : hasExistingEvaluation 
+                                        ? '평가 수정' 
+                                        : '평가 제출'
+                                    }
                                   </button>
                                 </div>
                               </div>
@@ -613,15 +708,14 @@ const Evaluation = () => {
     );
   }
 
-  // 로그인된 상태에서 기본적으로 프로젝트 목록 표시
   if (isLoggedIn) {
     return (
       <div className="evaluation-page">
         <div className="evaluation-hero section-padding">
           <div className="container text-center">
-            <h1 className="evaluation-title">제출된 프로젝트 목록</h1>
+            <h1 className="evaluation-title">심사위원 평가</h1>
             <p className="evaluation-subtitle">
-              AI Agent 경진대회에 제출된 프로젝트들을 확인하세요
+              슬슬 AIdea 2025에 제출된 프로젝트들을 평가해주세요
             </p>
             <div className="mt-3">
               <button 
@@ -658,13 +752,48 @@ const Evaluation = () => {
                         </button>
                       </div>
                     </div>
-                    <p className="text-muted text-start">총 {projects.length}개의 프로젝트가 제출되었습니다.</p>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <p className="text-muted mb-0">
+                        총 {projects.length}개의 프로젝트가 제출되었습니다.
+                        {currentJudge && (
+                          <span className="ms-3">
+                            <span className="badge bg-success me-2">
+                              평가 완료: {projects.filter(p => p.is_evaluated).length}개
+                            </span>
+                            <span className="badge bg-secondary">
+                              미평가: {projects.filter(p => !p.is_evaluated).length}개
+                            </span>
+                          </span>
+                        )}
+                      </p>
+                      {currentJudge && (
+                        <div className="filter-toggle-container">
+                          <div className="form-check form-switch">
+                            <input 
+                              className="form-check-input" 
+                              type="checkbox" 
+                              id="unevaluatedFilter"
+                              checked={showOnlyUnevaluated}
+                              onChange={toggleUnevaluatedFilter}
+                            />
+                            <label className="form-check-label" htmlFor="unevaluatedFilter">
+                              미평가만 보기
+                            </label>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   
-                  {projects.length === 0 ? (
+                  {filteredProjects.length === 0 ? (
                     <div className="alert alert-info text-center">
-                      <h5>📝 아직 제출된 프로젝트가 없습니다</h5>
-                      <p className="mb-0">참가자들이 프로젝트를 제출하면 여기에 표시됩니다.</p>
+                      <h5>📝 {showOnlyUnevaluated ? '미평가 프로젝트가 없습니다' : '아직 제출된 프로젝트가 없습니다'}</h5>
+                      <p className="mb-0">
+                        {showOnlyUnevaluated 
+                          ? '모든 프로젝트를 평가 완료했습니다!' 
+                          : '참가자들이 프로젝트를 제출하면 여기에 표시됩니다.'
+                        }
+                      </p>
                     </div>
                   ) : (
                     <div className="projects-list">
@@ -675,15 +804,23 @@ const Evaluation = () => {
                               <th>사업팀</th>
                               <th>팀명</th>
                               <th>프로젝트 이름</th>
+                              <th>상태</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {projects.map((project, index) => (
+                            {filteredProjects.map((project, index) => (
                               <tr key={project.aidea.id} onClick={() => handleProjectClick(project)} style={{cursor: 'pointer'}}>
                                 <td>{project.account.department || "미입력"}</td>
                                 <td>{project.account.team_name || "미입력"}</td>
                                 <td>
                                   <strong>{project.aidea.project}</strong>
+                                </td>
+                                <td>
+                                  {project.is_evaluated ? (
+                                    <span className="badge bg-success">평가 완료</span>
+                                  ) : (
+                                    <span className="badge bg-secondary">미평가</span>
+                                  )}
                                 </td>
                               </tr>
                             ))}

@@ -120,6 +120,7 @@ class ProjectWithAccount(BaseModel):
     account: AccountResponse
     team_members: List[TeamMemberResponse]
     aidea: AideaResponse
+    is_evaluated: bool = False  # 평가 여부 추가
 
     class Config:
         from_attributes = True
