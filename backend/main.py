@@ -12,15 +12,17 @@ import logging
 import httpx  # HTTP 클라이언트 라이브러리
 
 from database import get_db, engine
-from models import Base
+from models import Base, Judge
 from schemas import (
     AccountLogin, AccountResponse, AccountRegister, JudgeLogin, JudgeResponse, ProjectWithAccount, AideaResponse, TeamMemberResponse,
-    EvaluationCreate, EvaluationResponse, AccountWithEvaluations
+    EvaluationCreate, EvaluationResponse, AccountWithEvaluations, AdminLogin, AdminStats, JudgeCreate, JudgeUpdate, EvaluationWithProject
 )
 from crud import (
     create_or_update_account, get_account_by_knox_id, update_account_registration,
     verify_judge_login, get_all_projects_with_accounts,
-    create_evaluation, get_evaluations_by_account, get_judge_by_id, get_evaluation_by_judge_and_account
+    create_evaluation, get_evaluations_by_account, get_judge_by_id, get_evaluation_by_judge_and_account,
+    get_all_judges, create_judge_admin, update_judge_admin, delete_judge_admin,
+    get_admin_stats, get_evaluations_with_project_info
 )
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
@@ -328,6 +330,144 @@ async def send_email(email_data: dict):
         raise HTTPException(
             status_code=500,
             detail=f"메일 발송 중 오류가 발생했습니다: {str(e)}"
+        )
+
+# Admin API endpoints
+@app.post("/api/admin/login")
+async def admin_login(payload: AdminLogin):
+    """
+    관리자 로그인을 처리합니다.
+    """
+    try:
+        # 간단한 관리자 인증 (실제 환경에서는 더 안전한 인증 필요)
+        if payload.username == "admin" and payload.password == "admin123":
+            return {"message": "관리자 로그인 성공", "username": payload.username}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="관리자 ID 또는 비밀번호가 올바르지 않습니다."
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"관리자 로그인 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="서버 오류가 발생했습니다."
+        )
+
+@app.get("/api/admin/stats", response_model=AdminStats)
+async def get_admin_statistics(db: Session = Depends(get_db)):
+    """
+    관리자 대시보드용 통계를 가져옵니다.
+    """
+    try:
+        stats = get_admin_stats(db)
+        return AdminStats(**stats)
+    except Exception as e:
+        logger.error(f"관리자 통계 조회 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="통계 조회 중 오류가 발생했습니다."
+        )
+
+@app.get("/api/admin/judges", response_model=List[JudgeResponse])
+async def get_all_judges_admin(db: Session = Depends(get_db)):
+    """
+    모든 심사위원 목록을 가져옵니다.
+    """
+    try:
+        judges = get_all_judges(db)
+        return judges
+    except Exception as e:
+        logger.error(f"심사위원 목록 조회 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="심사위원 목록 조회 중 오류가 발생했습니다."
+        )
+
+@app.post("/api/admin/judges", response_model=JudgeResponse)
+async def create_judge_admin_endpoint(judge_data: JudgeCreate, db: Session = Depends(get_db)):
+    """
+    새로운 심사위원을 생성합니다.
+    """
+    try:
+        # 중복 ID 확인
+        existing_judge = db.query(Judge).filter(Judge.judge_id == judge_data.judge_id).first()
+        if existing_judge:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="이미 존재하는 심사위원 ID입니다."
+            )
+        
+        judge = create_judge_admin(db, judge_data)
+        return judge
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"심사위원 생성 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="심사위원 생성 중 오류가 발생했습니다."
+        )
+
+@app.put("/api/admin/judges/{judge_id}", response_model=JudgeResponse)
+async def update_judge_admin_endpoint(judge_id: int, judge_data: JudgeUpdate, db: Session = Depends(get_db)):
+    """
+    심사위원 정보를 수정합니다.
+    """
+    try:
+        judge = update_judge_admin(db, judge_id, judge_data)
+        if not judge:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="심사위원을 찾을 수 없습니다."
+            )
+        return judge
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"심사위원 수정 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="심사위원 수정 중 오류가 발생했습니다."
+        )
+
+@app.delete("/api/admin/judges/{judge_id}")
+async def delete_judge_admin_endpoint(judge_id: int, db: Session = Depends(get_db)):
+    """
+    심사위원을 삭제합니다.
+    """
+    try:
+        success = delete_judge_admin(db, judge_id)
+        if not success:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="심사위원을 찾을 수 없습니다."
+            )
+        return {"message": "심사위원이 성공적으로 삭제되었습니다."}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"심사위원 삭제 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="심사위원 삭제 중 오류가 발생했습니다."
+        )
+
+@app.get("/api/admin/evaluations", response_model=List[EvaluationWithProject])
+async def get_all_evaluations_admin(db: Session = Depends(get_db)):
+    """
+    모든 평가 결과를 프로젝트 정보와 함께 가져옵니다.
+    """
+    try:
+        evaluations = get_evaluations_with_project_info(db)
+        return evaluations
+    except Exception as e:
+        logger.error(f"평가 결과 조회 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="평가 결과 조회 중 오류가 발생했습니다."
         )
 
 BUILD_DIR = (Path(__file__).parent / "../frontend/build").resolve()

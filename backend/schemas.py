@@ -140,3 +140,43 @@ class AccountWithEvaluations(AccountResponse):
 
     class Config:
         from_attributes = True
+
+# Admin 스키마
+class AdminLogin(BaseModel):
+    username: str
+    password: str
+
+class AdminStats(BaseModel):
+    total_projects: int
+    total_judges: int
+    total_evaluations: int
+    average_score: float
+    projects_by_department: dict
+    evaluation_status: dict
+
+class JudgeCreate(BaseModel):
+    judge_id: str
+    password: str
+    name: str
+
+class JudgeUpdate(BaseModel):
+    judge_id: Optional[str] = None
+    password: Optional[str] = None
+    name: Optional[str] = None
+
+class EvaluationWithProject(BaseModel):
+    id: int
+    account_id: int
+    judge_id: int
+    innovation_score: int
+    feasibility_score: int
+    effectiveness_score: int
+    total_score: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    project_name: str
+    team_name: str
+    judge_name: str
+
+    class Config:
+        from_attributes = True

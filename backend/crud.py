@@ -284,5 +284,124 @@ def get_all_evaluations(db: Session):
     """모든 평가를 가져옵니다."""
     return db.query(Evaluation).all()
 
+# Admin CRUD functions
+def get_all_judges(db: Session):
+    """모든 심사위원을 가져옵니다."""
+    return db.query(Judge).all()
+
+def create_judge_admin(db: Session, judge_data):
+    """관리자가 심사위원을 생성합니다."""
+    hashed = bcrypt.hash(judge_data.password)
+    judge = Judge(
+        judge_id=judge_data.judge_id,
+        hashed_password=hashed,
+        name=judge_data.name
+    )
+    db.add(judge)
+    db.commit()
+    db.refresh(judge)
+    return judge
+
+def update_judge_admin(db: Session, judge_id: int, judge_data):
+    """관리자가 심사위원 정보를 수정합니다."""
+    judge = get_judge_by_id(db, judge_id)
+    if not judge:
+        return None
+    
+    if judge_data.judge_id:
+        judge.judge_id = judge_data.judge_id
+    if judge_data.password:
+        judge.hashed_password = bcrypt.hash(judge_data.password)
+    if judge_data.name:
+        judge.name = judge_data.name
+    
+    db.commit()
+    db.refresh(judge)
+    return judge
+
+def delete_judge_admin(db: Session, judge_id: int):
+    """관리자가 심사위원을 삭제합니다."""
+    judge = get_judge_by_id(db, judge_id)
+    if not judge:
+        return False
+    
+    # 관련 평가도 함께 삭제
+    db.query(Evaluation).filter(Evaluation.judge_id == judge_id).delete()
+    db.delete(judge)
+    db.commit()
+    return True
+
+def get_admin_stats(db: Session):
+    """관리자 대시보드용 통계를 가져옵니다."""
+    from sqlalchemy import func
+    
+    total_projects = db.query(Account).join(Aidea).count()
+    total_judges = db.query(Judge).count()
+    total_evaluations = db.query(Evaluation).count()
+    
+    # 평균 점수
+    avg_score_result = db.query(func.avg(Evaluation.total_score)).scalar()
+    average_score = round(avg_score_result, 2) if avg_score_result else 0
+    
+    # 부서별 프로젝트 수
+    projects_by_department = {}
+    department_stats = db.query(
+        Account.department, 
+        func.count(Aidea.id).label('count')
+    ).join(Aidea).group_by(Account.department).all()
+    
+    for dept, count in department_stats:
+        dept_name = dept if dept else "미입력"
+        projects_by_department[dept_name] = count
+    
+    # 평가 상태별 통계
+    evaluation_status = {
+        "completed": 0,
+        "pending": 0
+    }
+    
+    # 각 프로젝트별로 평가 완료 여부 확인
+    all_projects = db.query(Account).join(Aidea).all()
+    for project in all_projects:
+        has_evaluation = db.query(Evaluation).filter(
+            Evaluation.account_id == project.id
+        ).first()
+        if has_evaluation:
+            evaluation_status["completed"] += 1
+        else:
+            evaluation_status["pending"] += 1
+    
+    return {
+        "total_projects": total_projects,
+        "total_judges": total_judges,
+        "total_evaluations": total_evaluations,
+        "average_score": average_score,
+        "projects_by_department": projects_by_department,
+        "evaluation_status": evaluation_status
+    }
+
+def get_evaluations_with_project_info(db: Session):
+    """평가 결과와 프로젝트 정보를 함께 가져옵니다."""
+    evaluations = db.query(Evaluation).join(Account).join(Aidea).join(Judge).all()
+    
+    result = []
+    for evaluation in evaluations:
+        result.append({
+            "id": evaluation.id,
+            "account_id": evaluation.account_id,
+            "judge_id": evaluation.judge_id,
+            "innovation_score": evaluation.innovation_score,
+            "feasibility_score": evaluation.feasibility_score,
+            "effectiveness_score": evaluation.effectiveness_score,
+            "total_score": evaluation.total_score,
+            "created_at": evaluation.created_at,
+            "updated_at": evaluation.updated_at,
+            "project_name": evaluation.account.aideas[0].project if evaluation.account.aideas else "미입력",
+            "team_name": evaluation.account.team_name or "미입력",
+            "judge_name": evaluation.judge.name
+        })
+    
+    return result
+
 if __name__ == "__main__":
     add_benefit_column()
