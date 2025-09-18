@@ -8,6 +8,8 @@ import Guide from './pages/Guide';
 import Agenda from './pages/Agenda';
 import Resources from './pages/Resources';
 import Register from './pages/Register';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 import './App.css';
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
             <Route path="/agenda" element={<Agenda />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
           </Routes>
         </main>
         <Footer />
