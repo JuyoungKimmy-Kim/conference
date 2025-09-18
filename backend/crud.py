@@ -246,13 +246,13 @@ def get_projects_with_aideas_only(db: Session):
     return db.query(Account).join(Aidea).all()
 
 # Evaluation CRUD
-def create_evaluation(db: Session, account_id: int, judge_id: int, innovation_score: int, feasibility_score: int, effectiveness_score: int):
+def create_evaluation(db: Session, aidea_id: int, judge_id: int, innovation_score: int, feasibility_score: int, effectiveness_score: int):
     """평가를 생성합니다."""
     total_score = innovation_score + feasibility_score + effectiveness_score
     
-    # 이미 같은 심사위원이 같은 계정을 평가했는지 확인
+    # 이미 같은 심사위원이 같은 aidea를 평가했는지 확인
     existing_evaluation = db.query(Evaluation).filter(
-        Evaluation.account_id == account_id,
+        Evaluation.aidea_id == aidea_id,
         Evaluation.judge_id == judge_id
     ).first()
     
@@ -266,7 +266,7 @@ def create_evaluation(db: Session, account_id: int, judge_id: int, innovation_sc
         return existing_evaluation
     else:
         evaluation = Evaluation(
-            account_id=account_id,
+            aidea_id=aidea_id,
             judge_id=judge_id,
             innovation_score=innovation_score,
             feasibility_score=feasibility_score,
@@ -278,15 +278,26 @@ def create_evaluation(db: Session, account_id: int, judge_id: int, innovation_sc
         db.refresh(evaluation)
         return evaluation
 
-def get_evaluations_by_account(db: Session, account_id: int):
-    """특정 계정의 모든 평가를 가져옵니다."""
-    return db.query(Evaluation).filter(Evaluation.account_id == account_id).all()
+def get_evaluations_by_aidea(db: Session, aidea_id: int):
+    """특정 aidea의 모든 평가를 가져옵니다."""
+    return db.query(Evaluation).filter(Evaluation.aidea_id == aidea_id).all()
 
-def get_evaluation_by_judge_and_account(db: Session, judge_id: int, account_id: int):
-    """특정 심사위원이 특정 계정에 대해 한 평가를 가져옵니다."""
+def get_evaluations_by_account(db: Session, account_id: int):
+    """특정 계정의 모든 평가를 가져옵니다. (aidea를 통해)"""
+    return db.query(Evaluation).join(Aidea).filter(Aidea.account_id == account_id).all()
+
+def get_evaluation_by_judge_and_aidea(db: Session, judge_id: int, aidea_id: int):
+    """특정 심사위원이 특정 aidea에 대해 한 평가를 가져옵니다."""
     return db.query(Evaluation).filter(
         Evaluation.judge_id == judge_id,
-        Evaluation.account_id == account_id
+        Evaluation.aidea_id == aidea_id
+    ).first()
+
+def get_evaluation_by_judge_and_account(db: Session, judge_id: int, account_id: int):
+    """특정 심사위원이 특정 계정에 대해 한 평가를 가져옵니다. (aidea를 통해)"""
+    return db.query(Evaluation).join(Aidea).filter(
+        Evaluation.judge_id == judge_id,
+        Aidea.account_id == account_id
     ).first()
 
 def get_all_evaluations(db: Session):

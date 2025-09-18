@@ -18,7 +18,6 @@ class Account(Base):
 
     team_members = relationship("TeamMember", back_populates="account", cascade="all, delete-orphan")
     aideas = relationship("Aidea", back_populates="account", cascade="all, delete-orphan")
-    evaluations = relationship("Evaluation", back_populates="account", cascade="all, delete-orphan")
 
     def verify_password(self, password: str) -> bool:
         return bcrypt.verify(password, self.hashed_password)
@@ -51,6 +50,7 @@ class Aidea(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     account = relationship("Account", back_populates="aideas")
+    evaluations = relationship("Evaluation", back_populates="aidea", cascade="all, delete-orphan")
 
 class Judge(Base):
     __tablename__ = "judges"
@@ -71,7 +71,7 @@ class Evaluation(Base):
     __tablename__ = "evaluations"
 
     id = Column(Integer, primary_key=True, index=True)
-    account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
+    aidea_id = Column(Integer, ForeignKey("aideas.id"), nullable=False)
     judge_id = Column(Integer, ForeignKey("judges.id"), nullable=False)
     innovation_score = Column(Integer, nullable=False)  # 아이디어 혁신성 점수
     feasibility_score = Column(Integer, nullable=False)  # 기술 실현 가능성 점수
@@ -80,5 +80,5 @@ class Evaluation(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    account = relationship("Account", back_populates="evaluations")
+    aidea = relationship("Aidea", back_populates="evaluations")
     judge = relationship("Judge", back_populates="evaluations")

@@ -127,7 +127,7 @@ class ProjectWithAccount(BaseModel):
 
 # Evaluation 스키마
 class EvaluationCreate(BaseModel):
-    account_id: int
+    aidea_id: int
     judge_id: int
     innovation_score: int
     feasibility_score: int
@@ -135,7 +135,7 @@ class EvaluationCreate(BaseModel):
 
 class EvaluationResponse(BaseModel):
     id: int
-    account_id: int
+    aidea_id: int
     judge_id: int
     innovation_score: int
     feasibility_score: int

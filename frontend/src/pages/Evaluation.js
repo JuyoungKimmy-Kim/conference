@@ -132,9 +132,9 @@ const Evaluation = () => {
     }
   };
 
-  const fetchExistingEvaluation = async (accountId, judgeId) => {
+  const fetchExistingEvaluation = async (aideaId, judgeId) => {
     try {
-      const response = await fetch(`/api/evaluations/${accountId}/judge/${judgeId}`);
+      const response = await fetch(`/api/evaluations/aidea/${aideaId}/judge/${judgeId}`);
       if (response.ok) {
         const evaluation = await response.json();
         // 점수를 등급으로 변환하여 상태에 설정
@@ -176,7 +176,7 @@ const Evaluation = () => {
     
     // 기존 평가 데이터 불러오기
     if (currentJudge) {
-      await fetchExistingEvaluation(project.account.id, currentJudge.id);
+      await fetchExistingEvaluation(project.aidea.id, currentJudge.id);
     }
   };
 
@@ -248,7 +248,7 @@ const Evaluation = () => {
     setIsSubmittingEvaluation(true);
     try {
       const evaluationData = {
-        account_id: selectedProject.account.id,
+        aidea_id: selectedProject.aidea.id,
         judge_id: currentJudge.id,
         innovation_score: getGradeValue(evaluationScores.innovation, 'innovation'),
         feasibility_score: getGradeValue(evaluationScores.feasibility, 'feasibility'),

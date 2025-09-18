@@ -23,7 +23,8 @@ from schemas import (
 from crud import (
     create_or_update_account, get_account_by_knox_id, update_account_registration,
     get_all_accounts, get_all_aideas, verify_judge_login,get_all_projects_with_accounts,
-    create_evaluation, get_evaluations_by_account, get_judge_by_id, get_evaluation_by_judge_and_account
+    create_evaluation, get_evaluations_by_account, get_judge_by_id, get_evaluation_by_judge_and_account,
+    get_evaluation_by_judge_and_aidea
 )
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
@@ -267,7 +268,7 @@ async def get_projects(judge_id: int = None, db: Session = Depends(get_db)):
                 # 평가 여부 확인
                 is_evaluated = False
                 if judge_id:
-                    existing_evaluation = get_evaluation_by_judge_and_account(db, judge_id, account.id)
+                    existing_evaluation = get_evaluation_by_judge_and_aidea(db, judge_id, aidea.id)
                     is_evaluated = existing_evaluation is not None
 
                 project_item = ProjectWithAccount(
@@ -294,7 +295,7 @@ async def submit_evaluation(evaluation_data: EvaluationCreate, db: Session = Dep
     """
     try:
         judge_id = evaluation_data.judge_id
-        account_id = evaluation_data.account_id
+        aidea_id = evaluation_data.aidea_id
         
         # 점수 유효성 검사
         if not (6 <= evaluation_data.innovation_score <= 30 and 
@@ -321,14 +322,14 @@ async def submit_evaluation(evaluation_data: EvaluationCreate, db: Session = Dep
         # 평가 생성
         evaluation = create_evaluation(
             db=db,
-            account_id=account_id,
+            aidea_id=aidea_id,
             judge_id=judge_id,
             innovation_score=evaluation_data.innovation_score,
             feasibility_score=evaluation_data.feasibility_score,
             effectiveness_score=evaluation_data.effectiveness_score
         )
         
-        logger.info(f"평가 제출 완료: account_id={account_id}, judge_id={judge_id}, total_score={evaluation.total_score}")
+        logger.info(f"평가 제출 완료: aidea_id={aidea_id}, judge_id={judge_id}, total_score={evaluation.total_score}")
         return evaluation
         
     except HTTPException:
@@ -375,6 +376,28 @@ async def get_evaluation_by_judge(account_id: int, judge_id: int, db: Session = 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="심사위원 평가 조회 중 오류가 발생했습니다."
+        )
+
+@app.get("/api/evaluations/aidea/{aidea_id}/judge/{judge_id}", response_model=EvaluationResponse)
+async def get_evaluation_by_judge_and_aidea_endpoint(aidea_id: int, judge_id: int, db: Session = Depends(get_db)):
+    """
+    특정 심사위원이 특정 aidea에 대해 한 평가를 가져옵니다.
+    """
+    try:
+        evaluation = get_evaluation_by_judge_and_aidea(db, judge_id, aidea_id)
+        if not evaluation:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="해당 심사위원의 평가를 찾을 수 없습니다."
+            )
+        return evaluation
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"심사위원 aidea 평가 조회 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="심사위원 aidea 평가 조회 중 오류가 발생했습니다."
         )
 
 @app.post("/api/send-email")
