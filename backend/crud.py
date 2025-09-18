@@ -191,6 +191,15 @@ def delete_aidea(db: Session, aidea_id: int):
     db.commit()
     return True
 
+# 관리자용 CRUD 함수들
+def get_all_accounts(db: Session, skip: int = 0, limit: int = 100):
+    """모든 계정을 조회합니다."""
+    return db.query(Account).offset(skip).limit(limit).all()
+
+def get_all_aideas(db: Session, skip: int = 0, limit: int = 100):
+    """모든 Aidea를 계정 정보와 함께 조회합니다."""
+    return db.query(Aidea).join(Account).offset(skip).limit(limit).all()
+
 # 마이그레이션 스크립트 (migrate.py)
 from sqlalchemy import text
 from database import engine

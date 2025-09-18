@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from typing import List, Optional
@@ -10,14 +11,18 @@ import os
 import uvicorn
 import logging
 import httpx  # HTTP 클라이언트 라이브러리
+import jwt
+from datetime import datetime, timedelta
 
 from database import get_db, engine
 from models import Base
 from schemas import (
-    AccountLogin, AccountResponse, AccountRegister
+    AccountLogin, AccountResponse, AccountRegister, AdminLogin, AdminResponse,
+    AccountListResponse
 )
 from crud import (
-    create_or_update_account, get_account_by_knox_id, update_account_registration
+    create_or_update_account, get_account_by_knox_id, update_account_registration,
+    get_all_accounts, get_all_aideas
 )
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
@@ -30,10 +35,58 @@ logger = logging.getLogger(__name__)
 # 데이터베이스 테이블 생성
 Base.metadata.create_all(bind=engine)
 
+# JWT 설정
+SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-here")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
+
+# 관리자 인증 정보
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
+
+# JWT 토큰 생성 함수
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+# JWT 토큰 검증 함수
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer())):
+    try:
+        payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None or username != ADMIN_USERNAME:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        return username
+    except jwt.PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
 app = FastAPI(
     title="슬슬 AIdea Agent API",
     description="사내 개발자 경진대회 컨퍼런스 API",
     version="1.0.0"
+)
+
+# CORS 설정
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:8000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/api")
@@ -158,6 +211,65 @@ async def send_email(email_data: dict):
         raise HTTPException(
             status_code=500,
             detail=f"메일 발송 중 오류가 발생했습니다: {str(e)}"
+        )
+
+# 관리자 API 엔드포인트들
+@app.post("/api/admin/login", response_model=AdminResponse)
+async def admin_login(admin_data: AdminLogin):
+    """
+    관리자 로그인을 처리합니다.
+    """
+    if admin_data.username != ADMIN_USERNAME or admin_data.password != ADMIN_PASSWORD:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="잘못된 관리자 인증 정보입니다."
+        )
+    
+    access_token = create_access_token(data={"sub": admin_data.username})
+    return AdminResponse(message="로그인 성공", token=access_token)
+
+@app.get("/api/admin/accounts", response_model=AccountListResponse)
+async def get_all_accounts_admin(
+    skip: int = 0, 
+    limit: int = 100, 
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_token)
+):
+    """
+    등록된 모든 계정을 조회합니다. (관리자 전용)
+    """
+    try:
+        accounts = get_all_accounts(db, skip=skip, limit=limit)
+        total = len(accounts)
+        return AccountListResponse(accounts=accounts, total=total)
+    except Exception as e:
+        logger.error(f"계정 조회 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="계정 조회 중 오류가 발생했습니다."
+        )
+
+@app.get("/api/admin/aideas", response_model=AccountListResponse)
+async def get_all_aideas_admin(
+    skip: int = 0, 
+    limit: int = 100, 
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_token)
+):
+    """
+    등록된 모든 Aidea를 조회합니다. (관리자 전용)
+    """
+    try:
+        accounts = get_all_accounts(db, skip=skip, limit=limit)
+        # Aidea가 있는 계정만 필터링
+        accounts_with_aideas = [account for account in accounts if account.aideas]
+        total = len(accounts_with_aideas)
+        return AccountListResponse(accounts=accounts_with_aideas, total=total)
+    except Exception as e:
+        logger.error(f"Aidea 조회 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Aidea 조회 중 오류가 발생했습니다."
         )
 
 BUILD_DIR = (Path(__file__).parent / "../frontend/build").resolve()

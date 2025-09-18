@@ -87,3 +87,16 @@ class AccountResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+# 관리자 스키마
+class AdminLogin(BaseModel):
+    username: str
+    password: str
+
+class AdminResponse(BaseModel):
+    message: str
+    token: str
+
+class AccountListResponse(BaseModel):
+    accounts: List[AccountResponse]
+    total: int
