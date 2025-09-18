@@ -24,7 +24,7 @@ from crud import (
     create_or_update_account, get_account_by_knox_id, update_account_registration,
     get_all_accounts, get_all_aideas, verify_judge_login,get_all_projects_with_accounts,
     create_evaluation, get_evaluations_by_account, get_judge_by_id, get_evaluation_by_judge_and_account,
-    get_evaluation_by_judge_and_aidea
+    get_evaluation_by_judge_and_aidea, get_all_evaluations
 )
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
@@ -484,6 +484,24 @@ async def get_all_aideas_admin(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Aidea 조회 중 오류가 발생했습니다."
+        )
+
+@app.get("/api/admin/evaluations", response_model=List[EvaluationResponse])
+async def get_all_evaluations_admin(
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_token)
+):
+    """
+    모든 심사 결과를 조회합니다. (관리자 전용)
+    """
+    try:
+        evaluations = get_all_evaluations(db)
+        return evaluations
+    except Exception as e:
+        logger.error(f"심사 결과 조회 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="심사 결과 조회 중 오류가 발생했습니다."
         )
 
 BUILD_DIR = (Path(__file__).parent / "../frontend/build").resolve()

@@ -7,11 +7,13 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('aideas');
   const [accounts, setAccounts] = useState([]);
   const [accountsWithAideas, setAccountsWithAideas] = useState([]);
+  const [evaluations, setEvaluations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedAidea, setSelectedAidea] = useState(null);
   const [showAideaDetail, setShowAideaDetail] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
+  const [selectedEvaluationDepartment, setSelectedEvaluationDepartment] = useState('all');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,13 +33,15 @@ const AdminDashboard = () => {
       const token = localStorage.getItem('adminToken');
       const headers = { Authorization: `Bearer ${token}` };
       
-      const [accountsRes, aideasRes] = await Promise.all([
+      const [accountsRes, aideasRes, evaluationsRes] = await Promise.all([
         axios.get('/api/admin/accounts', { headers }),
-        axios.get('/api/admin/aideas', { headers })
+        axios.get('/api/admin/aideas', { headers }),
+        axios.get('/api/admin/evaluations', { headers })
       ]);
       
       setAccounts(accountsRes.data.accounts);
       setAccountsWithAideas(aideasRes.data.accounts);
+      setEvaluations(evaluationsRes.data);
     } catch (err) {
       if (err.response?.status === 401) {
         localStorage.removeItem('adminToken');
@@ -100,6 +104,95 @@ const AdminDashboard = () => {
     return new Date(dateString).toLocaleString('ko-KR');
   };
 
+  // 심사 결과 통계 계산
+  const _calculateEvaluationStats = () => {
+    const totalProjects = accountsWithAideas ? accountsWithAideas.length : 0;
+    const totalEvaluations = evaluations ? evaluations.length : 0;
+
+    return {
+      totalProjects,
+      totalEvaluations
+    };
+  };
+
+  // 심사 결과에서 부서 목록 가져오기
+  const _getEvaluationDepartments = () => {
+    const departments = new Set();
+    if (evaluations && accountsWithAideas) {
+      evaluations.forEach(evaluation => {
+        for (const account of accountsWithAideas) {
+          if (account.aideas) {
+            const aidea = account.aideas.find(a => a.id === evaluation.aidea_id);
+            if (aidea && account.department) {
+              departments.add(account.department);
+              break;
+            }
+          }
+        }
+      });
+    }
+    return Array.from(departments).sort();
+  };
+
+  // 심사 결과와 Aidea 정보를 결합하고 프로젝트별로 그룹화
+  const _getEvaluationsWithAideaInfo = () => {
+    if (!evaluations || !accountsWithAideas) return [];
+
+    const evaluationsWithInfo = evaluations.map(evaluation => {
+      // 해당 evaluation의 aidea_id로 aidea와 account 정보 찾기
+      let aideaInfo = null;
+      let accountInfo = null;
+
+      for (const account of accountsWithAideas) {
+        if (account.aideas) {
+          const aidea = account.aideas.find(a => a.id === evaluation.aidea_id);
+          if (aidea) {
+            aideaInfo = aidea;
+            accountInfo = account;
+            break;
+          }
+        }
+      }
+
+      return {
+        ...evaluation,
+        aidea: aideaInfo,
+        account: accountInfo
+      };
+    });
+
+    // aidea_id별로 그룹화 (같은 프로젝트라도 다른 aidea_id는 별도 행으로 표시)
+    const groupedByAidea = {};
+    evaluationsWithInfo.forEach(evaluation => {
+      const aideaKey = evaluation.aidea_id;
+      if (!groupedByAidea[aideaKey]) {
+        groupedByAidea[aideaKey] = {
+          aidea: evaluation.aidea,
+          account: evaluation.account,
+          evaluations: []
+        };
+      }
+      groupedByAidea[aideaKey].evaluations.push(evaluation);
+    });
+
+    // 그룹화된 데이터를 배열로 변환
+    let projectGroups = Object.values(groupedByAidea);
+    
+    // 부서별 필터링 적용
+    if (selectedEvaluationDepartment !== 'all') {
+      projectGroups = projectGroups.filter(group => 
+        group.account?.department === selectedEvaluationDepartment
+      );
+    }
+    
+    // 각 프로젝트의 총점을 계산하여 정렬
+    return projectGroups.sort((a, b) => {
+      const totalScoreA = a.evaluations.reduce((sum, evaluation) => sum + evaluation.total_score, 0);
+      const totalScoreB = b.evaluations.reduce((sum, evaluation) => sum + evaluation.total_score, 0);
+      return totalScoreB - totalScoreA; // 높은 점수부터 정렬
+    });
+  };
+
   const renderAccounts = () => {
     const accountsList = accounts || [];
     
@@ -107,36 +200,39 @@ const AdminDashboard = () => {
       <div className="data-section">
         <div className="section-header">
           <h3>등록된 계정 ({accountsList.length}개)</h3>
-          <button onClick={loadData} className="refresh-button">
-            새로고침
-          </button>
         </div>
         
-        <div className="table-container">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Knox ID</th>
-                <th>이름</th>
-                <th>팀명</th>
-                <th>부서</th>
-                <th>팀원 수</th>
-                <th>등록일</th>
-              </tr>
-            </thead>
-            <tbody>
-              {accountsList.map((account) => (
-                <tr key={account.id}>
-                  <td>{account.knox_id}</td>
-                  <td>{account.name || '-'}</td>
-                  <td>{account.team_name || '-'}</td>
-                  <td>{account.department || '-'}</td>
-                  <td>{account.team_members?.length || 0}</td>
-                  <td>{formatDate(account.created_at)}</td>
+        <div className="projects-list">
+          <div className="table-responsive">
+            <table className="table table-hover accounts-table">
+              <thead className="table-dark">
+                <tr>
+                  <th>Knox ID</th>
+                  <th>이름</th>
+                  <th>팀명</th>
+                  <th>부서</th>
+                  <th>팀원 수</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {accountsList.map((account) => (
+                  <tr key={account.id}>
+                    <td>
+                      <strong>{account.knox_id}</strong>
+                    </td>
+                    <td>{account.name || '-'}</td>
+                    <td>{account.team_name || '-'}</td>
+                    <td>{account.department || '-'}</td>
+                    <td>
+                      <span className="badge bg-primary">
+                        {account.team_members?.length || 0}명
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );
@@ -161,9 +257,6 @@ const AdminDashboard = () => {
                 <option key={dept} value={dept}>{dept}</option>
               ))}
             </select>
-            <button onClick={loadData} className="refresh-button">
-              새로고침
-            </button>
           </div>
         </div>
         
@@ -192,6 +285,83 @@ const AdminDashboard = () => {
             </div>
           ))}
         </div>
+      </div>
+    );
+  };
+
+  const renderEvaluations = () => {
+    const evaluationsWithInfo = _getEvaluationsWithAideaInfo();
+    const stats = _calculateEvaluationStats();
+    const evaluationDepartments = _getEvaluationDepartments();
+
+    return (
+      <div className="data-section">
+        <div className="section-header">
+          <h3>심사 결과 </h3>
+          <div className="filter-controls">
+            <select 
+              value={selectedEvaluationDepartment} 
+              onChange={(e) => setSelectedEvaluationDepartment(e.target.value)}
+              className="department-filter"
+            >
+              <option value="all">전체 부서</option>
+              {evaluationDepartments.map(dept => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* 심사 결과 테이블 */}
+        <div className="projects-list">
+          <div className="table-responsive">
+            <table className="table table-hover evaluations-table">
+              <thead className="table-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>프로젝트명</th>
+                  <th>팀명</th>
+                  <th>부서</th>
+                  <th>심사위원</th>
+                  <th>총점</th>
+                </tr>
+              </thead>
+              <tbody>
+                {evaluationsWithInfo.map((projectGroup, index) => (
+                  <tr key={index}>
+                    <td>
+                      <strong>{projectGroup.aidea?.id || '-'}</strong>
+                    </td>
+                    <td>
+                      <strong>{projectGroup.aidea?.project || '-'}</strong>
+                    </td>
+                    <td>{projectGroup.account?.team_name || '-'}</td>
+                    <td>{projectGroup.account?.department || '-'}</td>
+                    <td>
+                      {projectGroup.evaluations.map((evaluation, evalIndex) => (
+                        <span key={evalIndex}>
+                          {evaluation.judge?.name || '-'}({evaluation.total_score})
+                          {evalIndex < projectGroup.evaluations.length - 1 && ', '}
+                        </span>
+                      ))}
+                    </td>
+                    <td>
+                      <span className="badge bg-success">
+                        {projectGroup.evaluations.reduce((sum, evaluation) => sum + evaluation.total_score, 0)}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {evaluationsWithInfo.length === 0 && (
+          <div className="no-data">
+            <p>아직 심사 결과가 없습니다.</p>
+          </div>
+        )}
       </div>
     );
   };
@@ -324,6 +494,12 @@ const AdminDashboard = () => {
         >
           계정 관리
         </button>
+        <button
+          className={`tab-button ${activeTab === 'evaluations' ? 'active' : ''}`}
+          onClick={() => setActiveTab('evaluations')}
+        >
+          심사 결과
+        </button>
       </div>
 
       {error && (
@@ -333,7 +509,9 @@ const AdminDashboard = () => {
       )}
 
       <div className="admin-content">
-        {activeTab === 'accounts' ? renderAccounts() : renderAideas()}
+        {activeTab === 'accounts' ? renderAccounts() : 
+         activeTab === 'evaluations' ? renderEvaluations() : 
+         renderAideas()}
       </div>
     </div>
   );
