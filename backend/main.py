@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from typing import List
+from typing import List, Optional
 from pathlib import Path
 import os
 import uvicorn
