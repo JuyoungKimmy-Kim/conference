@@ -280,7 +280,7 @@ ${teamMembers.map(member => `• 팀원: ${member.name} (${member.knoxId})`).joi
       setSubmitSuccess(true);
     } catch (error) {
       console.error('등록 실패:', error);
-      alert('등록에 실패했습니다: ' + error.message);
+      alert('등록에 실패했습니다: \n' + error.message);
     } finally {
       setIsSubmitting(false);
     }

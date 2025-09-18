@@ -74,6 +74,23 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+# 서류제출 기간 체크 함수
+def _check_registration_period():
+    """
+    서류제출 기간을 체크합니다.
+    기간이 지났으면 HTTPException을 발생시킵니다.
+    """
+    # 서류제출 마감일 설정 (예: 2024년 12월 31일 23:59:59)
+    registration_deadline = datetime(2025, 12, 31, 23, 59, 59)
+    
+    current_time = datetime.now()
+    
+    if current_time > registration_deadline:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="서류제출 기간이 종료되었습니다."
+        )
+
 app = FastAPI(
     title="슬슬 AIdea Agent API",
     description="사내 개발자 경진대회 컨퍼런스 API",
@@ -157,10 +174,16 @@ async def register_account(payload: AccountRegister, db: Session = Depends(get_d
     트랜잭션 안전성을 보장하고 동시성 문제를 방지합니다.
     """
     try:
+        # 서류제출 기간 체크
+        _check_registration_period()
+        
         account = update_account_registration(db, payload)
         logger.info(f"계정 정보 등록 완료: knox_id={payload.knox_id}")
         return account
         
+    except HTTPException:
+        # 서류제출 기간 관련 에러는 그대로 전달
+        raise
     except ValueError as e:
         logger.warning(f"ValueError: knox_id={payload.knox_id} - {e}")
         raise HTTPException(
