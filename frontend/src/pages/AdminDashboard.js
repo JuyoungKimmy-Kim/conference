@@ -25,6 +25,22 @@ const AdminDashboard = () => {
     loadData();
   }, [navigate]);
 
+  // 브라우저 뒤로가기 이벤트 처리
+  useEffect(() => {
+    const handlePopState = (event) => {
+      // Aidea 세부 정보 화면에서 뒤로가기를 누르면 목록으로 돌아가기
+      if (showAideaDetail && selectedAidea) {
+        goBackToList();
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [showAideaDetail, selectedAidea]);
+
   const loadData = async () => {
     setLoading(true);
     setError('');
@@ -62,11 +78,17 @@ const AdminDashboard = () => {
   const handleAideaClick = (aidea) => {
     setSelectedAidea(aidea);
     setShowAideaDetail(true);
+    
+    // 브라우저 히스토리에 상태 추가
+    window.history.pushState({ showAideaDetail: true, aideaId: aidea.id }, '', window.location.pathname);
   };
 
   const goBackToList = () => {
     setShowAideaDetail(false);
     setSelectedAidea(null);
+    
+    // 브라우저 히스토리 업데이트
+    window.history.pushState({ showAideaDetail: false }, '', window.location.pathname);
   };
 
   // Department 목록 가져오기

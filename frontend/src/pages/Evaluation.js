@@ -38,6 +38,22 @@ const Evaluation = () => {
     }
   }, [currentJudge, isLoggedIn]);
 
+  // 브라우저 뒤로가기 이벤트 처리
+  useEffect(() => {
+    const handlePopState = (event) => {
+      // 디테일 화면에서 뒤로가기를 누르면 프로젝트 목록으로 돌아가기
+      if (isLoggedIn && viewMode === 'detail' && selectedProject) {
+        handleBackToProjects();
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isLoggedIn, viewMode, selectedProject]);
+
   // 필터링된 프로젝트 목록 계산
   const filteredProjects = showOnlyUnevaluated 
     ? projects.filter(project => !project.is_evaluated)
@@ -174,6 +190,9 @@ const Evaluation = () => {
     setSelectedProject(project);
     setViewMode('detail');
     
+    // 브라우저 히스토리에 상태 추가
+    window.history.pushState({ viewMode: 'detail', projectId: project.aidea.id }, '', window.location.pathname);
+    
     // 기존 평가 데이터 불러오기
     if (currentJudge) {
       await fetchExistingEvaluation(project.aidea.id, currentJudge.id);
@@ -183,6 +202,8 @@ const Evaluation = () => {
   const handleBackToProjects = () => {
     setSelectedProject(null);
     setViewMode('projects');
+    // 브라우저 히스토리 업데이트
+    window.history.pushState({ viewMode: 'projects' }, '', window.location.pathname);
     // 평가 상태 초기화
     setEvaluationScores({
       innovation: '',
