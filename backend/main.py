@@ -444,8 +444,6 @@ async def admin_login(admin_data: AdminLogin):
 
 @app.get("/api/admin/accounts", response_model=AccountListResponse)
 async def get_all_accounts_admin(
-    skip: int = 0, 
-    limit: int = 100, 
     db: Session = Depends(get_db),
     _: str = Depends(verify_token)
 ):
@@ -453,7 +451,7 @@ async def get_all_accounts_admin(
     등록된 모든 계정을 조회합니다. (관리자 전용)
     """
     try:
-        accounts = get_all_accounts(db, skip=skip, limit=limit)
+        accounts = get_all_accounts(db)
         total = len(accounts)
         return AccountListResponse(accounts=accounts, total=total)
     except Exception as e:
@@ -465,8 +463,6 @@ async def get_all_accounts_admin(
 
 @app.get("/api/admin/aideas", response_model=AccountListResponse)
 async def get_all_aideas_admin(
-    skip: int = 0, 
-    limit: int = 100, 
     db: Session = Depends(get_db),
     _: str = Depends(verify_token)
 ):
@@ -474,7 +470,7 @@ async def get_all_aideas_admin(
     등록된 모든 Aidea를 조회합니다. (관리자 전용)
     """
     try:
-        accounts = get_all_accounts(db, skip=skip, limit=limit)
+        accounts = get_all_accounts(db)
         # Aidea가 있는 계정만 필터링
         accounts_with_aideas = [account for account in accounts if account.aideas]
         total = len(accounts_with_aideas)
@@ -506,8 +502,6 @@ async def get_all_evaluations_admin(
 
 @app.get("/api/admin/judges", response_model=JudgeListResponse)
 async def get_all_judges_admin(
-    skip: int = 0,
-    limit: int = 100,
     db: Session = Depends(get_db),
     _: str = Depends(verify_token)
 ):
@@ -515,7 +509,7 @@ async def get_all_judges_admin(
     모든 심사위원을 조회합니다. (관리자 전용)
     """
     try:
-        judges = get_all_judges(db, skip=skip, limit=limit)
+        judges = get_all_judges(db)
         total = len(judges)
         return JudgeListResponse(judges=judges, total=total)
     except Exception as e:

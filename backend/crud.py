@@ -192,13 +192,13 @@ def delete_aidea(db: Session, aidea_id: int):
     return True
 
 # 관리자용 CRUD 함수들
-def get_all_accounts(db: Session, skip: int = 0, limit: int = 100):
+def get_all_accounts(db: Session):
     """모든 계정을 조회합니다."""
-    return db.query(Account).offset(skip).limit(limit).all()
+    return db.query(Account).all()
 
-def get_all_aideas(db: Session, skip: int = 0, limit: int = 100):
+def get_all_aideas(db: Session):
     """모든 Aidea를 계정 정보와 함께 조회합니다."""
-    return db.query(Aidea).join(Account).offset(skip).limit(limit).all()
+    return db.query(Aidea).join(Account).all()
 
 # 마이그레이션 스크립트 (migrate.py)
 from sqlalchemy import text
@@ -237,9 +237,9 @@ def verify_judge_login(db: Session, judge_id: str, password: str):
         return judge
     return None
 
-def get_all_judges(db: Session, skip: int = 0, limit: int = 100):
+def get_all_judges(db: Session):
     """모든 심사위원을 조회합니다."""
-    return db.query(Judge).offset(skip).limit(limit).all()
+    return db.query(Judge).all()
 
 def get_all_projects_with_accounts(db: Session):
     """제출된 모든 Aidea 프로젝트와 계정 정보를 함께 가져옵니다."""
