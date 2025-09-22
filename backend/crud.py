@@ -237,6 +237,10 @@ def verify_judge_login(db: Session, judge_id: str, password: str):
         return judge
     return None
 
+def get_all_judges(db: Session, skip: int = 0, limit: int = 100):
+    """모든 심사위원을 조회합니다."""
+    return db.query(Judge).offset(skip).limit(limit).all()
+
 def get_all_projects_with_accounts(db: Session):
     """제출된 모든 Aidea 프로젝트와 계정 정보를 함께 가져옵니다."""
     return db.query(Account).outerjoin(Aidea).all()

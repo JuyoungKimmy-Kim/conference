@@ -17,14 +17,14 @@ from datetime import datetime, timedelta
 from database import get_db, engine
 from models import Base
 from schemas import (
-    AccountLogin, AccountResponse, AccountRegister, AdminLogin, AdminResponse, AccountListResponse, JudgeLogin, JudgeResponse, ProjectWithAccount, AideaResponse, TeamMemberResponse,
+    AccountLogin, AccountResponse, AccountRegister, AdminLogin, AdminResponse, AccountListResponse, JudgeCreate, JudgeLogin, JudgeResponse, JudgeListResponse, ProjectWithAccount, AideaResponse, TeamMemberResponse,
     EvaluationCreate, EvaluationResponse, AccountWithEvaluations
 )
 from crud import (
     create_or_update_account, get_account_by_knox_id, update_account_registration,
     get_all_accounts, get_all_aideas, verify_judge_login,get_all_projects_with_accounts,
     create_evaluation, get_evaluations_by_account, get_judge_by_id, get_evaluation_by_judge_and_account,
-    get_evaluation_by_judge_and_aidea, get_all_evaluations
+    get_evaluation_by_judge_and_aidea, get_all_evaluations, create_judge, get_all_judges, get_judge_by_judge_id
 )
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
@@ -502,6 +502,81 @@ async def get_all_evaluations_admin(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="심사 결과 조회 중 오류가 발생했습니다."
+        )
+
+@app.get("/api/admin/judges", response_model=JudgeListResponse)
+async def get_all_judges_admin(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_token)
+):
+    """
+    모든 심사위원을 조회합니다. (관리자 전용)
+    """
+    try:
+        judges = get_all_judges(db, skip=skip, limit=limit)
+        total = len(judges)
+        return JudgeListResponse(judges=judges, total=total)
+    except Exception as e:
+        logger.error(f"심사위원 조회 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="심사위원 조회 중 오류가 발생했습니다."
+        )
+
+@app.post("/api/admin/judges", response_model=JudgeResponse)
+async def create_judge_admin(
+    judge_data: JudgeCreate,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_token)
+):
+    """
+    새로운 심사위원을 생성합니다. (관리자 전용)
+    """
+    try:
+        # 입력 데이터 검증
+        if not judge_data.judge_id or not judge_data.judge_id.strip():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="심사위원 ID는 필수입니다."
+            )
+        if not judge_data.password or not judge_data.password.strip():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="비밀번호는 필수입니다."
+            )
+        if not judge_data.name or not judge_data.name.strip():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="심사위원 이름은 필수입니다."
+            )
+        
+        # 중복 확인
+        existing_judge = get_judge_by_judge_id(db, judge_data.judge_id)
+        if existing_judge:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="이미 존재하는 심사위원 ID입니다."
+            )
+        
+        judge = create_judge(
+            db=db,
+            judge_id=judge_data.judge_id.strip(),
+            password=judge_data.password.strip(),
+            name=judge_data.name.strip()
+        )
+        
+        logger.info(f"심사위원 생성 완료: {judge.name} ({judge.judge_id})")
+        return judge
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"심사위원 생성 오류: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="심사위원 생성 중 오류가 발생했습니다."
         )
 
 BUILD_DIR = (Path(__file__).parent / "../frontend/build").resolve()

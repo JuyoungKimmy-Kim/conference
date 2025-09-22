@@ -102,6 +102,11 @@ class AccountListResponse(BaseModel):
     total: int
 
 # Judge 스키마
+class JudgeCreate(BaseModel):
+    judge_id: str
+    password: str
+    name: str
+
 class JudgeLogin(BaseModel):
     judge_id: str
     password: str
@@ -115,6 +120,10 @@ class JudgeResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class JudgeListResponse(BaseModel):
+    judges: List[JudgeResponse]
+    total: int
 
 class ProjectWithAccount(BaseModel):
     account: AccountResponse

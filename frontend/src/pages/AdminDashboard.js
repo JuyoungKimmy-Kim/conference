@@ -8,12 +8,19 @@ const AdminDashboard = () => {
   const [accounts, setAccounts] = useState([]);
   const [accountsWithAideas, setAccountsWithAideas] = useState([]);
   const [evaluations, setEvaluations] = useState([]);
+  const [judges, setJudges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedAidea, setSelectedAidea] = useState(null);
   const [showAideaDetail, setShowAideaDetail] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [selectedEvaluationDepartment, setSelectedEvaluationDepartment] = useState('all');
+  const [showJudgeForm, setShowJudgeForm] = useState(false);
+  const [judgeFormData, setJudgeFormData] = useState({
+    judge_id: '',
+    password: '',
+    name: ''
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,15 +56,17 @@ const AdminDashboard = () => {
       const token = localStorage.getItem('adminToken');
       const headers = { Authorization: `Bearer ${token}` };
       
-      const [accountsRes, aideasRes, evaluationsRes] = await Promise.all([
+      const [accountsRes, aideasRes, evaluationsRes, judgesRes] = await Promise.all([
         axios.get('/api/admin/accounts', { headers }),
         axios.get('/api/admin/aideas', { headers }),
-        axios.get('/api/admin/evaluations', { headers })
+        axios.get('/api/admin/evaluations', { headers }),
+        axios.get('/api/admin/judges', { headers })
       ]);
       
       setAccounts(accountsRes.data.accounts);
       setAccountsWithAideas(aideasRes.data.accounts);
       setEvaluations(evaluationsRes.data);
+      setJudges(judgesRes.data.judges);
     } catch (err) {
       if (err.response?.status === 401) {
         localStorage.removeItem('adminToken');
@@ -73,6 +82,49 @@ const AdminDashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     navigate('/admin/login');
+  };
+
+  const handleJudgeFormChange = (e) => {
+    const { name, value } = e.target;
+    setJudgeFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCreateJudge = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      const headers = { Authorization: `Bearer ${token}` };
+
+      await axios.post('/api/admin/judges', judgeFormData, { headers });
+      
+      // 폼 초기화
+      setJudgeFormData({
+        judge_id: '',
+        password: '',
+        name: ''
+      });
+      setShowJudgeForm(false);
+      
+      // 데이터 다시 로드
+      await loadData();
+      
+      alert('심사위원이 성공적으로 생성되었습니다.');
+    } catch (err) {
+      if (err.response?.status === 401) {
+        localStorage.removeItem('adminToken');
+        navigate('/admin/login');
+      } else {
+        setError(err.response?.data?.detail || '심사위원 생성에 실패했습니다.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAideaClick = (aidea) => {
@@ -388,6 +440,134 @@ const AdminDashboard = () => {
     );
   };
 
+  const renderJudges = () => {
+    const judgesList = judges || [];
+
+    return (
+      <div className="data-section">
+        <div className="section-header">
+          <h3>심사위원 관리 ({judgesList.length}명)</h3>
+          <button 
+            className="btn btn-primary"
+            onClick={() => setShowJudgeForm(true)}
+          >
+            + 심사위원 추가
+          </button>
+        </div>
+
+        {/* 심사위원 목록 테이블 */}
+        <div className="projects-list">
+          <div className="table-responsive">
+            <table className="table table-hover judges-table">
+              <thead className="table-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>심사위원 ID</th>
+                  <th>이름</th>
+                  <th>생성일</th>
+                </tr>
+              </thead>
+              <tbody>
+                {judgesList.map((judge) => (
+                  <tr key={judge.id}>
+                    <td>
+                      <strong>{judge.id}</strong>
+                    </td>
+                    <td>{judge.judge_id}</td>
+                    <td>{judge.name}</td>
+                    <td>{formatDate(judge.created_at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {judgesList.length === 0 && (
+          <div className="no-data">
+            <p>등록된 심사위원이 없습니다.</p>
+          </div>
+        )}
+
+        {/* 심사위원 생성 폼 모달 */}
+        {showJudgeForm && (
+          <div className="modal-overlay" onClick={() => setShowJudgeForm(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h4>심사위원 추가</h4>
+                <button 
+                  className="close-button"
+                  onClick={() => setShowJudgeForm(false)}
+                >
+                  ×
+                </button>
+              </div>
+              <form onSubmit={handleCreateJudge}>
+                <div className="modal-body">
+                  <div className="form-group">
+                    <label htmlFor="judge_id">심사위원 ID *</label>
+                    <input
+                      type="text"
+                      id="judge_id"
+                      name="judge_id"
+                      value={judgeFormData.judge_id}
+                      onChange={handleJudgeFormChange}
+                      required
+                      className="form-control"
+                      placeholder="심사위원 ID를 입력하세요"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="password">비밀번호 *</label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      value={judgeFormData.password}
+                      onChange={handleJudgeFormChange}
+                      required
+                      className="form-control"
+                      placeholder="비밀번호를 입력하세요"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="name">이름 *</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={judgeFormData.name}
+                      onChange={handleJudgeFormChange}
+                      required
+                      className="form-control"
+                      placeholder="심사위원 이름을 입력하세요"
+                    />
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary"
+                    onClick={() => setShowJudgeForm(false)}
+                  >
+                    취소
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary"
+                    disabled={loading}
+                  >
+                    {loading ? '생성 중...' : '생성'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="admin-dashboard">
@@ -517,6 +697,12 @@ const AdminDashboard = () => {
           계정 관리
         </button>
         <button
+          className={`tab-button ${activeTab === 'judges' ? 'active' : ''}`}
+          onClick={() => setActiveTab('judges')}
+        >
+          심사위원 관리
+        </button>
+        <button
           className={`tab-button ${activeTab === 'evaluations' ? 'active' : ''}`}
           onClick={() => setActiveTab('evaluations')}
         >
@@ -532,6 +718,7 @@ const AdminDashboard = () => {
 
       <div className="admin-content">
         {activeTab === 'accounts' ? renderAccounts() : 
+         activeTab === 'judges' ? renderJudges() :
          activeTab === 'evaluations' ? renderEvaluations() : 
          renderAideas()}
       </div>
