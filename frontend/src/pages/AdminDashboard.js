@@ -21,6 +21,7 @@ const AdminDashboard = () => {
     password: '',
     name: ''
   });
+  const [isJudgeProgressExpanded, setIsJudgeProgressExpanded] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -178,15 +179,29 @@ const AdminDashboard = () => {
     return new Date(dateString).toLocaleString('ko-KR');
   };
 
-  // 심사 결과 통계 계산
-  const _calculateEvaluationStats = () => {
-    const totalProjects = accountsWithAideas ? accountsWithAideas.length : 0;
-    const totalEvaluations = evaluations ? evaluations.length : 0;
+  // 심사위원별 진행사항 계산
+  const _calculateJudgeProgress = () => {
+    if (!judges || !evaluations || !accountsWithAideas) return [];
 
-    return {
-      totalProjects,
-      totalEvaluations
-    };
+    // 전체 프로젝트 수 계산
+    const totalProjects = accountsWithAideas.length;
+
+    // 심사위원별 평가한 프로젝트 수 계산
+    const judgeProgress = judges.map(judge => {
+      const evaluatedCount = evaluations.filter(evaluation => 
+        evaluation.judge_id === judge.id
+      ).length;
+
+      return {
+        judge,
+        evaluatedCount,
+        totalProjects,
+        progressPercentage: totalProjects > 0 ? Math.round((evaluatedCount / totalProjects) * 100) : 0
+      };
+    });
+
+    // 평가한 프로젝트 수 기준으로 내림차순 정렬
+    return judgeProgress.sort((a, b) => b.evaluatedCount - a.evaluatedCount);
   };
 
   // 심사 결과에서 부서 목록 가져오기
@@ -365,8 +380,8 @@ const AdminDashboard = () => {
 
   const renderEvaluations = () => {
     const evaluationsWithInfo = _getEvaluationsWithAideaInfo();
-    const stats = _calculateEvaluationStats();
     const evaluationDepartments = _getEvaluationDepartments();
+    const judgeProgress = _calculateJudgeProgress();
 
     return (
       <div className="data-section">
@@ -385,6 +400,43 @@ const AdminDashboard = () => {
             </select>
           </div>
         </div>
+
+        {/* 심사위원별 진행사항 */}
+        {judgeProgress.length > 0 && (
+          <div className="judge-progress-section">
+            <div className="judge-progress-header" onClick={() => setIsJudgeProgressExpanded(!isJudgeProgressExpanded)}>
+              <h4>심사위원별 진행사항</h4>
+              <button className="expand-toggle-btn">
+                <span className={`expand-icon ${isJudgeProgressExpanded ? 'expanded' : 'collapsed'}`}>
+                  ▼
+                </span>
+              </button>
+            </div>
+            <div className={`judge-progress-content ${isJudgeProgressExpanded ? 'expanded' : 'collapsed'}`}>
+              <div className="judge-progress-list">
+                {judgeProgress.map((progress, index) => (
+                  <div key={progress.judge.id} className="judge-progress-item">
+                    <div className="judge-info">
+                      <span className="judge-name">{progress.judge.name}</span>
+                      <span className="progress-text">
+                        ({progress.evaluatedCount}/{progress.totalProjects})
+                      </span>
+                    </div>
+                    <div className="progress-bar-container">
+                      <div 
+                        className="progress-bar"
+                        style={{ width: `${progress.progressPercentage}%` }}
+                      ></div>
+                    </div>
+                    <div className="progress-percentage">
+                      {progress.progressPercentage}%
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* 심사 결과 테이블 */}
         <div className="projects-list">

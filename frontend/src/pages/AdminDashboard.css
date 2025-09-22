@@ -1099,3 +1099,159 @@
     font-size: 0.8rem;
   }
 }
+
+/* 심사위원별 진행사항 스타일 */
+.judge-progress-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.judge-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+  padding: 5px;
+  border-radius: 6px;
+  margin: -5px;
+}
+
+.judge-progress-header:hover {
+  background-color: #f8f9fa;
+}
+
+.judge-progress-section h4 {
+  color: #333;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.expand-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.expand-toggle-btn:hover {
+  background-color: #e9ecef;
+}
+
+.expand-icon {
+  display: inline-block;
+  font-size: 12px;
+  color: #666;
+  transition: transform 0.3s ease;
+}
+
+.expand-icon.expanded {
+  transform: rotate(0deg);
+}
+
+.expand-icon.collapsed {
+  transform: rotate(-90deg);
+}
+
+.judge-progress-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.judge-progress-content.expanded {
+  max-height: 1000px;
+  opacity: 1;
+}
+
+.judge-progress-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+.judge-progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.judge-progress-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.judge-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 150px;
+}
+
+.judge-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.progress-text {
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.progress-bar-container {
+  flex: 1;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #007bff, #0056b3);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-percentage {
+  min-width: 40px;
+  text-align: right;
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+}
+
+/* 반응형 심사위원 진행사항 */
+@media (max-width: 768px) {
+  .judge-progress-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .judge-info {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .progress-bar-container {
+    width: 100%;
+  }
+  
+  .progress-percentage {
+    text-align: left;
+  }
+}
